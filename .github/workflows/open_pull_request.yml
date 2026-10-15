@@ -27,9 +27,11 @@ jobs:
             echo "Existing PR found."
             exit 0
           fi
-          COMMITS=$(gh api "repos/${{ github.repository }}/compare/${TARGET_BRANCH}...${SOURCE_BRANCH}" --jq '.total_commits')
-          if [ "$COMMITS" -eq 0 ]; then
-            echo "No changes to propose."
+          # A sync merge can contain a commit but no actual file changes.
+          # Compare changed files, not just total commit count.
+          CHANGED_FILES=$(gh api "repos/${{ github.repository }}/compare/${TARGET_BRANCH}...${SOURCE_BRANCH}" --jq '.files | length')
+          if [ "$CHANGED_FILES" -eq 0 ]; then
+            echo "No changed files to propose."
             exit 0
           fi
           if ! gh pr create --base "$TARGET_BRANCH" --head "$SOURCE_BRANCH" --draft \
