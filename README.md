@@ -6,13 +6,15 @@
 
 An independent collection of [Morphe](https://github.com/MorpheApp/morphe-patches-template)-compatible patches and Android APK investigation tools.
 
-[![Build](https://github.com/lopikss/lopikss-patches/actions/workflows/release.yml/badge.svg?branch=dev)](https://github.com/lopikss/lopikss-patches/actions/workflows/release.yml)
-[![Tests](https://github.com/lopikss/lopikss-patches/actions/workflows/validate.yml/badge.svg?branch=dev)](https://github.com/lopikss/lopikss-patches/actions/workflows/validate.yml)
+[![Build](https://github.com/lopikss/lopikss-patches/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/lopikss/lopikss-patches/actions/workflows/release.yml)
+[![Tests](https://github.com/lopikss/lopikss-patches/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/lopikss/lopikss-patches/actions/workflows/validate.yml)
 [![Kotlin](https://img.shields.io/badge/Kotlin-Morphe%20patches-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-40444A.svg)](LICENSE)
 [![Status: Experimental](https://img.shields.io/badge/status-experimental-F3AA35)](#project-status)
 
-[**Browse patches**](#patch-catalog) · [**Get started**](#getting-started) · [**Development**](#development) · [**Report an issue**](https://github.com/lopikss/lopikss-patches/issues)
+[**⬇️ Download v1.0.0**](https://github.com/lopikss/lopikss-patches/releases/download/v1.0.0/patches-1.0.0.mpp) · [**➕ Add to Morphe**](https://morphe.software/add-source?github=lopikss/lopikss-patches) · [**Patch catalog**](#patch-catalog)
+
+[Getting started](#getting-started) · [Development](#development) · [Report an issue](https://github.com/lopikss/lopikss-patches/issues)
 
 </div>
 
@@ -42,7 +44,7 @@ Lopikss Patches is a personal open-source project for understanding Android app 
 
 ## 📦 Patch catalog
 
-The section below is **automatically updated by the official Morphe release workflow**. Do not edit it by hand.
+The section below uses the **original Morphe template's expandable, auto-generated patch list**. Each published release updates it automatically.
 
 <!-- PATCHES_START EXPANDED -->
 > **[v1.0.0](https://github.com/lopikss/lopikss-patches/releases/tag/v1.0.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;1 patch total
@@ -80,14 +82,21 @@ The section below is **automatically updated by the official Morphe release work
 
 ## 🚀 Getting started
 
-**Using Morphe?** The first experimental bundle is available in [Releases](https://github.com/lopikss/lopikss-patches/releases). Add this repository as a patch source:
+**The compiled patch bundle is available to download now:**
+
+| Release | File | Installation |
+| --- | --- | --- |
+| **Stable v1.0.0** | **[⬇ Download `patches-1.0.0.mpp`](https://github.com/lopikss/lopikss-patches/releases/download/v1.0.0/patches-1.0.0.mpp)** | [View release and notes](https://github.com/lopikss/lopikss-patches/releases/tag/v1.0.0) |
+| Development | [Browse prereleases](https://github.com/lopikss/lopikss-patches/releases) | For experimental updates only |
+
+**Recommended: add this GitHub repository as a Morphe patch source** rather than manually handling each future bundle:
 
 **[➕ Add Lopikss Patches to Morphe](https://morphe.software/add-source?github=lopikss/lopikss-patches)**
 
-1. Open Morphe and add the source using the link above.
-2. Select **XP Hero 26.2.0** and the patch **Billing result trace**.
-3. Back up your game data before testing a modified APK.
-4. To inspect the result, connect your Android device with ADB and run:
+1. In Morphe, use the source link above, or import the downloaded `.mpp` manually if your installed Morphe version supports it.
+2. Select **XP Hero 26.2.0** and enable **Billing result trace** (disabled by default).
+3. Back up your game data before installing a modified APK.
+4. For billing-result diagnostics, connect your Android device with ADB and run:
 
 ```bash
 adb logcat -s LopikssBilling:I '*:S'
