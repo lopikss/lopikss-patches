@@ -45,7 +45,7 @@ Lopikss Patches is a personal open-source project for understanding Android app 
 The section below is **automatically updated by the official Morphe release workflow**. Do not edit it by hand.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.0.0-dev.1](https://github.com/lopikss/lopikss-patches/releases/tag/v1.0.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;1 patch total
+> **[v1.0.0](https://github.com/lopikss/lopikss-patches/releases/tag/v1.0.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;1 patch total
 <details open>
 <summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
