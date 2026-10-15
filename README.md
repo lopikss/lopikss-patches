@@ -45,7 +45,7 @@ Lopikss Patches is a personal open-source project for understanding Android app 
 The section below is **automatically updated by the official Morphe release workflow**. Do not edit it by hand.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.0.0-dev.1](https://github.com/lopikss/lopikss-patches/releases/tag/v1.0.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;1 patches total
+> **[v1.0.0-dev.1](https://github.com/lopikss/lopikss-patches/releases/tag/v1.0.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;1 patch total
 <details open>
 <summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
@@ -63,7 +63,7 @@ The section below is **automatically updated by the official Morphe release work
 
 <!-- PATCHES_END -->
 
-### XP Hero · Billing result trace
+### XP Hero: Billing result trace
 
 <details open>
 <summary><strong>What does the first patch actually do?</strong></summary>
@@ -80,7 +80,7 @@ The section below is **automatically updated by the official Morphe release work
 
 ## 🚀 Getting started
 
-**Using Morphe?** Once a patch bundle is published in [Releases](https://github.com/lopikss/lopikss-patches/releases), you can add this repository as a patch source:
+**Using Morphe?** The first experimental bundle is available in [Releases](https://github.com/lopikss/lopikss-patches/releases). Add this repository as a patch source:
 
 **[➕ Add Lopikss Patches to Morphe](https://morphe.software/add-source?github=lopikss/lopikss-patches)**
 
