@@ -45,8 +45,21 @@ Lopikss Patches is a personal open-source project for understanding Android app 
 The section below is **automatically updated by the official Morphe release workflow**. Do not edit it by hand.
 
 <!-- PATCHES_START EXPANDED -->
+> **[v1.0.0-dev.1](https://github.com/lopikss/lopikss-patches/releases/tag/v1.0.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;1 patches total
+<details open>
+<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
 
-_No published patch bundle yet. Build verification is separate from a released, device-tested patch._
+**🎯 Supported versions:**
+
+| 🧪&nbsp;26.2.0 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [XP Hero: Billing result trace](#xp-hero-billing-result-trace) | Log Android billing activity results to Logcat (tag: LopikssBilling). Does not alter purchases. |  |
+
+</details>
 
 <!-- PATCHES_END -->
 
