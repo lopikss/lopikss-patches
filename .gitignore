@@ -128,3 +128,15 @@ node_modules/
 # Ignore IDEA files
 .idea/
 local.properties
+
+# Local Android packages, splits, captures, and Python caches
+*.xapk
+*.apkm
+*.apks
+*.mpp
+*.mpe
+*.logcat
+__pycache__/
+.pytest_cache/
+.env
+.env.*

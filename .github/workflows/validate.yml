@@ -1,0 +1,29 @@
+name: Validate
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  python-tests:
+    name: APK inspector tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+      - name: Byte-compile the inspector
+        run: python -m py_compile tools/inspect_apks.py

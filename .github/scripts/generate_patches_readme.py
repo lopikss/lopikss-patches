@@ -147,7 +147,7 @@ def build_content(expanded=False):
     lines = [
         f"> **[v{ver}](https://github.com/{owner}/{repo}/releases/tag/v{ver})**"
         f"&nbsp;&nbsp;•&nbsp;&nbsp;`{branch}`&nbsp;&nbsp;•&nbsp;&nbsp;"
-        f"{total} patches total"
+        f"{total} {'patch' if total == 1 else 'patches'} total"
     ]
 
     # One spoiler per app, in the order they appear in the JSON

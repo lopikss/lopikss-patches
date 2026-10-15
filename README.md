@@ -1,91 +1,132 @@
-# 👋🧩 Morphe Patches template
+<div align="center">
 
-Template repository for Morphe Patches.
+# ⚡ Lopikss Patches
 
-## ❓ About
+**Small, focused patches. Clear diagnostics. No guesswork.**
 
-Patches for apps I like.
+An independent collection of [Morphe](https://github.com/MorpheApp/morphe-patches-template)-compatible patches and Android APK investigation tools.
 
-<!-- TODO: Update this about section with a brief introduction/summary about this repo and what it offers. -->
+[![Build](https://github.com/lopikss/lopikss-patches/actions/workflows/release.yml/badge.svg?branch=dev)](https://github.com/lopikss/lopikss-patches/actions/workflows/release.yml)
+[![Tests](https://github.com/lopikss/lopikss-patches/actions/workflows/validate.yml/badge.svg?branch=dev)](https://github.com/lopikss/lopikss-patches/actions/workflows/validate.yml)
+[![Kotlin](https://img.shields.io/badge/Kotlin-Morphe%20patches-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
+[![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-40444A.svg)](LICENSE)
+[![Status: Experimental](https://img.shields.io/badge/status-experimental-F3AA35)](#project-status)
 
-### How to use these patches
+[**Browse patches**](#patch-catalog) · [**Get started**](#getting-started) · [**Development**](#development) · [**Report an issue**](https://github.com/lopikss/lopikss-patches/issues)
 
-Click here to add these patches to Morphe: https://morphe.software/add-source?github=xyz-user/xyz-patches
+</div>
 
-## 🩹 Patches list
+---
+
+> [!IMPORTANT]
+> **Early development.** The first XP Hero patch traces a Google Play billing activity result for troubleshooting; it does **not** make purchases free, create receipts, disable verification, or grant paid items. This project has passed its source compilation check, but the patch has **not** been validated on a physical device.
+
+## ✨ What is this?
+
+Lopikss Patches is a personal open-source project for understanding Android app compatibility issues and building **small, testable Morphe patches**.
+
+| 🔍 Investigate | 🧩 Patch | 🧪 Verify |
+| :--- | :--- | :--- |
+| Inspect APK/XAPK contents and version markers. | Keep changes limited to supported apps and versions. | Run build checks and tests before release. |
+
+### Project status
+
+| Area | Current state |
+| --- | --- |
+| Morphe project | ✅ Configured and compiles |
+| First target | **XP Hero 26.2.0** (`io.supercent.weaponrpg`) |
+| Billing library detected | Google Play Billing **8.3.0** |
+| Patch availability | 🧪 Experimental; **disabled by default** |
+| On-device validation | ⏳ Not completed |
+| Free in-app purchases | ❌ **Not provided** |
+
+## 📦 Patch catalog
+
+The section below is **automatically updated by the official Morphe release workflow**. Do not edit it by hand.
 
 <!-- PATCHES_START EXPANDED -->
+> **[v1.0.0-dev.1](https://github.com/lopikss/lopikss-patches/releases/tag/v1.0.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;1 patch total
+<details open>
+<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
 
-<!-- Do not modify this section by hand. The patch list is generated when release.yml creates a new release.
-     
-     If you wish for the patches list to be collapsed, then remove the word 'EXPANDED' from the comment tag above.
+**🎯 Supported versions:**
 
-     If you wish to manually keep this list updated then remove the PATCHES_START and PATCHES_END 
-     comment blocks entirely. -->
+| 🧪&nbsp;26.2.0 |
+| :---: |
 
-#### A list of your patches will automatically be shown here after your first patches release is created.
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [XP Hero: Billing result trace](#xp-hero-billing-result-trace) | Log Android billing activity results to Logcat (tag: LopikssBilling). Does not alter purchases. |  |
 
-&nbsp;
+</details>
 
-## 🚀 Getting development started
-
-To start using this template, follow these steps:
-
-1. [Setup](https://github.com/MorpheApp/morphe-documentation/blob/main/docs/morphe-development/README.md) your development environment including adding a GitHub PAT as described [here](https://github.com/MorpheApp/morphe-patcher/blob/main/docs/2_1_setup.md#-prepare-the-environment).
-2. [Create a new repository using this template](https://github.com/new?template_name=morphe-patches-template&template_owner=MorpheApp). Select create a new repository, and **enable 'Include all branches'** 
-3. Enable "Allow GitHub Actions to create and approve pull requests" in your repo Settings > Actions > General > Workflow permissions
-4. Update the [build.gradle.kts](patches/build.gradle.kts) file (Specifically, the 
-   [group of the project](patches/build.gradle.kts#L1), and the [About](patches/build.gradle.kts#L6-L11))
-5. Update the [README.md](README.md) file to be specific of your repo, and update the links in the [issue templates](.github/ISSUE_TEMPLATE).
-6. Choose a name for your patches project. Keep in mind you must use a name that does not 
-   imply authorship by the Morphe open source project. If unsure, then simply name these
-   patches after yourself ("UserXYZ Morphe patches"). See the [NOTICE](NOTICE) for details. 
-7. (Optional): Add `patches-bundle.png` to the project if you want a custom icon to show in
-   Morphe Manager instead of your GitHub profile avatar.
-
-🎉 You are now ready to start creating patches!
-
-## 🧑‍💻 Dev usage
-
-To develop and release your Patches using this template:
-
-- **Make all changes to the `dev` branch.**
-- For local development work build your patches using the gradle task `./gradlew buildAndroid` to generate the mpp file found in `patches/build/libs/patches-*.mpp`. Apply your patches locally using Morphe Desktop tool like any other patch bundle.
-- Always use [Semantic commit](https://kapeli.com/cheat_sheets/Semantic_Commits.docset/Contents/Resources/Documents/index) messages for commits. To keep it simple use only 3 commit message types: 
-  - `feat: Added a new feature`
-  - `fix: Some problem now fixed`
-  - `chore: Random change you do not want in the user facing changelog`
-- Commits of `fix:` and `feat:` will automatically generate new pre-releases and `chore:` will not create a new release.
-- Users can apply your dev branch releases by enabling `pre-release` in Morphe Manager patch sources.
-- When your dev branch is ready, and you want a stable release, merge dev branch to main (do not squash, and only merge).
-- **Always use semantic release (release.yml)**. Do not manually upload or create releases by hand
-  because many files must be updated and release.yml handles everything.
-
-## 🤓 Tips
-- See the [patcher documentation](https://github.com/MorpheApp/morphe-patcher/blob/main/docs/1_patcher_intro.md) for more examples of creating patches and fingerprints.
-- Do not use AI to create new release scripts. The `release.yml` here already handles everything.
-  If you need something custom with your releases then modify the existing `release.yml`
-  and `.releaserc` instead of writing everything new from scratch.
-- Do not manually edit or manually commit any generated files such as: `patches-list.json`,
-  `patches-bundle.json`, `CHANGELOG.md`.  These files will be automatically updated by `release.yml`.
-- Do not force push any semantic release commits as that will break all future releases.
-  If you need to fix a broken release, it's always easiest to create a new release instead of 
-  fixing an existing release.
-
-
-<!-- The patches end tag is intentionally placed here so the first release will clean up 
-     this readme of all developer instructions above. -->
 <!-- PATCHES_END -->
 
-### 🛠️ Building locally
+### XP Hero: Billing result trace
 
-- Run `./gradlew buildAndroid`
-- The built patches .mpp file is found in `patches/build/libs/patches-*.mpp`
-- Patch the mpp file using [Morphe-Desktop](https://github.com/MorpheApp/morphe-desktop)
-  like any other patch bundle.
+<details open>
+<summary><strong>What does the first patch actually do?</strong></summary>
 
-See the [Morphe documentation](https://github.com/MorpheApp/morphe-documentation) for more information.
+<br>
 
-## 📜 License
+- Hooks the Android `ProxyBillingActivity.onActivityResult` callback for XP Hero **26.2.0**.
+- Writes the Android activity result integer to Logcat using the tag **`LopikssBilling`**.
+- Leaves the checkout flow and purchase results unchanged; the patch never examines receipts or purchase tokens.
 
-UserXYZ Patches are licensed under the [GNU General Public License v3.0](LICENSE)
+> **Reading the result:** Android result `-1` usually indicates `RESULT_OK`, and `0` indicates `RESULT_CANCELED`. These are **not** Google Play Billing response codes and do not prove a transaction succeeded.
+
+</details>
+
+## 🚀 Getting started
+
+**Using Morphe?** The first experimental bundle is available in [Releases](https://github.com/lopikss/lopikss-patches/releases). Add this repository as a patch source:
+
+**[➕ Add Lopikss Patches to Morphe](https://morphe.software/add-source?github=lopikss/lopikss-patches)**
+
+1. Open Morphe and add the source using the link above.
+2. Select **XP Hero 26.2.0** and the patch **Billing result trace**.
+3. Back up your game data before testing a modified APK.
+4. To inspect the result, connect your Android device with ADB and run:
+
+```bash
+adb logcat -s LopikssBilling:I '*:S'
+```
+
+> [!CAUTION]
+> A modified APK can require reinstallation and may not share the original app's signature. **Do not uninstall your only copy or wipe app data without a backup.** Never approve a real payment just to test a billing diagnostic.
+
+## 🛠️ Development
+
+Built with the [official Morphe patches template](https://github.com/MorpheApp/morphe-patches-template). Work happens on the **[`dev` branch](https://github.com/lopikss/lopikss-patches/tree/dev)**; `main` holds the reviewed version.
+
+```bash
+# Clone, switch to dev, run the Morphe build
+git clone https://github.com/lopikss/lopikss-patches.git
+cd lopikss-patches
+git switch dev
+./gradlew buildAndroid
+```
+
+The `.mpp` output is produced at `patches/build/libs/`. Dependencies for local builds may require [GitHub Packages credentials](https://github.com/MorpheApp/morphe-patcher/blob/main/docs/2_1_setup.md).
+
+**Read-only APK inspector:** Requires Python 3.10+; supports APK, XAPK and other split APK containers.
+
+```bash
+python tools/inspect_apks.py original.xapk --patched modified.apk
+python -m unittest discover -s tests -v
+```
+
+The inspector compares DEX files and asset metadata. It **cannot** confirm server-side verification or prove a purchase bypass.
+
+**Project resources:** [Technical findings](docs/XP_HERO_FINDINGS.md) · [Roadmap](docs/NEXT_STEPS.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Actions](https://github.com/lopikss/lopikss-patches/actions)
+
+---
+
+<div align="center">
+
+Made by **[Lopikss](https://lopikss.com)** · [GPL-3.0 License](LICENSE)
+
+<sub>Independent community project. Not affiliated with Morphe, Google Play, or Supercent.</sub>
+
+</div>

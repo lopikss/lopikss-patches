@@ -1,1 +1,5 @@
 blank_issues_enabled: false
+contact_links:
+  - name: "📚 Project documentation"
+    url: "https://github.com/lopikss/lopikss-patches#readme"
+    about: "Read setup and testing notes before opening an issue."
