@@ -1,17 +1,24 @@
-# Development and testing checklist
+# Roadmap
 
-- [x] Create `lopikss/lopikss-patches` using the official Morphe template.
-- [x] Remove the starter/example Kotlin patches.
-- [x] Add a narrowly scoped, off-by-default XP Hero billing activity diagnostic.
-- [ ] Verify the Gradle build in GitHub Actions.
-- [ ] Confirm that Morphe recognizes the patch bundle.
-- [ ] Back up XP Hero progress before any experimental installation.
-- [ ] Check that the unmodified purchase UI continues to behave normally.
-- [ ] Read the `LopikssBilling` Android activity result codes from Logcat.
-- [ ] Compare with the official application's behavior.
+| Milestone | State |
+| --- | --- |
+| Create independent Morphe repository | ✅ Done |
+| Read-only APK/XAPK inspector and tests | ✅ Done |
+| Identify XP Hero 26.2.0 Billing 8.3.0 markers | ✅ Done |
+| XP Hero billing activity result tracer | ✅ Source complete |
+| Morphe Gradle compilation | ✅ Confirmed on GitHub Actions |
+| Python CI validation | ✅ Added; check Actions for results |
+| Physical device test of the tracer | ⏳ Pending |
+| Add more version-pinned diagnostics | 🔜 Future |
 
-Build: `./gradlew buildAndroid`.
+## Device test
 
-The diagnostic patch is **not** intended to make any in-app purchase free. It does not fabricate receipts, modify transaction outcomes or bypass remote purchase verification.
+1. Back up XP Hero saves; do not wipe the only copy.
+2. Use the experimental patch on a controlled installation.
+3. Capture the activity result via `adb logcat -s LopikssBilling:I '*:S'`.
+4. Report **whether a Logcat line appears** and the **Android result integer**, not personal receipt details.
+5. Compare normal, unmodified billing UI behavior with a patched installation.
 
-If a build fails, use the exact GitHub Actions error messages to adjust the source.
+### Boundaries
+
+This project does not provide free paid items, fake purchase receipts, or server-side verification bypasses. Compiler success is not proof of runtime compatibility.

@@ -1,48 +1,42 @@
-name: 🐞 Bug report
-description: Report a bug or an issue.
+name: "🐞 Bug report"
+description: "Report a patch error or compatibility issue"
 title: "bug: "
-labels: ["Bug report"]
 body:
   - type: markdown
     attributes:
       value: |
-        # Patches template bug report
-
-        Before creating a new bug report, please keep the following in mind:
-
-        - **Do not submit a duplicate bug report**: Search for existing bug reports [here](https://github.com/TEMPLATE/template-patches-template/issues?q=label%3A%22Bug+report%22).
-        - **Review the contribution guidelines**: Make sure your bug report adheres to it. You can find the guidelines [here](https://github.com/TEMPLATE/template-patches-template/blob/main/CONTRIBUTING.md).
-  - type: textarea
+        Thanks for the report. Do not post APK files, purchase receipts, account details, or unredacted personal information.
+  - type: input
+    id: app
     attributes:
-      label: Bug description
-      description: |
-        - Describe your bug in detail
-        - Add steps to reproduce the bug if possible (Step 1. ... Step 2. ...)
-        - Add images and videos if possible
+      label: App and package name
+      placeholder: "XP Hero (io.supercent.weaponrpg)"
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: App version, Morphe version and patch source version
+      placeholder: "26.2.0 / Morphe version / Lopikss Patches version"
     validations:
       required: true
   - type: textarea
+    id: issue
     attributes:
-      label: Error logs
-      description: Exceptions can be captured by running `logcat | grep AndroidRuntime` in a shell.
-      render: shell
+      label: What happened?
+      description: "Include exact steps, expected behavior, and what actually happened."
+    validations:
+      required: true
   - type: textarea
+    id: logs
     attributes:
-      label: Solution
-      description: If applicable, add a possible solution to the bug.
-  - type: textarea
-    attributes:
-      label: Additional context
-      description: Add additional context here.
+      label: Logs (redacted)
+      description: "Paste only relevant error lines. Remove tokens, signatures, IDs and account details."
+      render: text
   - type: checkboxes
-    id: acknowledgements
+    id: checks
     attributes:
-      label: Acknowledgements
-      description: Your bug report will be closed if you don't follow the checklist below.
+      label: Before submitting
       options:
-        - label: I have checked all open and closed bug reports and this is not a duplicate.
-          required: true
-        - label: I have chosen an appropriate title.
-          required: true
-        - label: All requested information has been provided properly.
+        - label: "I checked for an existing report and removed sensitive data."
           required: true
