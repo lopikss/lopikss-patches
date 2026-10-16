@@ -1,7 +1,267 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "patches": [
+    {
+      "name": "XP Hero 1.3: 5000 PvP Video Tickets",
+      "description": "Experimental: PvP ticket video-use configuration 5 to 5000. Other tickets unaffected.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "io.supercent.weaponrpg",
+          "name": "XP Hero",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#F5A623",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.2.0",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "XP Hero 1.3: Chest Shops",
+      "description": "Experimental: zero locally stored non-IAP weapon and soul chest costs.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "io.supercent.weaponrpg",
+          "name": "XP Hero",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#F5A623",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.2.0",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "XP Hero 1.3: Daily Gem Shop",
+      "description": "Experimental: zero local Daily Gem Shop item prices.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "io.supercent.weaponrpg",
+          "name": "XP Hero",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#F5A623",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.2.0",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "XP Hero 1.3: Exchange Shop",
+      "description": "Stackable version of the tested 24 zero-gem material exchanges.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "io.supercent.weaponrpg",
+          "name": "XP Hero",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#F5A623",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.2.0",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "XP Hero 1.3: Free Hero Evolve",
+      "description": "Experimental: zero hero evolution materials and pieces.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "io.supercent.weaponrpg",
+          "name": "XP Hero",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#F5A623",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.2.0",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "XP Hero 1.3: Free Hero Level Up",
+      "description": "Experimental: zero hero level-up resource costs.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "io.supercent.weaponrpg",
+          "name": "XP Hero",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#F5A623",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.2.0",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "XP Hero 1.3: Free Hero Upgrade",
+      "description": "Experimental: zero hero star-upgrade costs.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "io.supercent.weaponrpg",
+          "name": "XP Hero",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#F5A623",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.2.0",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "XP Hero 1.3: Invasion Shop",
+      "description": "Experimental: zero local Invasion Shop coin prices.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "io.supercent.weaponrpg",
+          "name": "XP Hero",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#F5A623",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.2.0",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "XP Hero 1.3: Other Shops",
+      "description": "Experimental: other verified local non-IAP currency prices.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "io.supercent.weaponrpg",
+          "name": "XP Hero",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#F5A623",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.2.0",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "XP Hero 1.3: Token Shop",
+      "description": "Experimental: zero red-token shop prices.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "io.supercent.weaponrpg",
+          "name": "XP Hero",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#F5A623",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.2.0",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
     {
       "name": "XP Hero: Zero-gem Exchange materials",
       "description": "Set 24 gem-priced material exchanges to zero in XP Hero 26.2.0 (user-tested; IAPs and ad limits unaffected).",

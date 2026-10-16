@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/lopikss/lopikss-patches/compare/v1.2.0...v1.3.0) (2026-10-16)
+
+### ✨ New Features
+
+* add XP Hero v1.3.0 modular patches ([bae3505](https://github.com/lopikss/lopikss-patches/commit/bae3505de81ad7a33e96bce331c9686c9e981dcf))
+
 ## [1.2.0](https://github.com/lopikss/lopikss-patches/compare/v1.1.0...v1.2.0) (2026-10-16)
 
 ### ✨ New Features
