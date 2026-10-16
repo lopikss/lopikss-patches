@@ -209,17 +209,6 @@ val xp130FreeHeroLevel = rawResourcePatch(
     }
 }
 
-@Suppress("unused")
-val xp130FreeHeroUpgrade = rawResourcePatch(
-    name = "XP Hero 1.3: Free Hero Upgrade", description = "Experimental: zero hero star-upgrade costs.", default = false,
-) {
-    compatibleWith(XP_HERO)
-    execute {
-        val file = get(XP130.HERO_STAR)
-        file.writeBytes(XP130.hero(file.readBytes(),
-            "818570c2ec087bab93583352fbe6e6ff9dd859b5f06cd14b9d1995842467df87", 144, "Cost1_Amount"))
-    }
-}
 
 @Suppress("unused")
 val xp130FreeHeroEvolve = rawResourcePatch(
@@ -234,20 +223,10 @@ val xp130FreeHeroEvolve = rawResourcePatch(
     }
 }
 
-@Suppress("unused")
-val xp130PvpVideoTickets = rawResourcePatch(
-    name = "XP Hero 1.3: 5000 PvP Video Tickets", description = "Experimental: PvP ticket video-use configuration 5 to 5000. Other tickets unaffected.", default = false,
-) {
-    compatibleWith(XP_HERO)
-    execute {
-        val file = get(XP130.TICKET_CONFIG)
-        file.writeBytes(XP130.pvpAdTickets(file.readBytes()))
-    }
-}
 
 /**
- * One-piece hero upgrade test. DO NOT select together with the 0-cost
- * XP Hero 1.3: Free Hero Upgrade patch; both target the same guarded asset.
+ * Confirmed in-game: hero upgrades for one shard. The abandoned zero-cost
+ * variant was removed because its Upgrade button did nothing.
  */
 @Suppress("unused")
 val xp131OnePieceHeroUpgradeTest = rawResourcePatch(
