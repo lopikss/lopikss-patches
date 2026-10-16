@@ -1,3 +1,9 @@
+## [1.3.1](https://github.com/lopikss/lopikss-patches/compare/v1.3.0...v1.3.1) (2026-10-16)
+
+### 🐛 Bug Fixes
+
+* retire duplicate Exchange patch and add hero upgrade diagnostic ([86edbfb](https://github.com/lopikss/lopikss-patches/commit/86edbfb3f3910d7846a43852b73a4855a10c29a1))
+
 ## [1.3.0](https://github.com/lopikss/lopikss-patches/compare/v1.2.0...v1.3.0) (2026-10-16)
 
 ### ✨ New Features

@@ -75,7 +75,7 @@ Tell me the **game name, Android package, exact version**, what you'd like chang
 This catalog is generated automatically from published Morphe patch metadata.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.0](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;11 patches total
+> **[v1.3.1](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;11 patches total
 <details open>
 <summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;11 patches</summary>
 <br>
@@ -94,10 +94,10 @@ This catalog is generated automatically from published Morphe patch metadata.
 | [XP Hero 1.3: Free Hero Evolve](#xp-hero-1-3-free-hero-evolve) | Experimental: zero hero evolution materials and pieces. |  |
 | [XP Hero 1.3: Free Hero Level Up](#xp-hero-1-3-free-hero-level-up) | Experimental: zero hero level-up resource costs. |  |
 | [XP Hero 1.3: Free Hero Upgrade](#xp-hero-1-3-free-hero-upgrade) | Experimental: zero hero star-upgrade costs. |  |
+| [XP Hero 1.3: Hero Upgrade (1-piece test)](#xp-hero-1-3-hero-upgrade-1-piece-test) | Diagnostic only: hero star upgrades cost one piece, not free. Select instead of Free Hero Upgrade. |  |
 | [XP Hero 1.3: Invasion Shop](#xp-hero-1-3-invasion-shop) | Experimental: zero local Invasion Shop coin prices. |  |
 | [XP Hero 1.3: Other Shops](#xp-hero-1-3-other-shops) | Experimental: other verified local non-IAP currency prices. |  |
 | [XP Hero 1.3: Token Shop](#xp-hero-1-3-token-shop) | Experimental: zero red-token shop prices. |  |
-| [XP Hero: Zero-gem Exchange materials](#xp-hero-zero-gem-exchange-materials) | Set 24 gem-priced material exchanges to zero in XP Hero 26.2.0 (user-tested; IAPs and ad limits unaffected). |  |
 
 </details>
 
