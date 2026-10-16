@@ -47,9 +47,9 @@ Lopikss Patches is a personal open-source project for understanding Android app 
 The section below uses the **original Morphe template's expandable, auto-generated patch list**. Each published release updates it automatically.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.0.0](https://github.com/lopikss/lopikss-patches/releases/tag/v1.0.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;1 patch total
+> **[v1.1.0-dev.1](https://github.com/lopikss/lopikss-patches/releases/tag/v1.1.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;2 patches total
 <details open>
-<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -60,6 +60,7 @@ The section below uses the **original Morphe template's expandable, auto-generat
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [XP Hero: Billing result trace](#xp-hero-billing-result-trace) | Log Android billing activity results to Logcat (tag: LopikssBilling). Does not alter purchases. |  |
+| [XP Hero: Zero-gem Exchange materials](#xp-hero-zero-gem-exchange-materials) | Experimentally set gem prices to 0 for upgrade/enhancement materials in the Exchange shop. Leaves paid IAPs and ad limits alone. |  |
 
 </details>
 
