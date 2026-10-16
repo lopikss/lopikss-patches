@@ -23,7 +23,7 @@ jobs:
           distribution: temurin
           java-version: '21'
       - name: Check whitespace errors
-        run: git diff --check HEAD~1 HEAD
+        run: git show --format= --check HEAD
       - name: Build patch bundle
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
