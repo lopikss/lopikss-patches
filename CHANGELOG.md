@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/lopikss/lopikss-patches/compare/v1.1.0...v1.2.0) (2026-10-16)
+
+### ✨ New Features
+
+* share Unity cost editor and document tested XP Hero patch support ([b1aec31](https://github.com/lopikss/lopikss-patches/commit/b1aec316af3d15d6cfffdc0a44921118ed91fef8))
+
 ## [1.2.0-dev.1](https://github.com/lopikss/lopikss-patches/compare/v1.1.0...v1.2.0-dev.1) (2026-10-16)
 
 ### ✨ New Features
