@@ -73,7 +73,7 @@ Tell me the **game name, Android package, exact version**, what you'd like chang
 This catalog is generated automatically from published Morphe patch metadata.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0](https://github.com/lopikss/lopikss-patches/releases/tag/v1.1.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;1 patch total
+> **[v1.2.0-dev.1](https://github.com/lopikss/lopikss-patches/releases/tag/v1.2.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;1 patch total
 <details open>
 <summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
@@ -85,7 +85,7 @@ This catalog is generated automatically from published Morphe patch metadata.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [XP Hero: Zero-gem Exchange materials](#xp-hero-zero-gem-exchange-materials) | Experimentally set gem prices to 0 for upgrade/enhancement materials in the Exchange shop. Leaves paid IAPs and ad limits alone. |  |
+| [XP Hero: Zero-gem Exchange materials](#xp-hero-zero-gem-exchange-materials) | Set 24 gem-priced material exchanges to zero in XP Hero 26.2.0 (user-tested; IAPs and ad limits unaffected). |  |
 
 </details>
 

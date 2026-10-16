@@ -1,10 +1,10 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.1.0",
+  "version": "1.2.0-dev.1",
   "patches": [
     {
       "name": "XP Hero: Zero-gem Exchange materials",
-      "description": "Experimentally set gem prices to 0 for upgrade/enhancement materials in the Exchange shop. Leaves paid IAPs and ad limits alone.",
+      "description": "Set 24 gem-priced material exchanges to zero in XP Hero 26.2.0 (user-tested; IAPs and ad limits unaffected).",
       "default": false,
       "category": null,
       "compatiblePackages": [

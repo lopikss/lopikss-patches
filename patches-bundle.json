@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-16T00:37:32",
-  "description": "## [1.1.0](https://github.com/lopikss/lopikss-patches/compare/v1.0.0...v1.1.0) (2026-10-16)\n\n### 🐛 Bug Fixes\n\n* remove obsolete billing diagnostics and focus XP Hero Exchange ([99eebda](https://github.com/lopikss/lopikss-patches/commit/99eebda008cd7c58eb7b7117ea4e75a2e046342f))\n\n### ✨ New Features\n\n* add experimental zero-gem XP Hero Exchange material patch ([0eecf85](https://github.com/lopikss/lopikss-patches/commit/0eecf85b95fd3014a70abbb2782144e5f35d57c6))",
-  "download_url": "https://github.com/lopikss/lopikss-patches/releases/download/v1.1.0/patches-1.1.0.mpp",
+  "created_at": "2026-10-16T00:54:58",
+  "description": "## [1.2.0-dev.1](https://github.com/lopikss/lopikss-patches/compare/v1.1.0...v1.2.0-dev.1) (2026-10-16)\n\n### ✨ New Features\n\n* share Unity cost editor and document tested XP Hero patch support ([b1aec31](https://github.com/lopikss/lopikss-patches/commit/b1aec316af3d15d6cfffdc0a44921118ed91fef8))",
+  "download_url": "https://github.com/lopikss/lopikss-patches/releases/download/v1.2.0-dev.1/patches-1.2.0-dev.1.mpp",
   "signature_download_url": "",
-  "version": "1.1.0"
+  "version": "1.2.0-dev.1"
 }
