@@ -75,9 +75,9 @@ Tell me the **game name, Android package, exact version**, what you'd like chang
 This catalog is generated automatically from published Morphe patch metadata.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.1](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;11 patches total
+> **[v1.3.2](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;14 patches total
 <details open>
-<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;11 patches</summary>
+<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;14 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -94,10 +94,13 @@ This catalog is generated automatically from published Morphe patch metadata.
 | [XP Hero 1.3: Free Hero Evolve](#xp-hero-1-3-free-hero-evolve) | Experimental: zero hero evolution materials and pieces. |  |
 | [XP Hero 1.3: Free Hero Level Up](#xp-hero-1-3-free-hero-level-up) | Experimental: zero hero level-up resource costs. |  |
 | [XP Hero 1.3: Free Hero Upgrade](#xp-hero-1-3-free-hero-upgrade) | Experimental: zero hero star-upgrade costs. |  |
+| [XP Hero 1.3: Free Rune Upgrades](#xp-hero-1-3-free-rune-upgrades) | Experimental: zero both resource costs for all 1,440 rune upgrade levels. |  |
+| [XP Hero 1.3: Free Trait Presets](#xp-hero-1-3-free-trait-presets) | Experimental: zero save/load costs for four trait presets (not rerolls). |  |
 | [XP Hero 1.3: Hero Upgrade (1-piece test)](#xp-hero-1-3-hero-upgrade-1-piece-test) | Diagnostic only: hero star upgrades cost one piece, not free. Select instead of Free Hero Upgrade. |  |
 | [XP Hero 1.3: Invasion Shop](#xp-hero-1-3-invasion-shop) | Experimental: zero local Invasion Shop coin prices. |  |
 | [XP Hero 1.3: Other Shops](#xp-hero-1-3-other-shops) | Experimental: other verified local non-IAP currency prices. |  |
 | [XP Hero 1.3: Token Shop](#xp-hero-1-3-token-shop) | Experimental: zero red-token shop prices. |  |
+| [XP Hero 1.3: Zero Trait Reroll Coins](#xp-hero-1-3-zero-trait-reroll-coins) | Experimental: change the ARM64 trait reroll cost calculator to return 0, including for locked traits. |  |
 
 </details>
 

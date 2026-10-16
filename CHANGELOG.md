@@ -1,3 +1,9 @@
+## [1.3.2](https://github.com/lopikss/lopikss-patches/compare/v1.3.1...v1.3.2) (2026-10-16)
+
+### 🐛 Bug Fixes
+
+* free XP Hero rune upgrades and trait rerolls ([59c29fc](https://github.com/lopikss/lopikss-patches/commit/59c29fc3bb8a50dbac53c41e56e61ac9352b230a))
+
 ## [1.3.1](https://github.com/lopikss/lopikss-patches/compare/v1.3.0...v1.3.1) (2026-10-16)
 
 ### 🐛 Bug Fixes
