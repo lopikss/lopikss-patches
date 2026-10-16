@@ -3,11 +3,11 @@ group = "com.lopikss"
 patches {
     about {
         name = "Lopikss Patches"
-        description = "Android compatibility and diagnostics patches."
+        description = "Focused, experimental Android game patches."
         source = "https://github.com/lopikss/lopikss-patches"
         author = "Lopikss"
-        contact = "https://lopikss.com"
-        website = "https://lopikss.com"
+        contact = "https://github.com/lopikss"
+        website = "https://github.com/lopikss/lopikss-patches"
         license = "GPLv3"
     }
 }

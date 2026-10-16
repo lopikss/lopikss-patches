@@ -1,24 +1,20 @@
 # Roadmap
 
-| Milestone | State |
+| Milestone | Status |
 | --- | --- |
-| Create independent Morphe repository | ✅ Done |
-| Read-only APK/XAPK inspector and tests | ✅ Done |
-| Identify XP Hero 26.2.0 Billing 8.3.0 markers | ✅ Done |
-| XP Hero billing activity result tracer | ✅ Source complete |
-| Morphe Gradle compilation | ✅ Confirmed on GitHub Actions |
-| Python CI validation | ✅ Added; check Actions for results |
-| Physical device test of the tracer | ⏳ Pending |
-| Add more version-pinned diagnostics | 🔜 Future |
+| Set up Morphe patch repository and automatic releases | ✅ Complete |
+| Map XP Hero v26.2.0 Exchange product/cost tables | ✅ Complete |
+| Implement a guarded, length-preserving 24-price transformer | ✅ Local test passed |
+| Compile experimental Morphe .mpp bundle | ✅ GitHub Actions |
+| Verify modified APK builds and installs | ⏳ Needs a device test |
+| Confirm Exchange prices display as zero | ⏳ Needs a device test |
+| Confirm items redeem without reducing gems | ⏳ Unknown; may be server-validated |
+| Test updated game versions | 🔜 Only after v26.2.0 validation |
 
-## Device test
+## Testing
 
-1. Back up XP Hero saves; do not wipe the only copy.
-2. Use the experimental patch on a controlled installation.
-3. Capture the activity result via `adb logcat -s LopikssBilling:I '*:S'`.
-4. Report **whether a Logcat line appears** and the **Android result integer**, not personal receipt details.
-5. Compare normal, unmodified billing UI behavior with a patched installation.
+Follow the [installation instructions](../README.md#-install-with-morphe-android)
+and [technical analysis](XP_HERO_EXCHANGE.md).
 
-### Boundaries
-
-This project does not provide free paid items, fake purchase receipts, or server-side verification bypasses. Compiler success is not proof of runtime compatibility.
+**Important:** Source compilation only establishes that the patch bundle builds.
+No in-game purchase or material redemption has been verified.

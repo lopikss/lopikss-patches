@@ -1,4 +1,4 @@
-// Retained as the standard Morphe extension module for future diagnostics.
+// Standard Morphe extension module, kept for compatibility with the template.
 extension {
     name = "extensions/extension.mpe"
 }
