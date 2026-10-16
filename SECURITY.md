@@ -1,12 +1,12 @@
 # Security and privacy
 
-Lopikss Patches is experimental. Modified games may fail integrity checks,
-lose access to online features or become incompatible with saved progress.
+Lopikss Patches is an experimental third-party patch repository. Games may block modified APKs, change their bundled data or perform server-side validation. In-game success on one build is not a guarantee for future versions.
 
-- Back up local saves and your Morphe keystore before modifying or removing an installed game.
-- Do not share proprietary game APKs, account credentials, or private game-save data in public issues.
-- If the modified APK is re-signed, a normal Android install over the original app may be blocked; uninstalling the original can delete its local data.
-- The XP Hero Exchange patch changes only bundled client-side resource data. It does **not** intercept billing, receipts, tokens, identifiers or payment data.
-- Only download bundles from this repository's [GitHub Releases](https://github.com/lopikss/lopikss-patches/releases).
+- Protect your game save and Morphe keystore before patching.
+- A re-signed APK may conflict with the original installation. Uninstalling the original can delete local saves unless they're backed up or synced.
+- Never send or post accounts, private save data, purchase tokens, receipts, API keys or passwords.
+- Do not commit or publicly upload proprietary game APKs or copyrighted Unity assets.
+- The current XP Hero patch changes only in-game resource data; it does **not** modify paid IAP receipts or Google Play Billing.
+- Download patch bundles only from the project's [official GitHub Releases](https://github.com/lopikss/lopikss-patches/releases).
 
-For private security reports, contact the maintainer via the [GitHub profile](https://github.com/lopikss).
+For a private discussion or sensitive security issue, DM [**@lopikss on Discord**](https://discord.com/users/493792470778511360).
