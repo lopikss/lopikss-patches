@@ -1,3 +1,9 @@
+## [1.3.3](https://github.com/lopikss/lopikss-patches/compare/v1.3.2...v1.3.3) (2026-10-16)
+
+### 🐛 Bug Fixes
+
+* make XP Hero S-ticket rolls free and remove broken modules ([97ce97a](https://github.com/lopikss/lopikss-patches/commit/97ce97a31c08919179569a5aae2a1de7f4a175b5))
+
 ## [1.3.2](https://github.com/lopikss/lopikss-patches/compare/v1.3.1...v1.3.2) (2026-10-16)
 
 ### 🐛 Bug Fixes

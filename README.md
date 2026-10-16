@@ -75,9 +75,9 @@ Tell me the **game name, Android package, exact version**, what you'd like chang
 This catalog is generated automatically from published Morphe patch metadata.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.2](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;14 patches total
+> **[v1.3.3](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;13 patches total
 <details open>
-<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;14 patches</summary>
+<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;13 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -87,14 +87,13 @@ This catalog is generated automatically from published Morphe patch metadata.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [XP Hero 1.3: 5000 PvP Video Tickets](#xp-hero-1-3-5000-pvp-video-tickets) | Experimental: PvP ticket video-use configuration 5 to 5000. Other tickets unaffected. |  |
 | [XP Hero 1.3: Chest Shops](#xp-hero-1-3-chest-shops) | Experimental: zero locally stored non-IAP weapon and soul chest costs. |  |
 | [XP Hero 1.3: Daily Gem Shop](#xp-hero-1-3-daily-gem-shop) | Experimental: zero local Daily Gem Shop item prices. |  |
 | [XP Hero 1.3: Exchange Shop](#xp-hero-1-3-exchange-shop) | Stackable version of the tested 24 zero-gem material exchanges. |  |
 | [XP Hero 1.3: Free Hero Evolve](#xp-hero-1-3-free-hero-evolve) | Experimental: zero hero evolution materials and pieces. |  |
 | [XP Hero 1.3: Free Hero Level Up](#xp-hero-1-3-free-hero-level-up) | Experimental: zero hero level-up resource costs. |  |
-| [XP Hero 1.3: Free Hero Upgrade](#xp-hero-1-3-free-hero-upgrade) | Experimental: zero hero star-upgrade costs. |  |
 | [XP Hero 1.3: Free Rune Upgrades](#xp-hero-1-3-free-rune-upgrades) | Experimental: zero both resource costs for all 1,440 rune upgrade levels. |  |
+| [XP Hero 1.3: Free S-Ticket Rolls](#xp-hero-1-3-free-s-ticket-rolls) | Experimental: make S-Ticket rolls cost 0 by changing TRAIT_SUPERROLL_COST_AMOUNT from 1 to 0. In-game test needed. |  |
 | [XP Hero 1.3: Free Trait Presets](#xp-hero-1-3-free-trait-presets) | Experimental: zero save/load costs for four trait presets (not rerolls). |  |
 | [XP Hero 1.3: Hero Upgrade (1-piece test)](#xp-hero-1-3-hero-upgrade-1-piece-test) | Diagnostic only: hero star upgrades cost one piece, not free. Select instead of Free Hero Upgrade. |  |
 | [XP Hero 1.3: Invasion Shop](#xp-hero-1-3-invasion-shop) | Experimental: zero local Invasion Shop coin prices. |  |
