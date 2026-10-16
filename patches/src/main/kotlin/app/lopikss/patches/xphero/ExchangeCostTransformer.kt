@@ -10,12 +10,12 @@ import app.lopikss.patches.shared.UnityCostTableEditor.PriceRule
 internal object ExchangeCostTransformer {
     const val ASSET_PATH = "assets/bin/Data/c48bf6e962b374c2d829c84217571712"
 
-    private const val ORIGINAL_SHA256 =
+    internal const val ORIGINAL_SHA256 =
         "4e36ede85e3927f9f98ad3e3ae28a5e3362f1676da4c95e1ed33f6df263e26ac"
 
     // ShopProductData categories 6 / 7: upgrade and enhancement materials.
     // 3 is the gem currency param, and 1 is the per-item cost type.
-    private val priceRules = listOf(
+    internal val priceRules = listOf(
         PriceRule(1011, 50), PriceRule(1013, 100), PriceRule(1014, 500),
         PriceRule(1021, 50), PriceRule(1023, 100), PriceRule(1024, 500),
         PriceRule(1031, 50), PriceRule(1033, 100), PriceRule(1034, 500),

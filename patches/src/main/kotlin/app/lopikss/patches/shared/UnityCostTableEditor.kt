@@ -70,4 +70,80 @@ internal object UnityCostTableEditor {
         check(result.size == original.size) { "Unity asset byte count changed" }
         return result
     }
+
+    /**
+     * Experimental, wider XP Hero cost-table rewrite.
+     *
+     * Rewrites positive local prices in rows matching the known ShopProductCostData
+     * shape, across currency types. It excludes rows with an IAP original price.
+     * It cannot alter prices in other assets or server-authoritative purchases.
+     *
+     * This deliberately requires all independently confirmed Exchange baseline
+     * rows, plus at least one additional priced row, before writing anything.
+     */
+    fun rewriteAllNonIapStorePrices(
+        original: ByteArray,
+        expectedSha256: String,
+        baselineCurrencyParam: Int,
+        baselineCostType: Int,
+        baselineRules: List<PriceRule>,
+    ): ByteArray {
+        require(baselineRules.isNotEmpty()) { "A known baseline is required" }
+        val byGroup = baselineRules.associateBy { it.groupId }
+        require(byGroup.size == baselineRules.size) { "Duplicate baseline group" }
+
+        val actualSha256 = MessageDigest.getInstance("SHA-256")
+            .digest(original)
+            .joinToString("") { "%02x".format(it) }
+        require(actualSha256.equals(expectedSha256, ignoreCase = true)) {
+            "Unsupported game asset (SHA-256: $actualSha256); refusing to edit"
+        }
+
+        val text = String(original, Charsets.ISO_8859_1)
+        val confirmedGroups = mutableSetOf<Int>()
+        var extraModified = 0
+        val rewritten = row.replace(text) { match ->
+            val param = match.groupValues[1].toInt()
+            val type = match.groupValues[2].toInt()
+            val price = match.groupValues[3]
+            val group = match.groupValues[4].toInt()
+            val iapOriginalPrice = match.groupValues[7]
+            val expectedBaseline = byGroup[group]
+
+            if (expectedBaseline != null) {
+                check(param == baselineCurrencyParam && type == baselineCostType) {
+                    "Baseline group $group has a different currency or cost type"
+                }
+                check(price.toInt() == expectedBaseline.expected) {
+                    "Unexpected baseline price in group $group"
+                }
+                check(iapOriginalPrice.all { it == '0' }) {
+                    "Baseline group $group unexpectedly has an IAP price"
+                }
+                check(confirmedGroups.add(group)) {
+                    "Duplicate baseline cost row for group $group"
+                }
+            }
+
+            // Never modify entries associated with real-money IAPs, or prices
+            // that were already zero. Fixed-width changes preserve asset size.
+            if (iapOriginalPrice.any { it != '0' } || price.all { it == '0' }) {
+                match.value
+            } else {
+                if (expectedBaseline == null) extraModified++
+                val zero = "0".padStart(price.length, '0')
+                match.value.replace(costValueField, "\"cost_value\":\"$zero\"")
+            }
+        }
+
+        check(confirmedGroups == byGroup.keys) {
+            "Missing verified baseline groups: ${byGroup.keys - confirmedGroups}"
+        }
+        check(extraModified > 0) {
+            "No additional priced rows found in this asset; refusing a no-op expansion"
+        }
+        val result = rewritten.toByteArray(Charsets.ISO_8859_1)
+        check(result.size == original.size) { "Unity asset byte count changed" }
+        return result
+    }
 }

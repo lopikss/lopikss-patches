@@ -22,6 +22,7 @@
 | Game | Android version | Patch | Status |
 | --- | --- | --- | --- |
 | **XP Hero** (`io.supercent.weaponrpg`) | **26.2.0** | **Zero-gem Exchange materials** | ✅ **Confirmed working by the project owner on a device** |
+| **XP Hero** (`io.supercent.weaponrpg`) | **26.2.0** | **Experimental zero-cost shops** | 🧪 **Untested — extra non-IAP local cost rows only** |
 
 ### XP Hero — Zero-gem Exchange materials
 
@@ -33,13 +34,21 @@
 
 **[Technical details and supported scope →](docs/XP_HERO_EXCHANGE.md)**
 
+### XP Hero — Experimental zero-cost shops
+
+- Opt-in experiment: changes positive, non-IAP cost rows of **all currency types within the verified Unity shop asset**. It is broader than the 24 known Exchange offers.
+- **Not yet device-tested.** It may not affect every shop shown in-game, especially when the shop uses another asset or server-side prices.
+- Does **not** make Google Play purchases free, bypass ad limits, or remove purchase-count limits.
+- **Select only one XP Hero patch per build:** the experimental patch and tested Exchange-only patch edit the same resource and cannot be combined.
+- [Experimental technical details and test checklist](docs/XP_HERO_ZERO_COST_SHOPS.md).
+
 ## 📲 Install in Morphe (Android)
 
 1. Install [Morphe](https://morphe.software), then **[add this patch source](https://morphe.software/add-source?github=lopikss/lopikss-patches)**. Alternatively, go to **Sources → + → Remote** and enter `github.com/lopikss/lopikss-patches`.
 2. In the **Lopikss Patches** source card, tap **Update**. If you need to select XP Hero 26.2.0 and the option is shown, enable **Experimental app versions** (and **Pre-release patches** first if Morphe requires it).
 3. Under **Settings → Advanced → Expert settings**, enable **Expert mode**.
 4. Choose **XP Hero**, select **26.2.0**, and provide the **original, unmodified XAPK** when prompted.
-5. In the **Lopikss Patches** tab, enable **XP Hero: Zero-gem Exchange materials**. Tap **Proceed to patching**.
+5. In the **Lopikss Patches** tab, enable **ONE** patch: either **XP Hero: Zero-gem Exchange materials** (confirmed working) or **XP Hero: Experimental zero-cost shops** (untested). Do not select both. Tap **Proceed to patching**.
 6. Export/save the patched APK when complete; install it once you've protected your existing game data.
 
 > [!CAUTION]
