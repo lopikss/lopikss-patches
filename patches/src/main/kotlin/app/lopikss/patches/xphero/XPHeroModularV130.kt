@@ -77,6 +77,27 @@ private object XP130 {
         return result
     }
 
+    /**
+     * Diagnostic fallback for hero star upgrades that display a zero cost
+     * yet do not complete. Use INSTEAD of the zero-piece Hero Upgrade patch.
+     * This intentionally costs ONE hero piece, so it is not a free upgrade.
+     * It helps distinguish game logic rejecting zero from other validation.
+     */
+    fun heroUpgradeOnePiece(data: ByteArray): ByteArray {
+        require(digest(data) == "818570c2ec087bab93583352fbe6e6ff9dd859b5f06cd14b9d1995842467df87") {
+            "Unsupported hero star-upgrade asset"
+        }
+        val text = String(data, Charsets.ISO_8859_1)
+        val price = Regex("(\\\"Cost1_Amount\\\":\\\")([0-9]+)(\\\")")
+        check(price.findAll(text).count() == 144) { "Unexpected star upgrade row count" }
+        val rewritten = price.replace(text) { match ->
+            match.groupValues[1] + "0".repeat(match.groupValues[2].length - 1) +
+                "1" + match.groupValues[3]
+        }
+        val bytes = rewritten.toByteArray(Charsets.ISO_8859_1)
+        check(bytes.size == data.size) { "Asset length changed" }
+        return bytes
+    }
     /** Changes one identified PvP video-ticket daily limit from 5 to 5,000.
      *  The Unity TextAsset's 4-byte-aligned object-size and file-size headers
      *  must also be updated because the JSON string becomes three bytes longer.
@@ -108,8 +129,7 @@ private object XP130 {
     }
 }
 
-// Non-IAP categories; these modules can be enabled together. The original
-// Exchange-only v1.2.0 patch must be DISABLED when using these modules.
+// Non-IAP shop categories; the optional modules may be enabled together.
 @Suppress("unused")
 val xp130DailyGemShop = rawResourcePatch(
     name = "XP Hero 1.3: Daily Gem Shop", description = "Experimental: zero local Daily Gem Shop item prices.", default = false,
@@ -222,5 +242,22 @@ val xp130PvpVideoTickets = rawResourcePatch(
     execute {
         val file = get(XP130.TICKET_CONFIG)
         file.writeBytes(XP130.pvpAdTickets(file.readBytes()))
+    }
+}
+
+/**
+ * One-piece hero upgrade test. DO NOT select together with the 0-cost
+ * XP Hero 1.3: Free Hero Upgrade patch; both target the same guarded asset.
+ */
+@Suppress("unused")
+val xp131OnePieceHeroUpgradeTest = rawResourcePatch(
+    name = "XP Hero 1.3: Hero Upgrade (1-piece test)",
+    description = "Diagnostic only: hero star upgrades cost one piece, not free. Select instead of Free Hero Upgrade.",
+    default = false,
+) {
+    compatibleWith(XP_HERO)
+    execute {
+        val file = get(XP130.HERO_STAR)
+        file.writeBytes(XP130.heroUpgradeOnePiece(file.readBytes()))
     }
 }

@@ -21,14 +21,16 @@
 
 | Game | Android version | Patch | Status |
 | --- | --- | --- | --- |
-| **XP Hero** (`io.supercent.weaponrpg`) | **26.2.0** | **Zero-gem Exchange materials** | ✅ **Confirmed working by the project owner on a device** |
+| **XP Hero** (`io.supercent.weaponrpg`) | **26.2.0** | **Modular shops, hero Level Up, Evolve and experimental Upgrade** | 🧪 **Community-tested, but some modules still experimental** |
 
-### XP Hero — Zero-gem Exchange materials
+### XP Hero — Modular patches (v1.3.1)
 
-- Sets the gem prices of **24 material offers** in **Exchange → Upgrade material / Enhancement material** to **0**.
-- The project owner has **confirmed the patch works in-game on XP Hero 26.2.0**. This is a user report, not independent testing or a promise about future versions.
-- Leaves Google Play purchases, receipts, video-ad offers, and other shop categories unchanged.
-- Verifies the original Unity shop asset against its expected SHA-256 and refuses unknown asset versions.
+- The **XP Hero 1.3: Exchange Shop** module replaces the old Exchange-only patch and zeroes the same 24 material offers.
+- The project owner has reported successful in-game results for the new shop modules, **Free Hero Level Up**, and **Free Hero Evolve**.
+- **Free Hero Upgrade** currently displays zero but has not completed an upgrade. The separate **Hero Upgrade (1-piece test)** is a non-free diagnostic fallback; never select both upgrade patches together.
+- The project owner reported v1.3.0 testing results on XP Hero 26.2.0; these are user reports, not independent certification.
+- Paid Google Play purchases remain outside patch scope. The 5000 PvP Video Tickets option is experimental and was reported not working in-game.
+- Uses guarded Unity asset edits to avoid applying changes to unexpected game data.
 - Remains **off by default** in Morphe so only people who choose it apply it.
 
 **[Technical details and supported scope →](docs/XP_HERO_EXCHANGE.md)**
@@ -39,7 +41,7 @@
 2. In the **Lopikss Patches** source card, tap **Update**. If you need to select XP Hero 26.2.0 and the option is shown, enable **Experimental app versions** (and **Pre-release patches** first if Morphe requires it).
 3. Under **Settings → Advanced → Expert settings**, enable **Expert mode**.
 4. Choose **XP Hero**, select **26.2.0**, and provide the **original, unmodified XAPK** when prompted.
-5. In the **Lopikss Patches** tab, enable **XP Hero: Zero-gem Exchange materials**. Tap **Proceed to patching**.
+5. In the **Lopikss Patches** tab, enable the **XP Hero 1.3** modules you want. Do not enable both hero Upgrade variants. Tap **Proceed to patching**.
 6. Export/save the patched APK when complete; install it once you've protected your existing game data.
 
 > [!CAUTION]
