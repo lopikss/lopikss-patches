@@ -4,14 +4,14 @@ import app.lopikss.patches.shared.Constants.XP_HERO
 import app.morphe.patcher.patch.rawResourcePatch
 
 /**
- * Changes gem-cost material offers on the XP Hero 26.2.0 Exchange tab to zero.
- * Works on embedded static data, not Play Billing, not rewards or ad limits.
- * Runtime purchase behavior still requires on-device validation.
+ * Zero-gem material offers in XP Hero 26.2.0's Exchange tab.
+ * User-confirmed working on a device; other versions remain unsupported.
+ * Does not modify paid IAPs, video ads or any other shop categories.
  */
 @Suppress("unused")
 val xpHeroExchangeMaterialsPatch = rawResourcePatch(
     name = "XP Hero: Zero-gem Exchange materials",
-    description = "Experimentally set gem prices to 0 for upgrade/enhancement materials in the Exchange shop. Leaves paid IAPs and ad limits alone.",
+    description = "Set 24 gem-priced material exchanges to zero in XP Hero 26.2.0 (user-tested; IAPs and ad limits unaffected).",
     default = false,
 ) {
     compatibleWith(XP_HERO)
