@@ -1,11 +1,11 @@
 package app.lopikss.extension;
 
 /**
- * Placeholder module kept for the standard Morphe template build.
- * No Android method hooks are used by the XP Hero diagnostic patch.
+ * Reserved for future optional Morphe extension code.
+ * XP Hero's current resource-only patch does not use extension hooks.
  */
 public final class LopikssExtension {
     private LopikssExtension() {
-        // Utility class.
+        // No instance.
     }
 }
