@@ -23,17 +23,22 @@
 | --- | --- | --- | --- |
 | **XP Hero** (`io.supercent.weaponrpg`) | **26.2.0** | **Modular shops, hero Level Up, Evolve and experimental Upgrade** | 🧪 **Community-tested, but some modules still experimental** |
 
-### XP Hero — Modular patches (v1.3.1)
+### XP Hero — Modules (v1.3.5)
 
-- The **XP Hero 1.3: Exchange Shop** module replaces the old Exchange-only patch and zeroes the same 24 material offers.
-- The project owner has reported successful in-game results for the new shop modules, **Free Hero Level Up**, and **Free Hero Evolve**.
-- **Free Hero Upgrade** currently displays zero but has not completed an upgrade. The separate **Hero Upgrade (1-piece test)** is a non-free diagnostic fallback; never select both upgrade patches together.
-- The project owner reported v1.3.0 testing results on XP Hero 26.2.0; these are user reports, not independent certification.
-- Paid Google Play purchases remain outside patch scope. The 5000 PvP Video Tickets option is experimental and was reported not working in-game.
-- Uses guarded Unity asset edits to avoid applying changes to unexpected game data.
-- Remains **off by default** in Morphe so only people who choose it apply it.
+The six separate local shop modules have been merged into **XP Hero | Free Shops**.
+Enable the patch and open its **options/settings** to choose which shop categories are free:
+Daily Gem Shop, Chest Shops, Token Shop, Invasion Shop, Exchange Shop, and Other Shops.
+All six switches default to **enabled**; paid Google Play purchases remain untouched.
 
-**[Technical details and supported scope →](docs/XP_HERO_EXCHANGE.md)**
+Other independent modules:
+- **Free Hero Level Up** and **Free Hero Evolve** (reported working).
+- **Hero Upgrade (1 Shard)** (reported working; genuinely costs one shard).
+- **Free Rune Upgrades**, **Free Trait Presets**, **Free Trait Rerolls**, **Free S-Ticket Rolls**.
+- **Ticket Refills (400/day)** (experimental). The 400-refill limit was observed in Heroes' Tomb in-game, but the refill cost sometimes fell back to **100 gems**. v1.3.5 now patches the native **GetChargeCost** fallback so configured zero can be used; ticket purchase behavior still needs device testing.
+
+Modules for 5,000 video tickets and zero-shard hero upgrades were removed in earlier releases because they did not work correctly. The native trait patch remains compatible with the new ticket refill correction.
+
+[**Ticket fix technical notes**](docs/XP_HERO_V135.md) · [**Supported scope**](docs/XP_HERO_EXCHANGE.md)
 
 ## 📲 Install in Morphe (Android)
 
@@ -96,7 +101,7 @@ This catalog is generated automatically from published Morphe patch metadata.
 | [XP Hero 1.3: Free S-Ticket Rolls](#xp-hero-1-3-free-s-ticket-rolls) | Experimental: make S-Ticket rolls cost 0 in XP Hero 26.2.0. |  |
 | [XP Hero 1.3: Free Ticket Refills (400/day)](#xp-hero-1-3-free-ticket-refills-400-day) | Experimental: 0-gem ticket recharges plus 400 daily refills in PvP, Boss Raid, Heroes' Tomb and Challenge Tower. |  |
 | [XP Hero 1.3: Free Trait Presets](#xp-hero-1-3-free-trait-presets) | Experimental: zero save/load costs for four trait presets (not rerolls). |  |
-| [XP Hero 1.3: Hero Upgrade (1-piece test)](#xp-hero-1-3-hero-upgrade-1-piece-test) | Diagnostic only: hero star upgrades cost one piece, not free. Select instead of Free Hero Upgrade. |  |
+| [XP Hero 1.3: Hero Upgrade (1-piece test)](#xp-hero-1-3-hero-upgrade-1-piece-test) | Diagnostic only: hero star upgrades cost one piece, not free. Upgrades cost one shard. |  |
 | [XP Hero 1.3: Invasion Shop](#xp-hero-1-3-invasion-shop) | Experimental: zero local Invasion Shop coin prices. |  |
 | [XP Hero 1.3: Other Shops](#xp-hero-1-3-other-shops) | Experimental: other verified local non-IAP currency prices. |  |
 | [XP Hero 1.3: Token Shop](#xp-hero-1-3-token-shop) | Experimental: zero red-token shop prices. |  |

@@ -10,7 +10,7 @@ import app.morphe.patcher.patch.rawResourcePatch
  */
 @Suppress("unused")
 val xpHeroFreeSTicketRolls = rawResourcePatch(
-    name = "XP Hero 1.3: Free S-Ticket Rolls",
+    name = "XP Hero | Free S-Ticket Rolls",
     description = "Experimental: make S-Ticket rolls cost 0 in XP Hero 26.2.0.",
     default = false,
 ) {
