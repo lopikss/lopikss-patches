@@ -7,8 +7,8 @@ import app.morphe.patcher.patch.rawResourcePatch
  * PvP, Boss Raid, Heroes' Tomb, and Challenge Tower settings in XP Hero 26.2.0. */
 @Suppress("unused")
 val xpHeroFreeTickets400 = rawResourcePatch(
-    name = "XP Hero 1.3: Free Ticket Refills (400/day)",
-    description = "Experimental: 0-gem ticket recharges plus 400 daily refills in PvP, Boss Raid, Heroes' Tomb and Challenge Tower.",
+    name = "XP Hero | Ticket Refills (400/day)",
+    description = "Experimental: 400 refill limits confirmed in Heroes' Tomb, but some purchases still cost gems.",
     default = false,
 ) {
     compatibleWith(XP_HERO)
