@@ -12,7 +12,6 @@ private object XP130 {
     const val HERO_LEVEL = "assets/bin/Data/00199bb5af76d48728e982d6a69b40eb"
     const val HERO_STAR = "assets/bin/Data/02ce5273e9c794059afe2ada0670d172"
     const val HERO_EVOLVE = "assets/bin/Data/c71e9b16a78284852b30650ca0ebbf2e"
-    const val TICKET_CONFIG = "assets/bin/Data/8f4cc030fdc024de3acdae95bb99e004"
 
     private const val PRODUCT_HASH = "ff0afd7f54a04fe9af0cdcbf3c9c149d8e7d867c7743a6d7399f50166e24ec22"
     // Hash calculated after zeroing only verified non-IAP, per-item cost fields.
@@ -98,35 +97,6 @@ private object XP130 {
         val bytes = rewritten.toByteArray(Charsets.ISO_8859_1)
         check(bytes.size == data.size) { "Asset length changed" }
         return bytes
-    }
-    /** Changes one identified PvP video-ticket daily limit from 5 to 5,000.
-     *  The Unity TextAsset's 4-byte-aligned object-size and file-size headers
-     *  must also be updated because the JSON string becomes three bytes longer.
-     *  This is experimental: server-side caps or different ticket types may remain.
-     */
-    fun pvpAdTickets(original: ByteArray): ByteArray {
-        require(digest(original) == "a06150f47dfb4d441a10570466b0e43892c45c0136517f4fdf31880eb4d2d9ee") {
-            "Unsupported ticket configuration asset"
-        }
-        require(original.size == 2644) { "Unexpected ticket asset size" }
-        val current = "\"key\":\"PVP_TICKET_RV_COUNT_LIMIT\",\"value\":\"5\""
-        val next = "\"key\":\"PVP_TICKET_RV_COUNT_LIMIT\",\"value\":\"5000\""
-        val source = String(original, Charsets.ISO_8859_1)
-        check(source.indexOf(current) >= 0 && source.indexOf(current) == source.lastIndexOf(current)) {
-            "Ticket limit missing or duplicated"
-        }
-        // 2 bytes trailing padding for original 2474-byte JSON; the new 2477
-        // byte JSON needs 3 bytes of trailing padding.
-        check(original.takeLast(2).all { it == 0.toByte() })
-        val changed = source.substring(0, source.length - 2).replace(current, next) + "\u0000\u0000\u0000"
-        val result = changed.toByteArray(Charsets.ISO_8859_1)
-        check(result.size == 2648)
-        // Unity SerializedFile v22: 64-bit file size, BE at offset 24.
-        result[28] = 0; result[29] = 0; result[30] = 0x0A; result[31] = 0x58
-        // Object byte size (little endian), and TextAsset payload length.
-        result[112] = 0xC8.toByte(); result[113] = 0x09; result[114] = 0; result[115] = 0
-        result[164] = 0xAD.toByte(); result[165] = 0x09; result[166] = 0; result[167] = 0
-        return result
     }
 }
 
