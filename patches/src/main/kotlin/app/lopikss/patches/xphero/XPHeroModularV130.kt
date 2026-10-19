@@ -2,6 +2,7 @@ package app.lopikss.patches.xphero
 
 import app.lopikss.patches.shared.Constants.XP_HERO
 import app.morphe.patcher.patch.rawResourcePatch
+import app.morphe.patcher.patch.booleanOption
 import java.security.MessageDigest
 
 /** Experimental, version-pinned modules for XP Hero 26.2.0. */
@@ -130,76 +131,79 @@ private object XP130 {
 }
 
 // Non-IAP shop categories; the optional modules may be enabled together.
-@Suppress("unused")
-val xp130DailyGemShop = rawResourcePatch(
-    name = "XP Hero 1.3: Daily Gem Shop", description = "Experimental: zero local Daily Gem Shop item prices.", default = false,
-) {
-    compatibleWith(XP_HERO)
-    execute {
-        val costs = get(XP130.COST)
-        costs.writeBytes(XP130.store(costs.readBytes(), get(XP130.PRODUCTS).readBytes(), setOf(15), 300))
-    }
-}
 
-@Suppress("unused")
-val xp130ChestShop = rawResourcePatch(
-    name = "XP Hero 1.3: Chest Shops", description = "Experimental: zero locally stored non-IAP weapon and soul chest costs.", default = false,
-) {
-    compatibleWith(XP_HERO)
-    execute {
-        val costs = get(XP130.COST)
-        costs.writeBytes(XP130.store(costs.readBytes(), get(XP130.PRODUCTS).readBytes(), setOf(4, 8), 20))
-    }
-}
 
-@Suppress("unused")
-val xp130TokenShop = rawResourcePatch(
-    name = "XP Hero 1.3: Token Shop", description = "Experimental: zero red-token shop prices.", default = false,
-) {
-    compatibleWith(XP_HERO)
-    execute {
-        val costs = get(XP130.COST)
-        costs.writeBytes(XP130.store(costs.readBytes(), get(XP130.PRODUCTS).readBytes(), setOf(34), 27))
-    }
-}
 
-@Suppress("unused")
-val xp130InvasionShop = rawResourcePatch(
-    name = "XP Hero 1.3: Invasion Shop", description = "Experimental: zero local Invasion Shop coin prices.", default = false,
-) {
-    compatibleWith(XP_HERO)
-    execute {
-        val costs = get(XP130.COST)
-        costs.writeBytes(XP130.store(costs.readBytes(), get(XP130.PRODUCTS).readBytes(), setOf(9), 38))
-    }
-}
 
-@Suppress("unused")
-val xp130ExchangeShop = rawResourcePatch(
-    name = "XP Hero 1.3: Exchange Shop", description = "Stackable version of the tested 24 zero-gem material exchanges.", default = false,
-) {
-    compatibleWith(XP_HERO)
-    execute {
-        val costs = get(XP130.COST)
-        costs.writeBytes(XP130.store(costs.readBytes(), get(XP130.PRODUCTS).readBytes(), setOf(6, 7), 24))
-    }
-}
 
+
+
+/**
+ * One Morphe module with six independent on/off switches.
+ * All eligible records are non-IAP. Exact asset hashes and category row
+ * counts are validated by the tested XP130.store editor.
+ */
 @Suppress("unused")
-val xp130OtherShops = rawResourcePatch(
-    name = "XP Hero 1.3: Other Shops", description = "Experimental: other verified local non-IAP currency prices.", default = false,
+val xpHeroFreeShops = rawResourcePatch(
+    name = "XP Hero | Free Shops",
+    description = "Choose which shop categories have zero in-game currency prices. Open patch settings for six toggles.",
+    default = false,
 ) {
     compatibleWith(XP_HERO)
+
+    val dailyGems = booleanOption(
+        key = "dailyGemShop", default = true, title = "Daily Gem Shop",
+        description = "Zero 300 non-IAP Daily Gem Shop prices.",
+    )
+    val chests = booleanOption(
+        key = "chestShops", default = true, title = "Chest Shops",
+        description = "Zero 20 chest shop prices.",
+    )
+    val tokens = booleanOption(
+        key = "tokenShop", default = true, title = "Token Shop",
+        description = "Zero 27 red-token shop prices.",
+    )
+    val invasion = booleanOption(
+        key = "invasionShop", default = true, title = "Invasion Shop",
+        description = "Zero 38 Invasion Shop prices.",
+    )
+    val exchange = booleanOption(
+        key = "exchangeShop", default = true, title = "Exchange Shop",
+        description = "Zero the 24 in-game material Exchange prices.",
+    )
+    val otherShops = booleanOption(
+        key = "otherShops", default = true, title = "Other Shops",
+        description = "Zero 27 additional local non-IAP shop prices.",
+    )
+
     execute {
-        val costs = get(XP130.COST)
-        costs.writeBytes(XP130.store(costs.readBytes(), get(XP130.PRODUCTS).readBytes(),
-            setOf(15, 4, 8, 34, 9, 6, 7), 27, true))
+        val selected = listOf(
+            Triple(dailyGems.value == true, setOf(15), 300),
+            Triple(chests.value == true, setOf(4, 8), 20),
+            Triple(tokens.value == true, setOf(34), 27),
+            Triple(invasion.value == true, setOf(9), 38),
+            Triple(exchange.value == true, setOf(6, 7), 24),
+        )
+        val extra = otherShops.value == true
+        if (selected.any { it.first } || extra) {
+            val shopCosts = get(XP130.COST)
+            val productData = get(XP130.PRODUCTS).readBytes()
+            var bytes = shopCosts.readBytes()
+            for ((enabled, categories, expected) in selected) {
+                if (enabled) bytes = XP130.store(bytes, productData, categories, expected)
+            }
+            if (extra) {
+                bytes = XP130.store(bytes, productData,
+                    setOf(15, 4, 8, 34, 9, 6, 7), 27, true)
+            }
+            shopCosts.writeBytes(bytes)
+        }
     }
 }
 
 @Suppress("unused")
 val xp130FreeHeroLevel = rawResourcePatch(
-    name = "XP Hero 1.3: Free Hero Level Up", description = "Experimental: zero hero level-up resource costs.", default = false,
+    name = "XP Hero | Free Hero Level Up", description = "Experimental: zero hero level-up resource costs.", default = false,
 ) {
     compatibleWith(XP_HERO)
     execute {
@@ -212,7 +216,7 @@ val xp130FreeHeroLevel = rawResourcePatch(
 
 @Suppress("unused")
 val xp130FreeHeroEvolve = rawResourcePatch(
-    name = "XP Hero 1.3: Free Hero Evolve", description = "Experimental: zero hero evolution materials and pieces.", default = false,
+    name = "XP Hero | Free Hero Evolve", description = "Experimental: zero hero evolution materials and pieces.", default = false,
 ) {
     compatibleWith(XP_HERO)
     execute {
@@ -230,8 +234,8 @@ val xp130FreeHeroEvolve = rawResourcePatch(
  */
 @Suppress("unused")
 val xp131OnePieceHeroUpgradeTest = rawResourcePatch(
-    name = "XP Hero 1.3: Hero Upgrade (1-piece test)",
-    description = "Diagnostic only: hero star upgrades cost one piece, not free. Select instead of Free Hero Upgrade.",
+    name = "XP Hero | Hero Upgrade (1 Shard)",
+    description = "Confirmed: hero star upgrade costs one shard, deducted when used.",
     default = false,
 ) {
     compatibleWith(XP_HERO)
