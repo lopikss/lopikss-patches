@@ -1,3 +1,9 @@
+## [1.3.5](https://github.com/lopikss/lopikss-patches/compare/v1.3.4...v1.3.5) (2026-10-19)
+
+### 🐛 Bug Fixes
+
+* configurable XP Hero shops and zero-gem Heroes Tomb ticket refills ([5f54149](https://github.com/lopikss/lopikss-patches/commit/5f541495b89f7d4dabef8d3471b06df46ebfbf4c))
+
 ## [1.3.4](https://github.com/lopikss/lopikss-patches/compare/v1.3.3...v1.3.4) (2026-10-19)
 
 ### 🐛 Bug Fixes

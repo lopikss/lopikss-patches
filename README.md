@@ -80,9 +80,9 @@ Tell me the **game name, Android package, exact version**, what you'd like chang
 This catalog is generated automatically from published Morphe patch metadata.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.4](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.4)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;14 patches total
+> **[v1.3.5](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.5)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;9 patches total
 <details open>
-<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;14 patches</summary>
+<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;9 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -92,20 +92,15 @@ This catalog is generated automatically from published Morphe patch metadata.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [XP Hero 1.3: Chest Shops](#xp-hero-1-3-chest-shops) | Experimental: zero locally stored non-IAP weapon and soul chest costs. |  |
-| [XP Hero 1.3: Daily Gem Shop](#xp-hero-1-3-daily-gem-shop) | Experimental: zero local Daily Gem Shop item prices. |  |
-| [XP Hero 1.3: Exchange Shop](#xp-hero-1-3-exchange-shop) | Stackable version of the tested 24 zero-gem material exchanges. |  |
-| [XP Hero 1.3: Free Hero Evolve](#xp-hero-1-3-free-hero-evolve) | Experimental: zero hero evolution materials and pieces. |  |
-| [XP Hero 1.3: Free Hero Level Up](#xp-hero-1-3-free-hero-level-up) | Experimental: zero hero level-up resource costs. |  |
-| [XP Hero 1.3: Free Rune Upgrades](#xp-hero-1-3-free-rune-upgrades) | Experimental: zero both resource costs for all 1,440 rune upgrade levels. |  |
-| [XP Hero 1.3: Free S-Ticket Rolls](#xp-hero-1-3-free-s-ticket-rolls) | Experimental: make S-Ticket rolls cost 0 in XP Hero 26.2.0. |  |
-| [XP Hero 1.3: Free Ticket Refills (400/day)](#xp-hero-1-3-free-ticket-refills-400-day) | Experimental: 0-gem ticket recharges plus 400 daily refills in PvP, Boss Raid, Heroes' Tomb and Challenge Tower. |  |
-| [XP Hero 1.3: Free Trait Presets](#xp-hero-1-3-free-trait-presets) | Experimental: zero save/load costs for four trait presets (not rerolls). |  |
-| [XP Hero 1.3: Hero Upgrade (1-piece test)](#xp-hero-1-3-hero-upgrade-1-piece-test) | Diagnostic only: hero star upgrades cost one piece, not free. Upgrades cost one shard. |  |
-| [XP Hero 1.3: Invasion Shop](#xp-hero-1-3-invasion-shop) | Experimental: zero local Invasion Shop coin prices. |  |
-| [XP Hero 1.3: Other Shops](#xp-hero-1-3-other-shops) | Experimental: other verified local non-IAP currency prices. |  |
-| [XP Hero 1.3: Token Shop](#xp-hero-1-3-token-shop) | Experimental: zero red-token shop prices. |  |
-| [XP Hero 1.3: Zero Trait Reroll Coins](#xp-hero-1-3-zero-trait-reroll-coins) | Experimental: change the ARM64 trait reroll cost calculator to return 0, including for locked traits. |  |
+| [XP Hero | Free Hero Evolve](#xp-hero-free-hero-evolve) | Experimental: zero hero evolution materials and pieces. |  |
+| [XP Hero | Free Hero Level Up](#xp-hero-free-hero-level-up) | Experimental: zero hero level-up resource costs. |  |
+| [XP Hero | Free Rune Upgrades](#xp-hero-free-rune-upgrades) | Experimental: zero both resource costs for all 1,440 rune upgrade levels. |  |
+| [XP Hero | Free S-Ticket Rolls](#xp-hero-free-s-ticket-rolls) | Experimental: make S-Ticket rolls cost 0 in XP Hero 26.2.0. |  |
+| [XP Hero | Free Shops](#xp-hero-free-shops) | Choose which shop categories have zero in-game currency prices. Open patch settings for six toggles. | • Daily Gem Shop<br>• Chest Shops<br>• Token Shop<br>• Invasion Shop<br>• Exchange Shop<br>• Other Shops |
+| [XP Hero | Free Trait Presets](#xp-hero-free-trait-presets) | Experimental: zero save/load costs for four trait presets (not rerolls). |  |
+| [XP Hero | Free Trait Rerolls](#xp-hero-free-trait-rerolls) | Experimental: change the ARM64 trait reroll cost calculator to return 0, including for locked traits. |  |
+| [XP Hero | Hero Upgrade (1 Shard)](#xp-hero-hero-upgrade-1-shard) | Confirmed: hero star upgrade costs one shard, deducted when used. |  |
+| [XP Hero | Ticket Refills (400/day)](#xp-hero-ticket-refills-400-day) | Experimental: free configured ticket refills; correct the hardcoded 100-gem Heroes' Tomb fallback. |  |
 
 </details>
 
