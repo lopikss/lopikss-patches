@@ -51,24 +51,7 @@ private object XP132 {
      * All call sites, including TryConsumeRollCost, receive the same zero.
      * The implementation doesn't change unrelated coin expenditures.
      */
-    fun traitRerolls(data: ByteArray): ByteArray {
-        require(data.size == 83_724_712 && hash(data) == ARM64_SHA) {
-            "Unsupported XP Hero ARM64 IL2CPP library"
-        }
-        val offset = 0x2686684
-        val expected = byteArrayOf(
-            0xFE.toByte(), 0x0F, 0x1D, 0xF8.toByte(),
-            0xF6.toByte(), 0x57, 0x01, 0xA9.toByte()
-        )
-        check(data.copyOfRange(offset, offset + expected.size).contentEquals(expected)) {
-            "Unexpected trait reroll calculation instructions"
-        }
-        return data.copyOf().apply {
-            // mov w0, #0 ; ret — no stack adjustment, no resource deduction.
-            val patch = byteArrayOf(0x00, 0x00, 0x80.toByte(), 0x52, 0xC0.toByte(), 0x03, 0x5F, 0xD6.toByte())
-            patch.copyInto(this, offset)
-        }
-    }
+    fun traitRerolls(data: ByteArray): ByteArray = XP135NativeEditor.freeTraitRerolls(data)
 }
 
 @Suppress("unused")
