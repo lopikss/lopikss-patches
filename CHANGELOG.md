@@ -1,3 +1,9 @@
+## [1.3.4](https://github.com/lopikss/lopikss-patches/compare/v1.3.3...v1.3.4) (2026-10-19)
+
+### 🐛 Bug Fixes
+
+* free XP Hero ticket recharge and 400 daily refill limits ([3c47e5f](https://github.com/lopikss/lopikss-patches/commit/3c47e5f9418c73e122adef616a1f22a2bccec714))
+
 ## [1.3.3](https://github.com/lopikss/lopikss-patches/compare/v1.3.2...v1.3.3) (2026-10-16)
 
 ### 🐛 Bug Fixes
