@@ -73,7 +73,7 @@ private object XP132 {
 
 @Suppress("unused")
 val xp132FreeRuneUpgrades = rawResourcePatch(
-    name = "XP Hero 1.3: Free Rune Upgrades",
+    name = "XP Hero | Free Rune Upgrades",
     description = "Experimental: zero both resource costs for all 1,440 rune upgrade levels.",
     default = false,
 ) {
@@ -86,7 +86,7 @@ val xp132FreeRuneUpgrades = rawResourcePatch(
 
 @Suppress("unused")
 val xp132FreeTraitPresets = rawResourcePatch(
-    name = "XP Hero 1.3: Free Trait Presets",
+    name = "XP Hero | Free Trait Presets",
     description = "Experimental: zero save/load costs for four trait presets (not rerolls).",
     default = false,
 ) {
@@ -99,7 +99,7 @@ val xp132FreeTraitPresets = rawResourcePatch(
 
 @Suppress("unused")
 val xp132ZeroTraitRerollCoins = rawResourcePatch(
-    name = "XP Hero 1.3: Zero Trait Reroll Coins",
+    name = "XP Hero | Free Trait Rerolls",
     description = "Experimental: change the ARM64 trait reroll cost calculator to return 0, including for locked traits.",
     default = false,
 ) {
