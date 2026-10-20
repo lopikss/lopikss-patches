@@ -23,6 +23,9 @@ internal object XP134TicketEditor {
         "CHALLENGE_TOWER_RV_MAXCOUNT" to "5",
         "BOSS_RAID_TICKET_PACK_DAILY_PURCHASE_LIMIT" to "1",
         "HERO_TOMB_TICKET_PACK_DAILY_PURCHASE_LIMIT" to "5",
+        // Return Portal: advertised pass amount and initial free-use allowance.
+        "RETURN_TICKET_COUNT" to "10",
+        "RETURN_FIRST_FREE_CNT" to "3",
     )
 
     private fun sha(data: ByteArray): String = MessageDigest.getInstance("SHA-256")
@@ -99,12 +102,17 @@ internal object XP134TicketEditor {
         if (current == original) return true
         if (key == "TRAIT_SUPERROLL_COST_AMOUNT") return current == "0"
         if (key == "HEROTOMB_TICKET_CHARGE_COST") return current == "0"
-        if (key == "PVP_TICKET_CHARGE_COST" || key == "BR_TICKET_CHARGE_COST")
-            return current == List(400) { "0" }.joinToString(",")
-        return current == "400"
+        if (key == "PVP_TICKET_CHARGE_COST" || key == "BR_TICKET_CHARGE_COST") {
+            val prices = current.split(",")
+            return prices.size in 1..5000 && prices.all { it == "0" }
+        }
+        return current.toIntOrNull()?.let { it in 1..5000 } == true
     }
 
-    private fun remote(input: ByteArray, sTicket: Boolean): ByteArray {
+    private fun remote(
+        input: ByteArray, sTicket: Boolean,
+        dailyLimit: Int = 400, returnDaily: Int = 5000, freeReturns: Int = 5000,
+    ): ByteArray {
         val asset = parse(input, "RemoteConfig_329")
         var normalized = asset.text
         for ((key, original) in originals) {
@@ -119,33 +127,49 @@ internal object XP134TicketEditor {
         if (sTicket) {
             modified = put(modified, "TRAIT_SUPERROLL_COST_AMOUNT", "0")
         } else {
-            val free400 = List(400) { "0" }.joinToString(",")
+            val freePrices = List(dailyLimit) { "0" }.joinToString(",")
             for (key in listOf("PVP_TICKET_CHARGE_COST", "BR_TICKET_CHARGE_COST")) {
-                modified = put(modified, key, free400)
+                modified = put(modified, key, freePrices)
             }
             modified = put(modified, "HEROTOMB_TICKET_CHARGE_COST", "0")
+            val excluded = setOf(
+                "TRAIT_SUPERROLL_COST_AMOUNT", "PVP_TICKET_CHARGE_COST",
+                "BR_TICKET_CHARGE_COST", "HEROTOMB_TICKET_CHARGE_COST",
+                "RETURN_TICKET_COUNT", "RETURN_FIRST_FREE_CNT",
+            )
             for (key in originals.keys) {
-                if (key !in listOf("TRAIT_SUPERROLL_COST_AMOUNT", "PVP_TICKET_CHARGE_COST",
-                        "BR_TICKET_CHARGE_COST", "HEROTOMB_TICKET_CHARGE_COST")) {
-                    modified = put(modified, key, "400")
-                }
+                if (key !in excluded) modified = put(modified, key, dailyLimit.toString())
             }
+            // RETURN_TICKET_COUNT is the daily quantity advertised by
+            // the 30-day Return Ticket purchase. Increasing it does NOT
+            // grant or unlock that paid entitlement.
+            modified = put(modified, "RETURN_TICKET_COUNT", returnDaily.toString())
+            // Separate "first free returns" counter; the server may still cap it.
+            modified = put(modified, "RETURN_FIRST_FREE_CNT", freeReturns.toString())
         }
         return asset.encode(modified)
     }
 
-    /** Apply the independent S-ticket-roll price change in either patch order. */
+    /** Existing free S-ticket setting; compatible with changed ticket limits. */
     fun sTicket(input: ByteArray): ByteArray = remote(input, true)
 
-    /** Free all configured ticket refills and allow up to 400 per day. */
-    fun freeTicketRecharge(remoteBytes: ByteArray, pvpBytes: ByteArray): Pair<ByteArray, ByteArray> {
-        val changedRemote = remote(remoteBytes, false)
+    /** Configurable zero-gem recharge schedules and Return Portal allowances. */
+    fun freeTicketRecharge(
+        remoteBytes: ByteArray, pvpBytes: ByteArray,
+        dailyLimit: Int, returnDaily: Int, freeReturns: Int,
+    ): Pair<ByteArray, ByteArray> {
+        require(dailyLimit in 1..5000) { "Daily refill limit must be between 1 and 5000" }
+        require(returnDaily in 10..5000) { "Return daily ticket count must be between 10 and 5000" }
+        require(freeReturns in 3..5000) { "Free return allowance must be between 3 and 5000" }
+        val changedRemote = remote(remoteBytes, false, dailyLimit, returnDaily, freeReturns)
         val pvp = parse(pvpBytes, "ConfigData_45")
         val current = value(pvp.text, "PVP_TICKET_RV_COUNT_LIMIT")
-        check(current == "5" || current == "400") { "Unexpected PvP ticket configuration" }
+        check(current.toIntOrNull()?.let { it in 1..5000 } == true) {
+            "Unexpected PvP refill configuration"
+        }
         val originalText = put(pvp.text, "PVP_TICKET_RV_COUNT_LIMIT", "5")
         require(sha(pvp.encode(originalText)) == PVP_SHA) { "Unexpected PvP ticket asset" }
-        val changedPvp = pvp.encode(put(pvp.text, "PVP_TICKET_RV_COUNT_LIMIT", "400"))
+        val changedPvp = pvp.encode(put(pvp.text, "PVP_TICKET_RV_COUNT_LIMIT", dailyLimit.toString()))
         return changedRemote to changedPvp
     }
 }
