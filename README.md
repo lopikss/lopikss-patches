@@ -80,7 +80,7 @@ Tell me the **game name, Android package, exact version**, what you'd like chang
 This catalog is generated automatically from published Morphe patch metadata.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.5](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.5)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;9 patches total
+> **[v1.3.6](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.6)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;9 patches total
 <details open>
 <summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;9 patches</summary>
 <br>
@@ -100,7 +100,7 @@ This catalog is generated automatically from published Morphe patch metadata.
 | [XP Hero | Free Trait Presets](#xp-hero-free-trait-presets) | Experimental: zero save/load costs for four trait presets (not rerolls). |  |
 | [XP Hero | Free Trait Rerolls](#xp-hero-free-trait-rerolls) | Experimental: change the ARM64 trait reroll cost calculator to return 0, including for locked traits. |  |
 | [XP Hero | Hero Upgrade (1 Shard)](#xp-hero-hero-upgrade-1-shard) | Confirmed: hero star upgrade costs one shard, deducted when used. |  |
-| [XP Hero | Ticket Refills (400/day)](#xp-hero-ticket-refills-400-day) | Experimental: free configured ticket refills; correct the hardcoded 100-gem Heroes' Tomb fallback. |  |
+| [XP Hero | Ticket Refills & Return](#xp-hero-ticket-refills-return) | Custom daily ticket limits and Return Portal quantities, plus experimental zero-gem refills. | • Daily ticket refill limit<br>• Daily Return Tickets<br>• Free return allowance |
 
 </details>
 

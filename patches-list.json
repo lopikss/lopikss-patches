@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "patches": [
     {
       "name": "XP Hero | Free Hero Evolve",
@@ -266,8 +266,8 @@
       "options": []
     },
     {
-      "name": "XP Hero | Ticket Refills (400/day)",
-      "description": "Experimental: free configured ticket refills; correct the hardcoded 100-gem Heroes' Tomb fallback.",
+      "name": "XP Hero | Ticket Refills & Return",
+      "description": "Custom daily ticket limits and Return Portal quantities, plus experimental zero-gem refills.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -289,7 +289,35 @@
           ]
         }
       ],
-      "options": []
+      "options": [
+        {
+          "key": "dailyTicketRefills",
+          "title": "Daily ticket refill limit",
+          "description": "Set the configured daily cap for PvP, Boss Raid, Heroes' Tomb and Challenge Tower. Range: 1–5000.",
+          "required": true,
+          "type": "kotlin.Int",
+          "default": 400,
+          "values": null
+        },
+        {
+          "key": "returnDailyTickets",
+          "title": "Daily Return Tickets",
+          "description": "Change the configured daily quantity from 10 to this amount. The paid 30-day benefit may still need to be active.",
+          "required": true,
+          "type": "kotlin.Int",
+          "default": 5000,
+          "values": null
+        },
+        {
+          "key": "freeReturnAllowance",
+          "title": "Free return allowance",
+          "description": "Experimental: increase the game's initial free-return setting from 3. May be limited by online checks.",
+          "required": true,
+          "type": "kotlin.Int",
+          "default": 5000,
+          "values": null
+        }
+      ]
     }
   ]
 }

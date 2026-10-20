@@ -1,3 +1,9 @@
+## [1.3.6](https://github.com/lopikss/lopikss-patches/compare/v1.3.5...v1.3.6) (2026-10-20)
+
+### 🐛 Bug Fixes
+
+* configurable ticket refills and Return Portal allowances ([9e5761e](https://github.com/lopikss/lopikss-patches/commit/9e5761e08d28d351e273b3d6d3ca08b482ca1168))
+
 ## [1.3.5](https://github.com/lopikss/lopikss-patches/compare/v1.3.4...v1.3.5) (2026-10-19)
 
 ### 🐛 Bug Fixes
