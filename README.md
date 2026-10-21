@@ -30,7 +30,7 @@ Enable the patch and open its **options/settings** to choose which shop categori
 Daily Gem Shop, Chest Shops, Token Shop, Invasion Shop, Exchange Shop, and Other Shops.
 All six switches default to **enabled**; paid Google Play purchases remain untouched.
 
-**Return ticket correction (v1.3.7):** The paid 30-day Return Ticket offer is no longer modified. The **XP Hero | Free Tickets & Return** module now sets the game's separate *free Return ticket* inventory allowance at each daily reset (editable in Morphe, default 5000). The original €5.99 offer continues to advertise its normal 10 tickets. The grant needs in-game verification, and may not appear until the next daily reset. [See technical notes](docs/XP_HERO_V137.md).
+**Return ticket correction (v1.3.7):** The paid 30-day Return Ticket offer is no longer modified. The **XP Hero | Free Tickets & Return** module now sets the game's separate *free Return ticket* inventory allowance at each daily reset (editable in Morphe, default 5000). The original €5.99 offer continues to advertise its normal 10 tickets. The free-ticket grant needs in-game verification after the next daily reset; cloud saves or server rules might still override it. [See technical notes](docs/XP_HERO_V137.md).
 
 Other independent modules:
 - **Free Hero Level Up** and **Free Hero Evolve** (reported working).
