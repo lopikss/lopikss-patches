@@ -140,11 +140,11 @@ internal object XP134TicketEditor {
             for (key in originals.keys) {
                 if (key !in excluded) modified = put(modified, key, dailyLimit.toString())
             }
-            // RETURN_TICKET_COUNT is the daily quantity advertised by
-            // the 30-day Return Ticket purchase. Increasing it does NOT
-            // grant or unlock that paid entitlement.
-            modified = put(modified, "RETURN_TICKET_COUNT", returnDaily.toString())
-            // Separate "first free returns" counter; the server may still cap it.
+            // Preserve RETURN_TICKET_COUNT=10 so the paid 30-day offer's
+            // displayed quantity stays exactly as provided by the game.
+            // returnDaily is applied to the FREE ticket item by the separate
+            // daily reset native edit, not this purchase configuration.
+            // Separate onboarding allowance, potentially server-capped.
             modified = put(modified, "RETURN_FIRST_FREE_CNT", freeReturns.toString())
         }
         return asset.encode(modified)
@@ -153,7 +153,7 @@ internal object XP134TicketEditor {
     /** Existing free S-ticket setting; compatible with changed ticket limits. */
     fun sTicket(input: ByteArray): ByteArray = remote(input, true)
 
-    /** Configurable zero-gem recharge schedules and Return Portal allowances. */
+    /** Configurable refills and first-time free returns; paid offer unchanged. */
     fun freeTicketRecharge(
         remoteBytes: ByteArray, pvpBytes: ByteArray,
         dailyLimit: Int, returnDaily: Int, freeReturns: Int,
