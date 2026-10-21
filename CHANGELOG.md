@@ -1,3 +1,9 @@
+## [1.3.7](https://github.com/lopikss/lopikss-patches/compare/v1.3.6...v1.3.7) (2026-10-21)
+
+### 🐛 Bug Fixes
+
+* daily free Return tickets without changing the paid pass ([c3535b7](https://github.com/lopikss/lopikss-patches/commit/c3535b7cbd98143088552c5dabcd9ee842c57259))
+
 ## [1.3.6](https://github.com/lopikss/lopikss-patches/compare/v1.3.5...v1.3.6) (2026-10-20)
 
 ### 🐛 Bug Fixes
