@@ -8,8 +8,8 @@ import app.morphe.patcher.patch.intOption
  * PvP, Boss Raid, Heroes' Tomb, and Challenge Tower settings in XP Hero 26.2.0. */
 @Suppress("unused")
 val xpHeroFreeTickets400 = rawResourcePatch(
-    name = "XP Hero | Ticket Refills & Return",
-    description = "Custom daily ticket limits and Return Portal quantities, plus experimental zero-gem refills.",
+    name = "XP Hero | Free Tickets & Return",
+    description = "Configurable free Return tickets at daily reset, daily refill limits and zero-gem refills; never changes paid IAP.",
     default = false,
 ) {
     compatibleWith(XP_HERO)
@@ -25,15 +25,15 @@ val xpHeroFreeTickets400 = rawResourcePatch(
     val returnDailyTickets = intOption(
         key = "returnDailyTickets",
         default = 5000,
-        title = "Daily Return Tickets",
-        description = "Change the configured daily quantity from 10 to this amount. The paid 30-day benefit may still need to be active.",
+        title = "Free Return tickets per day",
+        description = "At the daily reset, allocate this many free Return tickets (not paid-pass tickets). The €5.99 offer remains unchanged.",
         required = true,
         validator = { it != null && it in 10..5000 },
     )
     val freeReturns = intOption(
         key = "freeReturnAllowance",
         default = 5000,
-        title = "Free return allowance",
+        title = "Initial free Return allowance",
         description = "Experimental: increase the game's initial free-return setting from 3. May be limited by online checks.",
         required = true,
         validator = { it != null && it in 3..5000 },
@@ -49,7 +49,8 @@ val xpHeroFreeTickets400 = rawResourcePatch(
             dailyRefills.value ?: 400, returnDailyTickets.value ?: 5000,
             freeReturns.value ?: 5000,
         )
-        val newNative = XP135NativeEditor.freeHeroesTombRefills(native.readBytes())
+        val newNative = XP135NativeEditor.freeHeroesTombRefills(
+            native.readBytes(), returnDailyTickets.value ?: 5000)
         remote.writeBytes(newRemote)
         pvp.writeBytes(newPvp)
         native.writeBytes(newNative)

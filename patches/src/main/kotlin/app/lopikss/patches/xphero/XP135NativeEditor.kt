@@ -40,6 +40,35 @@ internal object XP135NativeEditor {
         0x89.toByte(), 0x0C, 0x80.toByte(), 0x52 // mov w9,#100
     )
 
+    // HomeReturnPortalPassController.ResetDailyTickets originally sets
+    // Stackable_HomeReturnPortalTicket (paid, item 7001) to the advertised
+    // 30-day pass quantity. The Return-use path accepts item 7002, the
+    // independent Stackable_HomeReturnPortalFreeTicket. The fix directs this
+    // daily reset to 7002, with a configurable quantity, without changing
+    // or activating any paid in-app purchase.
+    private const val RETURN_QUANTITY_OFFSET = 0x24C0DC0
+    private const val RETURN_ITEM_OFFSET = 0x24C0DD8
+    private val ORIGINAL_RETURN_QUANTITY = byteArrayOf(0x73, 0x42, 0x80.toByte(), 0xB9.toByte())
+    private val ORIGINAL_RETURN_ITEM = byteArrayOf(0x20, 0x6B, 0x83.toByte(), 0x52)
+    private val FREE_RETURN_ITEM = byteArrayOf(0x40, 0x6B, 0x83.toByte(), 0x52)
+
+    private fun instruction(bytes: ByteArray, offset: Int): Int =
+        (bytes[offset].toInt() and 255) or
+            ((bytes[offset + 1].toInt() and 255) shl 8) or
+            ((bytes[offset + 2].toInt() and 255) shl 16) or
+            ((bytes[offset + 3].toInt() and 255) shl 24)
+
+    private fun replaceInstruction(bytes: ByteArray, offset: Int, code: Int) {
+        for (i in 0..3) bytes[offset + i] = (code ushr (i * 8)).toByte()
+    }
+
+    private fun knownFreeReturnQuantity(bytes: ByteArray): Boolean {
+        val code = instruction(bytes, RETURN_QUANTITY_OFFSET)
+        // ARM64 MOVZ x19,#imm16, no shift; only accept 10..5000.
+        return (code and 0xFFE0001F.toInt()) == 0xD2800013.toInt() &&
+            ((code ushr 5) and 0xffff) in 10..5000
+    }
+
     private fun equalAt(bytes: ByteArray, offset: Int, pattern: ByteArray): Boolean =
         bytes.copyOfRange(offset, offset + pattern.size).contentEquals(pattern)
 
@@ -49,6 +78,16 @@ internal object XP135NativeEditor {
             "Different Heroes' Tomb price calculation; refusing patch"
         }
         val normalized = input.copyOf()
+        require(equalAt(input, RETURN_QUANTITY_OFFSET, ORIGINAL_RETURN_QUANTITY) ||
+            knownFreeReturnQuantity(input)) {
+            "Unexpected Return ticket daily-reset quantity instruction"
+        }
+        require(equalAt(input, RETURN_ITEM_OFFSET, ORIGINAL_RETURN_ITEM) ||
+            equalAt(input, RETURN_ITEM_OFFSET, FREE_RETURN_ITEM)) {
+            "Unexpected Return ticket daily-reset item identifier"
+        }
+        ORIGINAL_RETURN_QUANTITY.copyInto(normalized, RETURN_QUANTITY_OFFSET)
+        ORIGINAL_RETURN_ITEM.copyInto(normalized, RETURN_ITEM_OFFSET)
         for ((offset, original, changed) in listOf(
             Triple(TRAIT_OFFSET, ORIGINAL_TRAIT, FREE_TRAIT),
             Triple(TOMB_OFFSET, ORIGINAL_TOMB, FREE_TOMB)
@@ -68,8 +107,15 @@ internal object XP135NativeEditor {
         return input.copyOf().also { FREE_TRAIT.copyInto(it, TRAIT_OFFSET) }
     }
 
-    fun freeHeroesTombRefills(input: ByteArray): ByteArray {
+    fun freeHeroesTombRefills(input: ByteArray, freeReturnDaily: Int): ByteArray {
+        require(freeReturnDaily in 10..5000) { "Invalid daily free Return ticket count" }
         verify(input)
-        return input.copyOf().also { FREE_TOMB.copyInto(it, TOMB_OFFSET) }
+        return input.copyOf().also {
+            FREE_TOMB.copyInto(it, TOMB_OFFSET)
+            // MOVZ x19,#freeReturnDaily — count passed to stackable setter.
+            replaceInstruction(it, RETURN_QUANTITY_OFFSET,
+                0xD2800013.toInt() or (freeReturnDaily shl 5))
+            FREE_RETURN_ITEM.copyInto(it, RETURN_ITEM_OFFSET)
+        }
     }
 }

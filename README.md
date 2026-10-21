@@ -23,18 +23,20 @@
 | --- | --- | --- | --- |
 | **XP Hero** (`io.supercent.weaponrpg`) | **26.2.0** | **Modular shops, hero Level Up, Evolve and experimental Upgrade** | 🧪 **Community-tested, but some modules still experimental** |
 
-### XP Hero — Modules (v1.3.5)
+### XP Hero — Modules (v1.3.7)
 
 The six separate local shop modules have been merged into **XP Hero | Free Shops**.
 Enable the patch and open its **options/settings** to choose which shop categories are free:
 Daily Gem Shop, Chest Shops, Token Shop, Invasion Shop, Exchange Shop, and Other Shops.
 All six switches default to **enabled**; paid Google Play purchases remain untouched.
 
+**Return ticket correction (v1.3.7):** The paid 30-day Return Ticket offer is no longer modified. The **XP Hero | Free Tickets & Return** module now sets the game's separate *free Return ticket* inventory allowance at each daily reset (editable in Morphe, default 5000). The original €5.99 offer continues to advertise its normal 10 tickets. The grant needs in-game verification, and may not appear until the next daily reset. [See technical notes](docs/XP_HERO_V137.md).
+
 Other independent modules:
 - **Free Hero Level Up** and **Free Hero Evolve** (reported working).
 - **Hero Upgrade (1 Shard)** (reported working; genuinely costs one shard).
 - **Free Rune Upgrades**, **Free Trait Presets**, **Free Trait Rerolls**, **Free S-Ticket Rolls**.
-- **Ticket Refills (400/day)** (experimental). The 400-refill limit was observed in Heroes' Tomb in-game, but the refill cost sometimes fell back to **100 gems**. v1.3.5 now patches the native **GetChargeCost** fallback so configured zero can be used; ticket purchase behavior still needs device testing.
+- **Free Tickets & Return** (experimental). The 400-refill limit was observed in Heroes' Tomb in-game, but the refill cost sometimes fell back to **100 gems**. v1.3.5 now patches the native **GetChargeCost** fallback so configured zero can be used; ticket purchase behavior still needs device testing.
 
 Modules for 5,000 video tickets and zero-shard hero upgrades were removed in earlier releases because they did not work correctly. The native trait patch remains compatible with the new ticket refill correction.
 
