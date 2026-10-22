@@ -24,7 +24,7 @@ val xpHeroFreeTickets400 = rawResourcePatch(
     )
     val returnDailyTickets = intOption(
         key = "returnDailyTickets",
-        default = 5000,
+        default = 50,
         title = "Instant free Return allowance",
         description = "Return can be used immediately away from base, without waiting for the daily reset. The shown count is virtual, not a stored or decremented inventory; the paid offer stays unchanged.",
         required = true,
@@ -32,7 +32,7 @@ val xpHeroFreeTickets400 = rawResourcePatch(
     )
     val freeReturns = intOption(
         key = "freeReturnAllowance",
-        default = 5000,
+        default = 50,
         title = "Initial free Return allowance",
         description = "Experimental: increase the game's initial free-return setting from 3. May be limited by online checks.",
         required = true,
@@ -46,11 +46,11 @@ val xpHeroFreeTickets400 = rawResourcePatch(
         // Check all three assets before writing any file.
         val (newRemote, newPvp) = XP134TicketEditor.freeTicketRecharge(
             remote.readBytes(), pvp.readBytes(),
-            dailyRefills.value ?: 400, returnDailyTickets.value ?: 5000,
-            freeReturns.value ?: 5000,
+            dailyRefills.value ?: 400, returnDailyTickets.value ?: 50,
+            freeReturns.value ?: 50,
         )
         val newNative = XP135NativeEditor.freeHeroesTombRefills(
-            native.readBytes(), returnDailyTickets.value ?: 5000)
+            native.readBytes(), returnDailyTickets.value ?: 50)
         remote.writeBytes(newRemote)
         pvp.writeBytes(newPvp)
         native.writeBytes(newNative)
