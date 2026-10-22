@@ -1,3 +1,9 @@
+## [1.3.11](https://github.com/lopikss/lopikss-patches/compare/v1.3.10...v1.3.11) (2026-10-22)
+
+### 🐛 Bug Fixes
+
+* restore XP Hero zero-shard completion and free Return daily grants ([9053819](https://github.com/lopikss/lopikss-patches/commit/905381983a00f46df1696fc8e58693cd8edcc4fc))
+
 ## [1.3.10](https://github.com/lopikss/lopikss-patches/compare/v1.3.9...v1.3.10) (2026-10-22)
 
 ### 🐛 Bug Fixes
