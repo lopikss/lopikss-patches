@@ -5,9 +5,11 @@ import java.security.MessageDigest
 /**
  * XP Hero 26.2.0 ARM64 IL2CPP native edits.
  *
- * Two independent patches touch this library:
+ * Independent stackable patches touch this library:
  * - zero-coin trait rerolls (user verified in v1.3.2)
  * - Heroes' Tomb refill price fallback (v1.3.5, experimental)
+ * - free Return daily reset (v1.3.7, experimental)
+ * - hero star upgrades (v1.3.8, experimental)
  *
  * Normalize ONLY these exact known changes before checking the complete
  * original library SHA-256. This permits either patch order and prevents
@@ -38,6 +40,17 @@ internal object XP135NativeEditor {
     private val TOMB_NEIGHBORS = byteArrayOf(
         0x1F, 0x01, 0x00, 0x71, // cmp w8,#0
         0x89.toByte(), 0x0C, 0x80.toByte(), 0x52 // mov w9,#100
+    )
+    // CostumeManager.TryGradeUp: at VA 0x02847EA0 the original TBZ jumps
+    // to failure after its HasEnough(cost) call when cost is 0.
+    // The immediately following CMP X22,#1 / B.LT already skips debit for 0.
+    // This removes ONLY the rejection branch; it does not award shards.
+    private const val STAR_UPGRADE_OFFSET = 0x2843EA0
+    private val ORIGINAL_STAR_UPGRADE = byteArrayOf(0xA0.toByte(), 0x1A, 0x00, 0x36)
+    private val FREE_STAR_UPGRADE = byteArrayOf(0x1F, 0x20, 0x03, 0xD5.toByte()) // ARM64 NOP
+    private val STAR_UPGRADE_SPEND_GUARD = byteArrayOf(
+        0xDF.toByte(), 0x06, 0x00, 0xF1.toByte(),
+        0x2B, 0x01, 0x00, 0x54
     )
 
     // HomeReturnPortalPassController.ResetDailyTickets originally sets
@@ -77,6 +90,9 @@ internal object XP135NativeEditor {
         require(equalAt(input, TOMB_OFFSET - 8, TOMB_NEIGHBORS)) {
             "Different Heroes' Tomb price calculation; refusing patch"
         }
+        require(equalAt(input, STAR_UPGRADE_OFFSET + 4, STAR_UPGRADE_SPEND_GUARD)) {
+            "The zero-shard spending guard differs; refusing hero upgrade edit"
+        }
         val normalized = input.copyOf()
         require(equalAt(input, RETURN_QUANTITY_OFFSET, ORIGINAL_RETURN_QUANTITY) ||
             knownFreeReturnQuantity(input)) {
@@ -90,7 +106,8 @@ internal object XP135NativeEditor {
         ORIGINAL_RETURN_ITEM.copyInto(normalized, RETURN_ITEM_OFFSET)
         for ((offset, original, changed) in listOf(
             Triple(TRAIT_OFFSET, ORIGINAL_TRAIT, FREE_TRAIT),
-            Triple(TOMB_OFFSET, ORIGINAL_TOMB, FREE_TOMB)
+            Triple(TOMB_OFFSET, ORIGINAL_TOMB, FREE_TOMB),
+            Triple(STAR_UPGRADE_OFFSET, ORIGINAL_STAR_UPGRADE, FREE_STAR_UPGRADE)
         )) {
             require(equalAt(input, offset, original) || equalAt(input, offset, changed)) {
                 "Unknown XP Hero native instructions"
@@ -100,6 +117,12 @@ internal object XP135NativeEditor {
         val sha = MessageDigest.getInstance("SHA-256").digest(normalized)
             .joinToString("") { "%02x".format(it) }
         require(sha == ORIGINAL_SHA) { "Unexpected XP Hero ARM64 code; refusing patch" }
+    }
+
+    /** Version-locked zero-shard star upgrade fix, compatible with native patches. */
+    fun freeHeroStarUpgrades(input: ByteArray): ByteArray {
+        verify(input)
+        return input.copyOf().also { FREE_STAR_UPGRADE.copyInto(it, STAR_UPGRADE_OFFSET) }
     }
 
     fun freeTraitRerolls(input: ByteArray): ByteArray {

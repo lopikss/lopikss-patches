@@ -204,8 +204,8 @@ val xp130FreeHeroEvolve = rawResourcePatch(
  */
 @Suppress("unused")
 val xp131OnePieceHeroUpgradeTest = rawResourcePatch(
-    name = "XP Hero | Hero Upgrade (1 Shard)",
-    description = "Confirmed: hero star upgrade costs one shard, deducted when used.",
+    name = "XP Hero | Hero Upgrade (1 Shard - Fallback)",
+    description = "Confirmed working fallback; costs one shard. Disable when selecting Free Hero Upgrade (0 Shards).",
     default = false,
 ) {
     compatibleWith(XP_HERO)
