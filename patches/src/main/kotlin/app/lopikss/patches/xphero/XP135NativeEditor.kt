@@ -61,16 +61,20 @@ internal object XP135NativeEditor {
     private const val STAR_ZERO_SPEND_GUARD_OFFSET = STAR_UPGRADE_OFFSET + 8
     private val ORIGINAL_STAR_ZERO_SPEND_GUARD = byteArrayOf(0x2B, 0x01, 0x00, 0x54)
     private val FREE_STAR_ZERO_SPEND_GUARD = byteArrayOf(0x1F, 0x20, 0x03, 0xD5.toByte()) // NOP
-    // CostumeManager.TryConsumeCostumePiece calls its lower-level inventory
-    // consumer; that returns failure for a quantity of 0 even when the
-    // piece-cost check passed. 0x02852E64 branches to error logging.
-    // Redirect *only the zero/negative count* to the method's existing
-    // "mov w0, #1" return at VA 0x02852F84. For positive piece costs,
-    // execution falls through the exact original inventory-debit logic.
-    // Original B.LE -> error VA 0x02852F8C. New B.LE -> success VA 0x02852F84.
+    // CostumeController.TryGradeUpCostume calls TryConsumeCostumePiece.
+    // The original <= 0 guard at VA 0x02852E64 diverts zero-amount spend
+    // away from its inventory transaction and change notifications. The old
+    // v1.3.9-v1.3.11 shortcut forced success without those notifications.
+    // New B.LT condition rejects only negative amounts and passes 0 into
+    // the lower consumer at VA 0x02854ED4. Disassembly confirms that
+    // lower consumer accepts zero (balance - 0 >= 0) and emits the normal
+    // update/notification, without deducting a shard.
     private const val HERO_UNLOCK_CONSUME_OFFSET = 0x2852e64 - 0x4000
     private val ORIGINAL_HERO_UNLOCK = byteArrayOf(0x4D, 0x09, 0x00, 0x54)
-    private val ZERO_HERO_UNLOCK = byteArrayOf(0x0D, 0x09, 0x00, 0x54)
+    private val LEGACY_ZERO_HERO_UNLOCK = byteArrayOf(0x0D, 0x09, 0x00, 0x54) // v1.3.9-1.3.11: skip notification path
+    // B.LE -> B.LT: allow zero amount through ordinary consume/notification
+    // code, but still reject invalid negative amounts.
+    private val ZERO_HERO_UNLOCK = byteArrayOf(0x4B, 0x09, 0x00, 0x54)
     private val HERO_UNLOCK_COMPARE = byteArrayOf(0x7F, 0x02, 0x00, 0xF1.toByte())
     private val HERO_UNLOCK_SUCCESS = byteArrayOf(0x20, 0x00, 0x80.toByte(), 0x52)
 
@@ -102,6 +106,24 @@ internal object XP135NativeEditor {
     private val ORIGINAL_RETURN_INACTIVE_PASS = byteArrayOf(0x40, 0x04, 0x00, 0x36)
     private val FREE_RETURN_INACTIVE_PASS = byteArrayOf(0xA0.toByte(), 0x00, 0x00, 0x36)
 
+    // GetFreeTicketCount (VA 0x024C237C) is used by the actual field Return
+    // action. Daily resets cannot be relied on to give the user tickets NOW.
+    // Return a configured virtual free-ticket allowance immediately instead
+    // of waiting for the daily-reset callback. No paid item 7001 is touched.
+    // At the free-ticket consumption call, allow the Return completion path
+    // when the underlying item 7002 inventory is still zero.
+    // These do NOT grant 5000 persisted items or change paid purchase offers.
+    private const val INSTANT_RETURN_COUNT_OFFSET = 0x24C237C - 0x4000
+    private val ORIGINAL_RETURN_COUNT_ENTRY = byteArrayOf(
+        0xFE.toByte(), 0x0F, 0x1E, 0xF8.toByte(),
+        0xF4.toByte(), 0x4F, 0x01, 0xA9.toByte())
+    private val INSTANT_RETURN_COUNT_RET = byteArrayOf(0xC0.toByte(), 0x03, 0x5F, 0xD6.toByte())
+    private const val RETURN_FREE_CONSUME_GUARD_OFFSET = 0x24C6458 - 0x4000
+    private val ORIGINAL_RETURN_FREE_CONSUME_GUARD = byteArrayOf(
+        0xE0.toByte(), 0x06, 0x00, 0x36)
+    private val INSTANT_RETURN_FREE_CONSUME_GUARD = byteArrayOf(
+        0x1F, 0x20, 0x03, 0xD5.toByte()) // ARM64 NOP
+
 
     private fun instruction(bytes: ByteArray, offset: Int): Int =
         (bytes[offset].toInt() and 255) or
@@ -111,6 +133,13 @@ internal object XP135NativeEditor {
 
     private fun replaceInstruction(bytes: ByteArray, offset: Int, code: Int) {
         for (i in 0..3) bytes[offset + i] = (code ushr (i * 8)).toByte()
+    }
+
+    private fun knownInstantReturnCount(bytes: ByteArray): Boolean {
+        val word = instruction(bytes, INSTANT_RETURN_COUNT_OFFSET)
+        return (word and 0xFFE0001F.toInt()) == 0x52800000 &&
+            ((word ushr 5) and 0xFFFF) in 10..5000 &&
+            equalAt(bytes, INSTANT_RETURN_COUNT_OFFSET + 4, INSTANT_RETURN_COUNT_RET)
     }
 
     private fun knownFreeReturnQuantity(bytes: ByteArray): Boolean {
@@ -146,6 +175,16 @@ internal object XP135NativeEditor {
         }
         ORIGINAL_RETURN_QUANTITY.copyInto(normalized, RETURN_QUANTITY_OFFSET)
         ORIGINAL_RETURN_ITEM.copyInto(normalized, RETURN_ITEM_OFFSET)
+        require(equalAt(input, INSTANT_RETURN_COUNT_OFFSET, ORIGINAL_RETURN_COUNT_ENTRY) ||
+            knownInstantReturnCount(input)) {
+            "Unexpected XP Hero free Return count reader"
+        }
+        ORIGINAL_RETURN_COUNT_ENTRY.copyInto(normalized, INSTANT_RETURN_COUNT_OFFSET)
+        require(equalAt(input, RETURN_FREE_CONSUME_GUARD_OFFSET, ORIGINAL_RETURN_FREE_CONSUME_GUARD) ||
+            equalAt(input, RETURN_FREE_CONSUME_GUARD_OFFSET, INSTANT_RETURN_FREE_CONSUME_GUARD)) {
+            "Unexpected XP Hero free Return consume result branch"
+        }
+        ORIGINAL_RETURN_FREE_CONSUME_GUARD.copyInto(normalized, RETURN_FREE_CONSUME_GUARD_OFFSET)
         for ((offset, original, changed) in listOf(
             Triple(RETURN_NO_PASS_OFFSET, ORIGINAL_RETURN_NO_PASS, FREE_RETURN_NO_PASS),
             Triple(RETURN_INACTIVE_PASS_OFFSET, ORIGINAL_RETURN_INACTIVE_PASS, FREE_RETURN_INACTIVE_PASS)
@@ -158,14 +197,22 @@ internal object XP135NativeEditor {
 
         for ((offset, original, changed) in listOf(
             Triple(TRAIT_OFFSET, ORIGINAL_TRAIT, FREE_TRAIT),
-            Triple(TOMB_OFFSET, ORIGINAL_TOMB, FREE_TOMB),
-            Triple(HERO_UNLOCK_CONSUME_OFFSET, ORIGINAL_HERO_UNLOCK, ZERO_HERO_UNLOCK)
+            Triple(TOMB_OFFSET, ORIGINAL_TOMB, FREE_TOMB)
         )) {
             require(equalAt(input, offset, original) || equalAt(input, offset, changed)) {
                 "Unknown XP Hero native instructions"
             }
             original.copyInto(normalized, offset)
         }
+        // Both the old shortcut to success and the newer B.LT fall-through
+        // must be accepted and restored for the exact original SHA check.
+        require(equalAt(input, HERO_UNLOCK_CONSUME_OFFSET, ORIGINAL_HERO_UNLOCK) ||
+            equalAt(input, HERO_UNLOCK_CONSUME_OFFSET, LEGACY_ZERO_HERO_UNLOCK) ||
+            equalAt(input, HERO_UNLOCK_CONSUME_OFFSET, ZERO_HERO_UNLOCK)) {
+            "Unknown XP Hero zero-piece consume instruction"
+        }
+        ORIGINAL_HERO_UNLOCK.copyInto(normalized, HERO_UNLOCK_CONSUME_OFFSET)
+
         // Normalize all previous released star-upgrade byte patterns, plus
         // the new zero-cost Spend guard, before the original-library SHA check.
         require(equalAt(input, STAR_UPGRADE_OFFSET, ORIGINAL_STAR_UPGRADE) ||
@@ -199,8 +246,13 @@ internal object XP135NativeEditor {
     fun freeHeroStarUpgrades(input: ByteArray): ByteArray {
         verify(input)
         return input.copyOf().also {
+            // Character detail upgrades call CostumeController.TryGradeUpCostume,
+            // not the static grade-up routine patched in v1.3.8-1.3.11.
+            // Restore static routine to original and fix the shared real
+            // costume-piece consumption helper instead.
             ORIGINAL_STAR_UPGRADE.copyInto(it, STAR_UPGRADE_OFFSET)
-            FREE_STAR_ZERO_SPEND_GUARD.copyInto(it, STAR_ZERO_SPEND_GUARD_OFFSET)
+            ORIGINAL_STAR_ZERO_SPEND_GUARD.copyInto(it, STAR_ZERO_SPEND_GUARD_OFFSET)
+            ZERO_HERO_UNLOCK.copyInto(it, HERO_UNLOCK_CONSUME_OFFSET)
         }
     }
 
@@ -220,6 +272,10 @@ internal object XP135NativeEditor {
             FREE_RETURN_ITEM.copyInto(it, RETURN_ITEM_OFFSET)
             FREE_RETURN_NO_PASS.copyInto(it, RETURN_NO_PASS_OFFSET)
             FREE_RETURN_INACTIVE_PASS.copyInto(it, RETURN_INACTIVE_PASS_OFFSET)
+            replaceInstruction(it, INSTANT_RETURN_COUNT_OFFSET,
+                0x52800000 or (freeReturnDaily shl 5)) // MOV W0,#N
+            INSTANT_RETURN_COUNT_RET.copyInto(it, INSTANT_RETURN_COUNT_OFFSET + 4)
+            INSTANT_RETURN_FREE_CONSUME_GUARD.copyInto(it, RETURN_FREE_CONSUME_GUARD_OFFSET)
         }
     }
 }
