@@ -61,13 +61,14 @@ internal object XP135NativeEditor {
     private const val STAR_ZERO_SPEND_GUARD_OFFSET = STAR_UPGRADE_OFFSET + 8
     private val ORIGINAL_STAR_ZERO_SPEND_GUARD = byteArrayOf(0x2B, 0x01, 0x00, 0x54)
     private val FREE_STAR_ZERO_SPEND_GUARD = byteArrayOf(0x1F, 0x20, 0x03, 0xD5.toByte()) // NOP
-    // CostumeManager.TryConsumeCostumePiece calls its lower-level inventory
-    // consumer; that returns failure for a quantity of 0 even when the
-    // piece-cost check passed. 0x02852E64 branches to error logging.
-    // Redirect *only the zero/negative count* to the method's existing
-    // "mov w0, #1" return at VA 0x02852F84. For positive piece costs,
-    // execution falls through the exact original inventory-debit logic.
-    // Original B.LE -> error VA 0x02852F8C. New B.LE -> success VA 0x02852F84.
+    // CostumeController.TryGradeUpCostume calls TryConsumeCostumePiece.
+    // The original <= 0 guard at VA 0x02852E64 diverts zero-amount spend
+    // away from its inventory transaction and change notifications. The old
+    // v1.3.9-v1.3.11 shortcut forced success without those notifications.
+    // New B.LT condition rejects only negative amounts and passes 0 into
+    // the lower consumer at VA 0x02854ED4. Disassembly confirms that
+    // lower consumer accepts zero (balance - 0 >= 0) and emits the normal
+    // update/notification, without deducting a shard.
     private const val HERO_UNLOCK_CONSUME_OFFSET = 0x2852e64 - 0x4000
     private val ORIGINAL_HERO_UNLOCK = byteArrayOf(0x4D, 0x09, 0x00, 0x54)
     private val LEGACY_ZERO_HERO_UNLOCK = byteArrayOf(0x0D, 0x09, 0x00, 0x54) // v1.3.9-1.3.11: skip notification path
