@@ -63,7 +63,7 @@ internal object XP135NativeEditor {
     private const val HERO_UNLOCK_CONSUME_OFFSET = 0x2852e64 - 0x4000
     private val ORIGINAL_HERO_UNLOCK = byteArrayOf(0x4D, 0x09, 0x00, 0x54)
     private val ZERO_HERO_UNLOCK = byteArrayOf(0x0D, 0x09, 0x00, 0x54)
-    private val HERO_UNLOCK_COMPARE = byteArrayOf(0x7F, 0x02, 0x00, 0xF1)
+    private val HERO_UNLOCK_COMPARE = byteArrayOf(0x7F, 0x02, 0x00, 0xF1.toByte())
     private val HERO_UNLOCK_SUCCESS = byteArrayOf(0x20, 0x00, 0x80.toByte(), 0x52)
 
 
