@@ -1,3 +1,9 @@
+## [1.3.9](https://github.com/lopikss/lopikss-patches/compare/v1.3.8...v1.3.9) (2026-10-22)
+
+### 🐛 Bug Fixes
+
+* XP Hero zero-piece unlock transaction for Hana and Blaster ([c843a54](https://github.com/lopikss/lopikss-patches/commit/c843a541827191bb5c9a01d3ee211bcfe8e032e6))
+
 ## [1.3.8](https://github.com/lopikss/lopikss-patches/compare/v1.3.7...v1.3.8) (2026-10-22)
 
 ### 🐛 Bug Fixes
