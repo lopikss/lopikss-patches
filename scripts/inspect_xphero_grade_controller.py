@@ -20,3 +20,25 @@ for va,n,title in [
  print("BEGIN",title,hex(va),flush=True)
  for ins in md.disasm(raw[va-0x4000:va-0x4000+n],va):
   print(f"{ins.address:08x} {ins.bytes.hex():10s} {ins.mnemonic:7s} {ins.op_str}",flush=True)
+
+# Assert the exact original ARM64 instructions behind the v1.3.12 edits.
+def at(va,n): return raw[va-0x4000:va-0x4000+n]
+assert at(0x2852e64,4).hex() == "4d090054"
+assert at(0x24c237c,8).hex() == "fe0f1ef8f44f01a9"
+assert at(0x24c6458,4).hex() == "e0060036"
+assert at(0x2847ea8,4).hex() == "2b010054"
+replacements = {
+  0x2852e64:bytes.fromhex("4b090054"), # B.LT keeps negative invalid, zero proceeds
+  0x24c237c:(0x52800000 | (5000 << 5)).to_bytes(4,"little"),
+  0x24c2380:bytes.fromhex("c0035fd6"), # RET, no prologue stack damage
+  0x24c6458:bytes.fromhex("1f2003d5"), # NOP, free-item debit need not exist
+}
+edited=bytearray(raw)
+for va,b in replacements.items(): edited[va-0x4000:va-0x4000+len(b)]=b
+for va,size,title in [
+    (0x2852e60,0x10,"Zero-count native transaction"),
+    (0x24c237c,8,"Instant virtual free Return allowance"),
+    (0x24c6448,0x18,"Free Return consume success continuation")
+]:
+ print("VERIFIED EDIT",title)
+ for ins in md.disasm(edited[va-0x4000:va-0x4000+size],va): print(hex(ins.address),ins.mnemonic,ins.op_str)
