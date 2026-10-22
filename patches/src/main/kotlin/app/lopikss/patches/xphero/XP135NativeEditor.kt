@@ -61,6 +61,40 @@ internal object XP135NativeEditor {
     private const val STAR_ZERO_SPEND_GUARD_OFFSET = STAR_UPGRADE_OFFSET + 8
     private val ORIGINAL_STAR_ZERO_SPEND_GUARD = byteArrayOf(0x2B, 0x01, 0x00, 0x54)
     private val FREE_STAR_ZERO_SPEND_GUARD = byteArrayOf(0x1F, 0x20, 0x03, 0xD5.toByte()) // NOP
+    // CostumeController.TryGradeUpCostume (VA 0x028482FC) uses the actual
+    // character-detail upgrade path, unlike CostumeManager.TryGradeUp.
+    //
+    // In the working 1-shard flow, VA 0x02848460 loads the 64-bit Cost1_Amount
+    // into x23, VA 0x02848478 calls HasEnoughPieces(int,long), and VA
+    // 0x02848484 reloads the cost into x19 before consuming it.
+    //
+    // For this star-upgrade callsite ONLY:
+    // - display data remains Cost1_Amount=0, so the screen shows free
+    // - pass a positive virtual cost of 1 to the native grade-up operation
+    // - replace the HasEnoughPieces call with AddCostumePiece(id, 1)
+    // - skip the old boolean affordability branch (AddCostumePiece is void)
+    // - pass amount 1 to the ORIGINAL TryConsumeCostumePiece, which deducts
+    //   the temporary one and fires its ordinary upgrade/UI callbacks.
+    //
+    // Both functions accept the same (int costumeID, long amount) arguments.
+    // Positive-cost hero upgrades are preserved; unrelated piece transactions
+    // are not intercepted. In a successful operation, net shards = +1 -1 = 0.
+    // A crash between these calls could leave a temporary +1 shard saved.
+    private val STAR_TEMPORARY_SHARD_PATCHES = listOf(
+        Triple(0x2848460 - 0x4000,
+            byteArrayOf(0xD7.toByte(), 0x12, 0x40, 0xF9.toByte()), // LDR X23,[X22,#0x20]
+            byteArrayOf(0x37, 0x00, 0x80.toByte(), 0xD2.toByte())), // MOV X23,#1
+        Triple(0x2848478 - 0x4000,
+            byteArrayOf(0x11, 0x18, 0x00, 0x94.toByte()), // BL HasEnoughPieces
+            byteArrayOf(0x9F.toByte(), 0x31, 0x00, 0x94.toByte())), // BL AddCostumePiece
+        Triple(0x284847C - 0x4000,
+            byteArrayOf(0x20, 0x1A, 0x00, 0x36), // TBZ W0,#0,fail
+            byteArrayOf(0x1F, 0x20, 0x03, 0xD5.toByte())), // NOP
+        Triple(0x2848484 - 0x4000,
+            byteArrayOf(0xD3.toByte(), 0x12, 0x40, 0xF9.toByte()), // LDR X19,[X22,#0x20]
+            byteArrayOf(0x33, 0x00, 0x80.toByte(), 0xD2.toByte())), // MOV X19,#1
+    )
+
     // CostumeController.TryGradeUpCostume calls TryConsumeCostumePiece.
     // The original <= 0 guard at VA 0x02852E64 diverts zero-amount spend
     // away from its inventory transaction and change notifications. The old
@@ -226,6 +260,12 @@ internal object XP135NativeEditor {
         }
         ORIGINAL_STAR_UPGRADE.copyInto(normalized, STAR_UPGRADE_OFFSET)
         ORIGINAL_STAR_ZERO_SPEND_GUARD.copyInto(normalized, STAR_ZERO_SPEND_GUARD_OFFSET)
+        for ((offset, original, virtualOne) in STAR_TEMPORARY_SHARD_PATCHES) {
+            require(equalAt(input, offset, original) || equalAt(input, offset, virtualOne)) {
+                "Unexpected XP Hero star-upgrade credit instruction"
+            }
+            original.copyInto(normalized, offset)
+        }
         val sha = MessageDigest.getInstance("SHA-256").digest(normalized)
             .joinToString("") { "%02x".format(it) }
         require(sha == ORIGINAL_SHA) { "Unexpected XP Hero ARM64 code; refusing patch" }
@@ -242,17 +282,22 @@ internal object XP135NativeEditor {
         }
     }
 
-    /** Version-locked zero-shard star upgrade fix, compatible with native patches. */
+    /**
+     * Zero-cost presentation with the ordinary positive-quantity star-upgrade
+     * transaction. Credit one shard *only* inside the character grade-up
+     * callsite and consume it through the original successful one-shard path.
+     */
     fun freeHeroStarUpgrades(input: ByteArray): ByteArray {
         verify(input)
-        return input.copyOf().also {
-            // Character detail upgrades call CostumeController.TryGradeUpCostume,
-            // not the static grade-up routine patched in v1.3.8-1.3.11.
-            // Restore static routine to original and fix the shared real
-            // costume-piece consumption helper instead.
-            ORIGINAL_STAR_UPGRADE.copyInto(it, STAR_UPGRADE_OFFSET)
-            ORIGINAL_STAR_ZERO_SPEND_GUARD.copyInto(it, STAR_ZERO_SPEND_GUARD_OFFSET)
-            ZERO_HERO_UNLOCK.copyInto(it, HERO_UNLOCK_CONSUME_OFFSET)
+        return input.copyOf().also { result ->
+            // Reverse earlier patches to the unrelated static grade-up route.
+            ORIGINAL_STAR_UPGRADE.copyInto(result, STAR_UPGRADE_OFFSET)
+            ORIGINAL_STAR_ZERO_SPEND_GUARD.copyInto(result, STAR_ZERO_SPEND_GUARD_OFFSET)
+            // Do not touch HERO_UNLOCK_CONSUME_OFFSET: the optional Blaster/Hana
+            // free-unlock patch owns that shared instruction independently.
+            for ((offset, _, virtualOne) in STAR_TEMPORARY_SHARD_PATCHES) {
+                virtualOne.copyInto(result, offset)
+            }
         }
     }
 
