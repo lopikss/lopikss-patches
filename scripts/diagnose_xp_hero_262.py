@@ -40,6 +40,13 @@ def show(va, size, title):
         print(f"  {insn.address:08x}  {insn.bytes.hex():10s} {insn.mnemonic:8s} {insn.op_str}")
 show(0x2847d70,0x2f0,"TryGradeUp near failed check, debit and exit")
 show(0x24c4be0,0x490,"ResetDailyTickets relevant logic")
+show(0x2a34ea0,0x200,"Star-upgrade zero-count approval/calculation method 0x2a34f04")
+show(0x2a34a80,0x220,"Star-upgrade inventory spending method 0x2a34b14")
+show(0x2a33f10,0x1e0,"Return inventory set-count method 0x2a33f70")
+show(0x24c6290,0x540,"Return portal activation and free-ticket verification")
+show(0x24c6e80,0x380,"Return portal ticket consumption method")
+show(0x24c22f0,0x120,"Current free/paid Return ticket counts")
+
 print("\n==== 7001/7002 MOVZ uses near RETURN methods ====",flush=True)
 hits=[]
 for i,(inst,) in enumerate(struct.iter_unpack("<I",data[:len(data)//4*4])):
