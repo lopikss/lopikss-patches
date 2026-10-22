@@ -85,6 +85,22 @@ internal object XP135NativeEditor {
     private val ORIGINAL_RETURN_ITEM = byteArrayOf(0x20, 0x6B, 0x83.toByte(), 0x52)
     private val FREE_RETURN_ITEM = byteArrayOf(0x40, 0x6B, 0x83.toByte(), 0x52)
 
+    // HomeReturnPortalPassController daily-reset handler (VA 0x024C4C48).
+    // Before v1.3.11, the new free-ticket ResetDailyTickets call only ran
+    // when a PAID pass existed AND was active. For accounts without a pass,
+    // these two branches skipped free ticket delivery entirely. Redirect
+    // only the null/inactive-pass exits to the EXISTING ResetDailyTickets
+    // invocation at VA 0x024C4CF0. Active paid-pass handling stays intact.
+    // Original "cbz x0, 0x24C4D64" -> "cbz x0, 0x24C4CF0".
+    private const val RETURN_NO_PASS_OFFSET = 0x24C4CD0 - 0x4000
+    private val ORIGINAL_RETURN_NO_PASS = byteArrayOf(0xA0.toByte(), 0x04, 0x00, 0xB4.toByte())
+    private val FREE_RETURN_NO_PASS = byteArrayOf(0x00, 0x01, 0x00, 0xB4.toByte())
+    // Original "tbz w0,#0, 0x24C4D64" -> "tbz w0,#0, 0x24C4CF0".
+    private const val RETURN_INACTIVE_PASS_OFFSET = 0x24C4CDC - 0x4000
+    private val ORIGINAL_RETURN_INACTIVE_PASS = byteArrayOf(0x40, 0x04, 0x00, 0x36)
+    private val FREE_RETURN_INACTIVE_PASS = byteArrayOf(0xA0.toByte(), 0x00, 0x00, 0x36)
+
+
     private fun instruction(bytes: ByteArray, offset: Int): Int =
         (bytes[offset].toInt() and 255) or
             ((bytes[offset + 1].toInt() and 255) shl 8) or
@@ -128,6 +144,16 @@ internal object XP135NativeEditor {
         }
         ORIGINAL_RETURN_QUANTITY.copyInto(normalized, RETURN_QUANTITY_OFFSET)
         ORIGINAL_RETURN_ITEM.copyInto(normalized, RETURN_ITEM_OFFSET)
+        for ((offset, original, changed) in listOf(
+            Triple(RETURN_NO_PASS_OFFSET, ORIGINAL_RETURN_NO_PASS, FREE_RETURN_NO_PASS),
+            Triple(RETURN_INACTIVE_PASS_OFFSET, ORIGINAL_RETURN_INACTIVE_PASS, FREE_RETURN_INACTIVE_PASS)
+        )) {
+            require(equalAt(input, offset, original) || equalAt(input, offset, changed)) {
+                "Unexpected Return daily-reset pass gate"
+            }
+            original.copyInto(normalized, offset)
+        }
+
         for ((offset, original, changed) in listOf(
             Triple(TRAIT_OFFSET, ORIGINAL_TRAIT, FREE_TRAIT),
             Triple(TOMB_OFFSET, ORIGINAL_TOMB, FREE_TOMB),
@@ -182,6 +208,8 @@ internal object XP135NativeEditor {
             replaceInstruction(it, RETURN_QUANTITY_OFFSET,
                 0xD2800013.toInt() or (freeReturnDaily shl 5))
             FREE_RETURN_ITEM.copyInto(it, RETURN_ITEM_OFFSET)
+            FREE_RETURN_NO_PASS.copyInto(it, RETURN_NO_PASS_OFFSET)
+            FREE_RETURN_INACTIVE_PASS.copyInto(it, RETURN_INACTIVE_PASS_OFFSET)
         }
     }
 }
