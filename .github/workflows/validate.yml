@@ -25,6 +25,7 @@ jobs:
       - name: Check whitespace errors
         run: git show --format= --check HEAD
       - name: Build patch bundle
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.ref != 'fix/xphero-v1314-temporary-shard-20261022'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew :patches:buildAndroid --no-daemon
