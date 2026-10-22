@@ -1,53 +1,38 @@
 #!/usr/bin/env python3
-"""Read-only inspect original XP Hero 26.2.0 for grade-up-scoped shard credit."""
-import io, zipfile, hashlib, os, re, subprocess, tempfile
-from capstone import Cs, CS_ARCH_ARM64, CS_MODE_ARM
-
+"""Read-only original XP Hero 26.2.0 native shard credit/grade-up inspection."""
+import io,zipfile,hashlib,struct
+from capstone import Cs,CS_ARCH_ARM64,CS_MODE_ARM
 with zipfile.ZipFile("/tmp/xp-hero-262.xapk") as z:
-    for x in z.namelist():
-        print("OUTER",x,flush=True)
-    with zipfile.ZipFile(io.BytesIO(z.read("config.arm64_v8a.apk"))) as b:
-        code=b.read("lib/arm64-v8a/libil2cpp.so")
-    meta=None
-    for n in z.namelist():
-        if n.endswith(".apk"):
-            with zipfile.ZipFile(io.BytesIO(z.read(n))) as b:
-                if "assets/bin/Data/Managed/Metadata/global-metadata.dat" in b.namelist():
-                    meta=b.read("assets/bin/Data/Managed/Metadata/global-metadata.dat")
-assert hashlib.sha256(code).hexdigest()=="88b591e6099c55b1147b865847a14651b108f9bd6837707371766a054c8df443"
-assert meta
-with tempfile.TemporaryDirectory() as td:
-    lib=os.path.join(td,"libil2cpp.so");md=os.path.join(td,"global-metadata.dat")
-    open(lib,"wb").write(code);open(md,"wb").write(meta)
-    repo=os.path.join(td,"dumper")
-    subprocess.run(["git","clone","-q","--depth","1","https://github.com/ChanGu54/Il2CppDumper.git",repo],check=True)
-    p=subprocess.run(["dotnet","build",os.path.join(repo,"Il2CppDumper.sln"),"-c","Release","-v","quiet"],capture_output=True,text=True,timeout=300)
-    print("BUILD DUMPER",p.returncode,p.stdout[-1200:],p.stderr[-500:],flush=True)
-    assert p.returncode==0
-    dlls=[]
-    for root,dirs,files in os.walk(repo):
-        if "Il2CppDumper.dll" in files and "/bin/" in root:
-            dlls.append(os.path.join(root,"Il2CppDumper.dll"))
-    out=os.path.join(td,"output");os.makedirs(out)
-    p=subprocess.run(["dotnet",dlls[0],lib,md,out],input="\n\n",capture_output=True,text=True,timeout=180,cwd=out)
-    print("DUMPER",p.returncode,p.stdout[-1000:],p.stderr[-500:],flush=True)
-    # Il2CppDumper prints Done! and writes dump.cs successfully before its
-    # unsupported ReadKey prompt exits non-zero on headless CI.
-    assert os.path.isfile(os.path.join(out,"dump.cs"))
-    dump=open(os.path.join(out,"dump.cs"),errors="replace").read().splitlines()
-    for i,line in enumerate(dump):
-        if re.search(r'^public (?:static )?class CostumeController\b|^public (?:static )?class CostumeManager\b',line):
-            print("CLASS",i,line,flush=True)
-            end=next((j for j in range(i+1,len(dump)) if dump[j].startswith("// Namespace:")),min(i+280,len(dump)))
-            for l in dump[i:min(end,i+160)]:
-                if re.search(r'\b(Add|Acquire|Increase|Give|Set|Get|Grant|Change|TryConsume|TryGradeUp|Piece|Shard|Count|Costume)\w*\s*\(',l) or " RVA: " in l:
-                    print("METHOD",l,flush=True)
-    names=re.compile(r"\b(AddCostume|AddPiece|AddHero|AcquirePiece|AcquireCostume|GiveCostume|IncreasePiece|SetPieceCount|ChangePieceCount|CostumePiece|Shard)\w*\s*\(",re.I)
-    for i,line in enumerate(dump):
-        if names.search(line) and "RVA:" not in line:
-            print("MATCH",i," || ".join(dump[max(0,i-1):i+1]),flush=True)
-    m=Cs(CS_ARCH_ARM64,CS_MODE_ARM)
-    for va,n in [(0x2848440,0x85),(0x2854ed4,0x60)]:
-        print("ASM",hex(va),flush=True)
-        for inst in m.disasm(code[va-0x4000:va-0x4000+n],va):
-            print(f"{inst.address:08x} {inst.bytes.hex():10s} {inst.mnemonic:8s} {inst.op_str}",flush=True)
+    with zipfile.ZipFile(io.BytesIO(z.read("config.arm64_v8a.apk"))) as f:
+        lib=f.read("lib/arm64-v8a/libil2cpp.so")
+sha=hashlib.sha256(lib).hexdigest()
+print("ORIGINAL",len(lib),sha,flush=True)
+assert len(lib)==83724712 and sha=="88b591e6099c55b1147b865847a14651b108f9bd6837707371766a054c8df443"
+def data(va,n):
+    return lib[va-0x4000:va-0x4000+n]
+md=Cs(CS_ARCH_ARM64,CS_MODE_ARM)
+for va,size,name in [
+  (0x2854af4,0x19c,"CostumeManager.AddCostumePiece"),
+  (0x2854e7c,0x58,"CostumePiece.AddPieces"),
+  (0x2848438,0x84,"CostumeController.TryGradeUpCostume"),
+  (0x2852dd0,0x170,"CostumeController.TryConsumeCostumePiece")]:
+    print("====",name,hex(va),"====",flush=True)
+    for ins in md.disasm(data(va,size),va):
+        print(f"{ins.address:08x} {ins.bytes.hex():10s} {ins.mnemonic:7s} {ins.op_str}",flush=True)
+for va,orig in [
+    (0x2848460,"d71240f9"),
+    (0x2848478,"11180094"),
+    (0x284847c,"201a0036"),
+    (0x2848484,"d31240f9"),
+]:
+    print("VERIFY",hex(va),data(va,4).hex(),flush=True)
+    assert data(va,4).hex()==orig
+mods={0x2848460:(0xd2800037).to_bytes(4,"little"),
+      0x2848478:(0x9400319f).to_bytes(4,"little"),
+      0x284847c:bytes.fromhex("1f2003d5"),
+      0x2848484:(0xd2800033).to_bytes(4,"little")}
+modified=bytearray(lib)
+for va,ins in mods.items(): modified[va-0x4000:va-0x4000+4]=ins
+print("==== PROPOSED ====",flush=True)
+for ins in md.disasm(modified[0x2848440-0x4000:0x284849c-0x4000],0x2848440):
+    print(f"{ins.address:08x} {ins.bytes.hex():10s} {ins.mnemonic:7s} {ins.op_str}",flush=True)
