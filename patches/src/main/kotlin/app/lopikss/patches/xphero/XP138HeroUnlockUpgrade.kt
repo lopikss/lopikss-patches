@@ -64,13 +64,19 @@ private object XP138Heroes {
 @Suppress("unused")
 val xp138UnlockLastTwoHeroes = rawResourcePatch(
     name = "XP Hero | Unlock Blaster & Hana (FREE)",
-    description = "Experimental: unlock Blaster and Hana with zero pieces; does not change other heroes.",
+    description = "Experimental: Blaster and Hana cost 0 pieces; allows zero-piece confirmation in native code.",
     default = false,
 ) {
     compatibleWith(XP_HERO)
     execute {
         val heroFile = get(XP138Heroes.HERO_DATA)
-        heroFile.writeBytes(XP138Heroes.unlockBlasterAndHana(heroFile.readBytes()))
+        val native = get(XP135NativeEditor.ARM64)
+        // Validate the original asset and native game logic before changing
+        // either file. This remains opt-in and version-specific.
+        val newHeroData = XP138Heroes.unlockBlasterAndHana(heroFile.readBytes())
+        val newNative = XP135NativeEditor.allowZeroPieceHeroUnlock(native.readBytes())
+        heroFile.writeBytes(newHeroData)
+        native.writeBytes(newNative)
     }
 }
 
