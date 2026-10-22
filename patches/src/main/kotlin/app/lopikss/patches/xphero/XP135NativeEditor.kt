@@ -42,23 +42,25 @@ internal object XP135NativeEditor {
         0x1F, 0x01, 0x00, 0x71, // cmp w8,#0
         0x89.toByte(), 0x0C, 0x80.toByte(), 0x52 // mov w9,#100
     )
-    // CostumeManager.TryGradeUp: at VA 0x02847EA0 the original TBZ jumps
-    // to failure when HasEnough(cost) returns false for the zero-cost case.
-    // v1.3.8-v1.3.9 NOPed the rejection branch, but left w0 == 0 (failure)
-    // live on the otherwise-successful path. On device, the star upgrade
-    // persisted but the UI stayed locked until the app restarted.
-    // MOV W0,#1 also removes the rejection branch while promoting that
-    // check result to success, matching a legitimate HasEnough success path.
-    // The unchanged CMP X22,#1 / B.LT guard skips deduction for zero shards.
-    // This is a targeted experimental correction; test UI completion in game.
+    // CostumeManager.TryGradeUp: the unmodified HasEnough(cost) check accepts
+    // zero (inventory balance >= zero). The prior v1.3.8-1.3.10 changes
+    // incorrectly bypassed that check, while leaving the next B.LT guard in
+    // place; the zero-cost operation then SKIPPED TryConsume and its normal
+    // transaction/notification path. The user's upgrade persisted but the
+    // upgrade UI stayed locked until restarting the game.
+    //
+    // Keep the original HasEnough result branch at VA 0x02847EA0; NOP ONLY
+    // the B.LT skip of the zero-quantity consumer at VA 0x02847EA8. Thus the
+    // real TryConsume(0) call at 0x02847EBC runs and continues through the
+    // ordinary grade-up notifications. This does not deduct shards.
     private const val STAR_UPGRADE_OFFSET = 0x2843EA0
     private val ORIGINAL_STAR_UPGRADE = byteArrayOf(0xA0.toByte(), 0x1A, 0x00, 0x36)
-    private val FREE_STAR_UPGRADE = byteArrayOf(0x20, 0x00, 0x80.toByte(), 0x52) // ARM64 MOV W0,#1
-    private val LEGACY_STAR_UPGRADE = byteArrayOf(0x1F, 0x20, 0x03, 0xD5.toByte()) // v1.3.8-v1.3.9 NOP
-    private val STAR_UPGRADE_SPEND_GUARD = byteArrayOf(
-        0xDF.toByte(), 0x06, 0x00, 0xF1.toByte(),
-        0x2B, 0x01, 0x00, 0x54
-    )
+    private val LEGACY_MOV_STAR_UPGRADE = byteArrayOf(0x20, 0x00, 0x80.toByte(), 0x52) // v1.3.10
+    private val LEGACY_NOP_STAR_UPGRADE = byteArrayOf(0x1F, 0x20, 0x03, 0xD5.toByte()) // v1.3.8-9
+    private val STAR_UPGRADE_SPEND_CMP = byteArrayOf(0xDF.toByte(), 0x06, 0x00, 0xF1.toByte())
+    private const val STAR_ZERO_SPEND_GUARD_OFFSET = STAR_UPGRADE_OFFSET + 8
+    private val ORIGINAL_STAR_ZERO_SPEND_GUARD = byteArrayOf(0x2B, 0x01, 0x00, 0x54)
+    private val FREE_STAR_ZERO_SPEND_GUARD = byteArrayOf(0x1F, 0x20, 0x03, 0xD5.toByte()) // NOP
     // CostumeManager.TryConsumeCostumePiece calls its lower-level inventory
     // consumer; that returns failure for a quantity of 0 even when the
     // piece-cost check passed. 0x02852E64 branches to error logging.
@@ -85,6 +87,22 @@ internal object XP135NativeEditor {
     private val ORIGINAL_RETURN_ITEM = byteArrayOf(0x20, 0x6B, 0x83.toByte(), 0x52)
     private val FREE_RETURN_ITEM = byteArrayOf(0x40, 0x6B, 0x83.toByte(), 0x52)
 
+    // HomeReturnPortalPassController daily-reset handler (VA 0x024C4C48).
+    // Before v1.3.11, the new free-ticket ResetDailyTickets call only ran
+    // when a PAID pass existed AND was active. For accounts without a pass,
+    // these two branches skipped free ticket delivery entirely. Redirect
+    // only the null/inactive-pass exits to the EXISTING ResetDailyTickets
+    // invocation at VA 0x024C4CF0. Active paid-pass handling stays intact.
+    // Original "cbz x0, 0x24C4D64" -> "cbz x0, 0x24C4CF0".
+    private const val RETURN_NO_PASS_OFFSET = 0x24C4CD0 - 0x4000
+    private val ORIGINAL_RETURN_NO_PASS = byteArrayOf(0xA0.toByte(), 0x04, 0x00, 0xB4.toByte())
+    private val FREE_RETURN_NO_PASS = byteArrayOf(0x00, 0x01, 0x00, 0xB4.toByte())
+    // Original "tbz w0,#0, 0x24C4D64" -> "tbz w0,#0, 0x24C4CF0".
+    private const val RETURN_INACTIVE_PASS_OFFSET = 0x24C4CDC - 0x4000
+    private val ORIGINAL_RETURN_INACTIVE_PASS = byteArrayOf(0x40, 0x04, 0x00, 0x36)
+    private val FREE_RETURN_INACTIVE_PASS = byteArrayOf(0xA0.toByte(), 0x00, 0x00, 0x36)
+
+
     private fun instruction(bytes: ByteArray, offset: Int): Int =
         (bytes[offset].toInt() and 255) or
             ((bytes[offset + 1].toInt() and 255) shl 8) or
@@ -110,8 +128,8 @@ internal object XP135NativeEditor {
         require(equalAt(input, TOMB_OFFSET - 8, TOMB_NEIGHBORS)) {
             "Different Heroes' Tomb price calculation; refusing patch"
         }
-        require(equalAt(input, STAR_UPGRADE_OFFSET + 4, STAR_UPGRADE_SPEND_GUARD)) {
-            "The zero-shard spending guard differs; refusing hero upgrade edit"
+        require(equalAt(input, STAR_UPGRADE_OFFSET + 4, STAR_UPGRADE_SPEND_CMP)) {
+            "The zero-shard spending comparison differs; refusing hero upgrade edit"
         }
         require(equalAt(input, HERO_UNLOCK_CONSUME_OFFSET - 4, HERO_UNLOCK_COMPARE) &&
                 equalAt(input, HERO_UNLOCK_CONSUME_OFFSET + 0x120, HERO_UNLOCK_SUCCESS)) {
@@ -129,6 +147,16 @@ internal object XP135NativeEditor {
         ORIGINAL_RETURN_QUANTITY.copyInto(normalized, RETURN_QUANTITY_OFFSET)
         ORIGINAL_RETURN_ITEM.copyInto(normalized, RETURN_ITEM_OFFSET)
         for ((offset, original, changed) in listOf(
+            Triple(RETURN_NO_PASS_OFFSET, ORIGINAL_RETURN_NO_PASS, FREE_RETURN_NO_PASS),
+            Triple(RETURN_INACTIVE_PASS_OFFSET, ORIGINAL_RETURN_INACTIVE_PASS, FREE_RETURN_INACTIVE_PASS)
+        )) {
+            require(equalAt(input, offset, original) || equalAt(input, offset, changed)) {
+                "Unexpected Return daily-reset pass gate"
+            }
+            original.copyInto(normalized, offset)
+        }
+
+        for ((offset, original, changed) in listOf(
             Triple(TRAIT_OFFSET, ORIGINAL_TRAIT, FREE_TRAIT),
             Triple(TOMB_OFFSET, ORIGINAL_TOMB, FREE_TOMB),
             Triple(HERO_UNLOCK_CONSUME_OFFSET, ORIGINAL_HERO_UNLOCK, ZERO_HERO_UNLOCK)
@@ -138,14 +166,19 @@ internal object XP135NativeEditor {
             }
             original.copyInto(normalized, offset)
         }
-        // Also allow repatching a source with the old NOP; normalization
-        // restores the exact original instruction before checking SHA-256.
+        // Normalize all previous released star-upgrade byte patterns, plus
+        // the new zero-cost Spend guard, before the original-library SHA check.
         require(equalAt(input, STAR_UPGRADE_OFFSET, ORIGINAL_STAR_UPGRADE) ||
-            equalAt(input, STAR_UPGRADE_OFFSET, FREE_STAR_UPGRADE) ||
-            equalAt(input, STAR_UPGRADE_OFFSET, LEGACY_STAR_UPGRADE)) {
-            "Unknown XP Hero star upgrade instruction"
+            equalAt(input, STAR_UPGRADE_OFFSET, LEGACY_MOV_STAR_UPGRADE) ||
+            equalAt(input, STAR_UPGRADE_OFFSET, LEGACY_NOP_STAR_UPGRADE)) {
+            "Unknown XP Hero star upgrade approval branch"
+        }
+        require(equalAt(input, STAR_ZERO_SPEND_GUARD_OFFSET, ORIGINAL_STAR_ZERO_SPEND_GUARD) ||
+            equalAt(input, STAR_ZERO_SPEND_GUARD_OFFSET, FREE_STAR_ZERO_SPEND_GUARD)) {
+            "Unknown XP Hero star upgrade spend branch"
         }
         ORIGINAL_STAR_UPGRADE.copyInto(normalized, STAR_UPGRADE_OFFSET)
+        ORIGINAL_STAR_ZERO_SPEND_GUARD.copyInto(normalized, STAR_ZERO_SPEND_GUARD_OFFSET)
         val sha = MessageDigest.getInstance("SHA-256").digest(normalized)
             .joinToString("") { "%02x".format(it) }
         require(sha == ORIGINAL_SHA) { "Unexpected XP Hero ARM64 code; refusing patch" }
@@ -165,7 +198,10 @@ internal object XP135NativeEditor {
     /** Version-locked zero-shard star upgrade fix, compatible with native patches. */
     fun freeHeroStarUpgrades(input: ByteArray): ByteArray {
         verify(input)
-        return input.copyOf().also { FREE_STAR_UPGRADE.copyInto(it, STAR_UPGRADE_OFFSET) }
+        return input.copyOf().also {
+            ORIGINAL_STAR_UPGRADE.copyInto(it, STAR_UPGRADE_OFFSET)
+            FREE_STAR_ZERO_SPEND_GUARD.copyInto(it, STAR_ZERO_SPEND_GUARD_OFFSET)
+        }
     }
 
     fun freeTraitRerolls(input: ByteArray): ByteArray {
@@ -182,6 +218,8 @@ internal object XP135NativeEditor {
             replaceInstruction(it, RETURN_QUANTITY_OFFSET,
                 0xD2800013.toInt() or (freeReturnDaily shl 5))
             FREE_RETURN_ITEM.copyInto(it, RETURN_ITEM_OFFSET)
+            FREE_RETURN_NO_PASS.copyInto(it, RETURN_NO_PASS_OFFSET)
+            FREE_RETURN_INACTIVE_PASS.copyInto(it, RETURN_INACTIVE_PASS_OFFSET)
         }
     }
 }

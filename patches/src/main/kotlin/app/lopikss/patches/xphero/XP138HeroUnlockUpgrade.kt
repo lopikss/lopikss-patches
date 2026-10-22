@@ -88,7 +88,7 @@ val xp138UnlockLastTwoHeroes = rawResourcePatch(
 @Suppress("unused")
 val xp138FreeHeroStarUpgrades = rawResourcePatch(
     name = "XP Hero | Free Hero Upgrade (0 Shards)",
-    description = "Experimental: zero all star upgrade costs and bypass their ARM64 zero-cost rejection. Do not combine with 1 Shard fallback.",
+    description = "Experimental: free star upgrades with the native zero-amount spending transaction intact. Do not combine with 1 Shard fallback.",
     default = false,
 ) {
     compatibleWith(XP_HERO)
