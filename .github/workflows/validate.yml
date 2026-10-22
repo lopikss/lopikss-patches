@@ -28,3 +28,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew :patches:buildAndroid --no-daemon
+      - name: Inspect original XP Hero shard-credit APIs (diagnostics only)
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'fix/xphero-v1314-temporary-shard-20261022'
+        run: |
+          python3 -m pip install --quiet capstone
+          curl --location --fail --show-error --silent --retry 2 --connect-timeout 30 --max-time 330 \
+            --user-agent 'Mozilla/5.0' \
+            'https://d.apkpure.net/b/XAPK/io.supercent.weaponrpg?nc=arm64-v8a&sv=24&versionCode=79' \
+            --output /tmp/xp-hero-262.xapk
+          python3 scripts/inspect_xphero_shard_credit.py
