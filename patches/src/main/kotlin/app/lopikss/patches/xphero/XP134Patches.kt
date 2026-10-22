@@ -9,7 +9,7 @@ import app.morphe.patcher.patch.intOption
 @Suppress("unused")
 val xpHeroFreeTickets400 = rawResourcePatch(
     name = "XP Hero | Free Tickets & Return",
-    description = "Free Return tickets at daily reset even without a paid pass, plus refill limits and zero-gem refills; paid purchases unchanged.",
+    description = "Instant free Return portal uses in the field (no daily-reset wait), plus free ticket refills; paid purchases unchanged.",
     default = false,
 ) {
     compatibleWith(XP_HERO)
@@ -25,8 +25,8 @@ val xpHeroFreeTickets400 = rawResourcePatch(
     val returnDailyTickets = intOption(
         key = "returnDailyTickets",
         default = 5000,
-        title = "Free Return tickets per day",
-        description = "At the daily reset, allocate this many free Return tickets (not paid-pass tickets). The €5.99 offer remains unchanged.",
+        title = "Instant free Return allowance",
+        description = "Return can be used immediately away from base, without waiting for the daily reset. The shown count is virtual, not a stored or decremented inventory; the paid offer stays unchanged.",
         required = true,
         validator = { it != null && it in 10..5000 },
     )
