@@ -12,6 +12,8 @@ for va,n,title in [
   (0x28482fc,0x5d8,"CostumeController.TryGradeUpCostume full body"),
   (0x2847e6c,0x1d0,"CostumeManager.TryGradeUp static body and success"),
   (0x24c237c,0x70,"HomeReturnPortal Free Count"),
+  (0x2852dd0,0x224,"CostumeController.TryConsumePiece positive and zero flow"),
+  (0x284e4bc,0x130,"CostumeController.HasEnoughPieces"),
   (0x24c4400,0x125,"HomeReturnPortal button next action"),
   (0x24c6330,0x320,"HomeReturnPortal TryUse")
 ]:
