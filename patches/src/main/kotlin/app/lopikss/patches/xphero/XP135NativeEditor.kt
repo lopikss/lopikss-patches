@@ -10,6 +10,7 @@ import java.security.MessageDigest
  * - Heroes' Tomb refill price fallback (v1.3.5, experimental)
  * - free Return daily reset (v1.3.7, experimental)
  * - hero star upgrades (v1.3.8, experimental)
+ * - zero-piece hero unlock confirmation (v1.3.9, experimental)
  *
  * Normalize ONLY these exact known changes before checking the complete
  * original library SHA-256. This permits either patch order and prevents
@@ -52,6 +53,19 @@ internal object XP135NativeEditor {
         0xDF.toByte(), 0x06, 0x00, 0xF1.toByte(),
         0x2B, 0x01, 0x00, 0x54
     )
+    // CostumeManager.TryConsumeCostumePiece calls its lower-level inventory
+    // consumer; that returns failure for a quantity of 0 even when the
+    // piece-cost check passed. 0x02852E64 branches to error logging.
+    // Redirect *only the zero/negative count* to the method's existing
+    // "mov w0, #1" return at VA 0x02852F84. For positive piece costs,
+    // execution falls through the exact original inventory-debit logic.
+    // Original B.LE -> error VA 0x02852F8C. New B.LE -> success VA 0x02852F84.
+    private const val HERO_UNLOCK_CONSUME_OFFSET = 0x2852e64 - 0x4000
+    private val ORIGINAL_HERO_UNLOCK = byteArrayOf(0x4D, 0x09, 0x00, 0x54)
+    private val ZERO_HERO_UNLOCK = byteArrayOf(0x0D, 0x09, 0x00, 0x54)
+    private val HERO_UNLOCK_COMPARE = byteArrayOf(0x7F, 0x02, 0x00, 0xF1)
+    private val HERO_UNLOCK_SUCCESS = byteArrayOf(0x20, 0x00, 0x80.toByte(), 0x52)
+
 
     // HomeReturnPortalPassController.ResetDailyTickets originally sets
     // Stackable_HomeReturnPortalTicket (paid, item 7001) to the advertised
@@ -93,6 +107,10 @@ internal object XP135NativeEditor {
         require(equalAt(input, STAR_UPGRADE_OFFSET + 4, STAR_UPGRADE_SPEND_GUARD)) {
             "The zero-shard spending guard differs; refusing hero upgrade edit"
         }
+        require(equalAt(input, HERO_UNLOCK_CONSUME_OFFSET - 4, HERO_UNLOCK_COMPARE) &&
+                equalAt(input, HERO_UNLOCK_CONSUME_OFFSET + 0x120, HERO_UNLOCK_SUCCESS)) {
+            "Different XP Hero zero-piece unlock function; refusing patch"
+        }
         val normalized = input.copyOf()
         require(equalAt(input, RETURN_QUANTITY_OFFSET, ORIGINAL_RETURN_QUANTITY) ||
             knownFreeReturnQuantity(input)) {
@@ -107,7 +125,8 @@ internal object XP135NativeEditor {
         for ((offset, original, changed) in listOf(
             Triple(TRAIT_OFFSET, ORIGINAL_TRAIT, FREE_TRAIT),
             Triple(TOMB_OFFSET, ORIGINAL_TOMB, FREE_TOMB),
-            Triple(STAR_UPGRADE_OFFSET, ORIGINAL_STAR_UPGRADE, FREE_STAR_UPGRADE)
+            Triple(STAR_UPGRADE_OFFSET, ORIGINAL_STAR_UPGRADE, FREE_STAR_UPGRADE),
+            Triple(HERO_UNLOCK_CONSUME_OFFSET, ORIGINAL_HERO_UNLOCK, ZERO_HERO_UNLOCK)
         )) {
             require(equalAt(input, offset, original) || equalAt(input, offset, changed)) {
                 "Unknown XP Hero native instructions"
@@ -117,6 +136,17 @@ internal object XP135NativeEditor {
         val sha = MessageDigest.getInstance("SHA-256").digest(normalized)
             .joinToString("") { "%02x".format(it) }
         require(sha == ORIGINAL_SHA) { "Unexpected XP Hero ARM64 code; refusing patch" }
+    }
+
+    /**
+     * Let the normal hero-unlock purchase flow treat a zero-piece
+     * consumption as success, without changing positive piece spending.
+     */
+    fun allowZeroPieceHeroUnlock(input: ByteArray): ByteArray {
+        verify(input)
+        return input.copyOf().also {
+            ZERO_HERO_UNLOCK.copyInto(it, HERO_UNLOCK_CONSUME_OFFSET)
+        }
     }
 
     /** Version-locked zero-shard star upgrade fix, compatible with native patches. */
