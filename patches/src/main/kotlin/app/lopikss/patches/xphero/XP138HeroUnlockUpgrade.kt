@@ -64,7 +64,7 @@ private object XP138Heroes {
 @Suppress("unused")
 val xp138UnlockLastTwoHeroes = rawResourcePatch(
     name = "XP Hero | Unlock Blaster & Hana (FREE)",
-    description = "Experimental: Blaster and Hana cost 0 pieces; allows zero-piece confirmation in native code.",
+    description = "Experimental: Blaster and Hana cost 0 pieces; the native zero-amount consume path keeps its normal notifications.",
     default = false,
 ) {
     compatibleWith(XP_HERO)
@@ -88,7 +88,7 @@ val xp138UnlockLastTwoHeroes = rawResourcePatch(
 @Suppress("unused")
 val xp138FreeHeroStarUpgrades = rawResourcePatch(
     name = "XP Hero | Free Hero Upgrade (0 Shards)",
-    description = "Experimental: free star upgrades with the native zero-amount spending transaction intact. Do not combine with 1 Shard fallback.",
+    description = "Experimental: 0-shard star upgrades use the real character-detail consume and UI notification path. Do not combine with 1 Shard fallback.",
     default = false,
 ) {
     compatibleWith(XP_HERO)
