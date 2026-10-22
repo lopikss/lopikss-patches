@@ -1,3 +1,9 @@
+## [1.3.12](https://github.com/lopikss/lopikss-patches/compare/v1.3.11...v1.3.12) (2026-10-22)
+
+### 🐛 Bug Fixes
+
+* XP Hero instant free Return and zero-shard character UI flow ([d969a4b](https://github.com/lopikss/lopikss-patches/commit/d969a4beae9246e9a0c4fbb0c1352d5a76ac6c9e))
+
 ## [1.3.11](https://github.com/lopikss/lopikss-patches/compare/v1.3.10...v1.3.11) (2026-10-22)
 
 ### 🐛 Bug Fixes

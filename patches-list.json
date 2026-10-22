@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.3.11",
+  "version": "1.3.12",
   "patches": [
     {
       "name": "XP Hero | Free Hero Evolve",
@@ -56,7 +56,7 @@
     },
     {
       "name": "XP Hero | Free Hero Upgrade (0 Shards)",
-      "description": "Experimental: free star upgrades with the native zero-amount spending transaction intact. Do not combine with 1 Shard fallback.",
+      "description": "Experimental: 0-shard star upgrades use the real character-detail consume and UI notification path. Do not combine with 1 Shard fallback.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -215,7 +215,7 @@
     },
     {
       "name": "XP Hero | Free Tickets & Return",
-      "description": "Free Return tickets at daily reset even without a paid pass, plus refill limits and zero-gem refills; paid purchases unchanged.",
+      "description": "Instant free Return portal uses in the field (no daily-reset wait), plus free ticket refills; paid purchases unchanged.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -249,8 +249,8 @@
         },
         {
           "key": "returnDailyTickets",
-          "title": "Free Return tickets per day",
-          "description": "At the daily reset, allocate this many free Return tickets (not paid-pass tickets). The €5.99 offer remains unchanged.",
+          "title": "Instant free Return allowance",
+          "description": "Return can be used immediately away from base, without waiting for the daily reset. The shown count is virtual, not a stored or decremented inventory; the paid offer stays unchanged.",
           "required": true,
           "type": "kotlin.Int",
           "default": 5000,
@@ -347,7 +347,7 @@
     },
     {
       "name": "XP Hero | Unlock Blaster & Hana (FREE)",
-      "description": "Experimental: Blaster and Hana cost 0 pieces; allows zero-piece confirmation in native code.",
+      "description": "Experimental: Blaster and Hana cost 0 pieces; the native zero-amount consume path keeps its normal notifications.",
       "default": false,
       "category": null,
       "compatiblePackages": [
