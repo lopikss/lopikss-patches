@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-22T13:08:54",
-  "description": "## [1.3.12](https://github.com/lopikss/lopikss-patches/compare/v1.3.11...v1.3.12) (2026-10-22)\n\n### 🐛 Bug Fixes\n\n* XP Hero instant free Return and zero-shard character UI flow ([d969a4b](https://github.com/lopikss/lopikss-patches/commit/d969a4beae9246e9a0c4fbb0c1352d5a76ac6c9e))",
-  "download_url": "https://github.com/lopikss/lopikss-patches/releases/download/v1.3.12/patches-1.3.12.mpp",
+  "created_at": "2026-10-22T13:36:13",
+  "description": "## [1.3.13](https://github.com/lopikss/lopikss-patches/compare/v1.3.12...v1.3.13) (2026-10-22)\n\n### 🐛 Bug Fixes\n\n* set XP Hero free Return allowance default to 50 ([eada185](https://github.com/lopikss/lopikss-patches/commit/eada185b807e3cbb656ecb491b205b519a658496))",
+  "download_url": "https://github.com/lopikss/lopikss-patches/releases/download/v1.3.13/patches-1.3.13.mpp",
   "signature_download_url": "",
-  "version": "1.3.12"
+  "version": "1.3.13"
 }

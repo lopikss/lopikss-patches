@@ -1,3 +1,9 @@
+## [1.3.13](https://github.com/lopikss/lopikss-patches/compare/v1.3.12...v1.3.13) (2026-10-22)
+
+### 🐛 Bug Fixes
+
+* set XP Hero free Return allowance default to 50 ([eada185](https://github.com/lopikss/lopikss-patches/commit/eada185b807e3cbb656ecb491b205b519a658496))
+
 ## [1.3.12](https://github.com/lopikss/lopikss-patches/compare/v1.3.11...v1.3.12) (2026-10-22)
 
 ### 🐛 Bug Fixes

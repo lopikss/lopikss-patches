@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.3.12",
+  "version": "1.3.13",
   "patches": [
     {
       "name": "XP Hero | Free Hero Evolve",
@@ -253,7 +253,7 @@
           "description": "Return can be used immediately away from base, without waiting for the daily reset. The shown count is virtual, not a stored or decremented inventory; the paid offer stays unchanged.",
           "required": true,
           "type": "kotlin.Int",
-          "default": 5000,
+          "default": 50,
           "values": null
         },
         {
@@ -262,7 +262,7 @@
           "description": "Experimental: increase the game's initial free-return setting from 3. May be limited by online checks.",
           "required": true,
           "type": "kotlin.Int",
-          "default": 5000,
+          "default": 50,
           "values": null
         }
       ]
