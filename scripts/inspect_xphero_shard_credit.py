@@ -31,7 +31,9 @@ with tempfile.TemporaryDirectory() as td:
     out=os.path.join(td,"output");os.makedirs(out)
     p=subprocess.run(["dotnet",dlls[0],lib,md,out],input="\n\n",capture_output=True,text=True,timeout=180,cwd=out)
     print("DUMPER",p.returncode,p.stdout[-1000:],p.stderr[-500:],flush=True)
-    assert p.returncode==0
+    # Il2CppDumper prints Done! and writes dump.cs successfully before its
+    # unsupported ReadKey prompt exits non-zero on headless CI.
+    assert os.path.isfile(os.path.join(out,"dump.cs"))
     dump=open(os.path.join(out,"dump.cs"),errors="replace").read().splitlines()
     for i,line in enumerate(dump):
         if re.search(r'^public (?:static )?class CostumeController\b|^public (?:static )?class CostumeManager\b',line):
