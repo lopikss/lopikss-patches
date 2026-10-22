@@ -1,3 +1,9 @@
+## [1.3.14](https://github.com/lopikss/lopikss-patches/compare/v1.3.13...v1.3.14) (2026-10-22)
+
+### 🐛 Bug Fixes
+
+* XP Hero zero-shard star upgrades via temporary credit and normal spend ([bf9941f](https://github.com/lopikss/lopikss-patches/commit/bf9941ffc35c66f6a528fb077fdeaa01f0b01410))
+
 ## [1.3.13](https://github.com/lopikss/lopikss-patches/compare/v1.3.12...v1.3.13) (2026-10-22)
 
 ### 🐛 Bug Fixes
