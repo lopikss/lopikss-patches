@@ -25,6 +25,7 @@ jobs:
       - name: Check whitespace errors
         run: git show --format= --check HEAD
       - name: Build patch bundle
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.ref != 'investigate/xphero-star-ui-20261022'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew :patches:buildAndroid --no-daemon
@@ -35,4 +36,5 @@ jobs:
             --user-agent 'Mozilla/5.0' \
             'https://d.apkpure.net/b/XAPK/io.supercent.weaponrpg?nc=arm64-v8a&sv=24&versionCode=79' \
             --output /tmp/xp-hero-262.xapk
+          python3 -m pip install --quiet capstone
           python3 scripts/inspect_xphero_ui.py
