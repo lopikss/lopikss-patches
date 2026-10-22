@@ -1,3 +1,9 @@
+## [1.3.10](https://github.com/lopikss/lopikss-patches/compare/v1.3.9...v1.3.10) (2026-10-22)
+
+### 🐛 Bug Fixes
+
+* correct XP Hero zero-shard star upgrade success path ([195aedb](https://github.com/lopikss/lopikss-patches/commit/195aedb3bbbfff1a2cf97b2a38b4c485d5ccea4c)), closes [#1](https://github.com/lopikss/lopikss-patches/issues/1)
+
 ## [1.3.9](https://github.com/lopikss/lopikss-patches/compare/v1.3.8...v1.3.9) (2026-10-22)
 
 ### 🐛 Bug Fixes
