@@ -9,7 +9,7 @@ import app.morphe.patcher.patch.intOption
 @Suppress("unused")
 val xpHeroFreeTickets400 = rawResourcePatch(
     name = "XP Hero | Free Tickets & Return",
-    description = "Configurable free Return tickets at daily reset, daily refill limits and zero-gem refills; never changes paid IAP.",
+    description = "Free Return tickets at daily reset even without a paid pass, plus refill limits and zero-gem refills; paid purchases unchanged.",
     default = false,
 ) {
     compatibleWith(XP_HERO)
