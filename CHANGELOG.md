@@ -1,3 +1,9 @@
+## [1.3.8](https://github.com/lopikss/lopikss-patches/compare/v1.3.7...v1.3.8) (2026-10-22)
+
+### 🐛 Bug Fixes
+
+* XP Hero free Blaster Hana unlock and zero-shard hero upgrades ([bb13c38](https://github.com/lopikss/lopikss-patches/commit/bb13c381dbc84dc72557cb2d0fc5972e53d0846a))
+
 ## [1.3.7](https://github.com/lopikss/lopikss-patches/compare/v1.3.6...v1.3.7) (2026-10-21)
 
 ### 🐛 Bug Fixes

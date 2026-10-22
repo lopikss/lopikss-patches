@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.3.7",
+  "version": "1.3.8",
   "patches": [
     {
       "name": "XP Hero | Free Hero Evolve",
@@ -31,6 +31,32 @@
     {
       "name": "XP Hero | Free Hero Level Up",
       "description": "Experimental: zero hero level-up resource costs.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "io.supercent.weaponrpg",
+          "name": "XP Hero",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#F5A623",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.2.0",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "XP Hero | Free Hero Upgrade (0 Shards)",
+      "description": "Experimental: zero all star upgrade costs and bypass their ARM64 zero-cost rejection. Do not combine with 1 Shard fallback.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -294,8 +320,34 @@
       "options": []
     },
     {
-      "name": "XP Hero | Hero Upgrade (1 Shard)",
-      "description": "Confirmed: hero star upgrade costs one shard, deducted when used.",
+      "name": "XP Hero | Hero Upgrade (1 Shard - Fallback)",
+      "description": "Confirmed working fallback; costs one shard. Disable when selecting Free Hero Upgrade (0 Shards).",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "io.supercent.weaponrpg",
+          "name": "XP Hero",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#F5A623",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.2.0",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "XP Hero | Unlock Blaster & Hana (FREE)",
+      "description": "Experimental: unlock Blaster and Hana with zero pieces; does not change other heroes.",
       "default": false,
       "category": null,
       "compatiblePackages": [
