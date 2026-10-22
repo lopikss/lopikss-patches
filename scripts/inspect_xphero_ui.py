@@ -61,5 +61,34 @@ with tempfile.TemporaryDirectory(prefix="xphero-meta-") as td:
                 key=re.compile(r"(?:class|void|bool|public|private).*(?:Costume.*(?:Grade|Upgrade|Star)|Star.*Costume|GradeUp|HomeReturnPortal|ReturnPortal|RefreshCostume|UpdateStar|OnClickUpgrade|UpgradeCostume)",re.I)
                 rows=[i for i,v in enumerate(txt) if key.search(v)]
                 print("DUMPER MATCHES",len(rows),flush=True)
-                for i in rows[:180]:
+                for i in rows[:70]:
                     print("DUMP",i+1," || ".join(txt[max(0,i-1):min(len(txt),i+3)]),flush=True)
+
+            # Identify the owner class, nearby lifecycle/callback methods and
+            # the exact RVA for the costume upgrade button.
+            triggers=("OnClickUpgradeButton()", "TryGradeUpCostume(", "TryGradeUp(", "OnGradeUp(", "OnCostumeGradeUp(", "OnGradeUpButton", "OnGradeUpClick")
+            captured=set()
+            for i,line in enumerate(txt):
+                if any(t in line for t in triggers) and i not in captured:
+                    head=max(0,i-300)
+                    owner=next((txt[j] for j in range(i-1,head,-1) if txt[j].startswith("public class ") or txt[j].startswith("private sealed class ") or txt[j].startswith("// Namespace:")), "no-owner")
+                    print("UI-OWNER",i+1,owner,flush=True)
+                    for j in range(max(0,i-14),min(len(txt),i+12)):
+                        print("UI-METHOD",j+1,txt[j],flush=True)
+                    captured.add(i)
+
+
+# Show the exact UI branch and result flow in the original lib.
+from capstone import Cs, CS_ARCH_ARM64, CS_MODE_ARM
+md=Cs(CS_ARCH_ARM64,CS_MODE_ARM)
+lib=files["lib/arm64-v8a/libil2cpp.so"]
+for va,length,name in [
+    (0x283b6fc,0x1ac,"Costume detail upgrade button handler"),
+    (0x283b8a8,0x230,"Costume detail UI adjacent callback"),
+    (0x284827c,0x180,"CostumeManager.TryGradeUpCostume"),
+    (0x2852d64,0x190,"CostumeManager.TryGradeUp"),
+    (0x20147bc,0xa0,"Other upgrade button handler")
+]:
+    print("ARM64",name,hex(va),flush=True)
+    for insn in md.disasm(lib[va-0x4000:va-0x4000+length],va):
+        print(f"  {insn.address:08x} {insn.mnemonic:7s} {insn.op_str}",flush=True)
