@@ -43,12 +43,18 @@ internal object XP135NativeEditor {
         0x89.toByte(), 0x0C, 0x80.toByte(), 0x52 // mov w9,#100
     )
     // CostumeManager.TryGradeUp: at VA 0x02847EA0 the original TBZ jumps
-    // to failure after its HasEnough(cost) call when cost is 0.
-    // The immediately following CMP X22,#1 / B.LT already skips debit for 0.
-    // This removes ONLY the rejection branch; it does not award shards.
+    // to failure when HasEnough(cost) returns false for the zero-cost case.
+    // v1.3.8-v1.3.9 NOPed the rejection branch, but left w0 == 0 (failure)
+    // live on the otherwise-successful path. On device, the star upgrade
+    // persisted but the UI stayed locked until the app restarted.
+    // MOV W0,#1 also removes the rejection branch while promoting that
+    // check result to success, matching a legitimate HasEnough success path.
+    // The unchanged CMP X22,#1 / B.LT guard skips deduction for zero shards.
+    // This is a targeted experimental correction; test UI completion in game.
     private const val STAR_UPGRADE_OFFSET = 0x2843EA0
     private val ORIGINAL_STAR_UPGRADE = byteArrayOf(0xA0.toByte(), 0x1A, 0x00, 0x36)
-    private val FREE_STAR_UPGRADE = byteArrayOf(0x1F, 0x20, 0x03, 0xD5.toByte()) // ARM64 NOP
+    private val FREE_STAR_UPGRADE = byteArrayOf(0x20, 0x00, 0x80.toByte(), 0x52) // ARM64 MOV W0,#1
+    private val LEGACY_STAR_UPGRADE = byteArrayOf(0x1F, 0x20, 0x03, 0xD5.toByte()) // v1.3.8-v1.3.9 NOP
     private val STAR_UPGRADE_SPEND_GUARD = byteArrayOf(
         0xDF.toByte(), 0x06, 0x00, 0xF1.toByte(),
         0x2B, 0x01, 0x00, 0x54
@@ -125,7 +131,6 @@ internal object XP135NativeEditor {
         for ((offset, original, changed) in listOf(
             Triple(TRAIT_OFFSET, ORIGINAL_TRAIT, FREE_TRAIT),
             Triple(TOMB_OFFSET, ORIGINAL_TOMB, FREE_TOMB),
-            Triple(STAR_UPGRADE_OFFSET, ORIGINAL_STAR_UPGRADE, FREE_STAR_UPGRADE),
             Triple(HERO_UNLOCK_CONSUME_OFFSET, ORIGINAL_HERO_UNLOCK, ZERO_HERO_UNLOCK)
         )) {
             require(equalAt(input, offset, original) || equalAt(input, offset, changed)) {
@@ -133,6 +138,14 @@ internal object XP135NativeEditor {
             }
             original.copyInto(normalized, offset)
         }
+        // Also allow repatching a source with the old NOP; normalization
+        // restores the exact original instruction before checking SHA-256.
+        require(equalAt(input, STAR_UPGRADE_OFFSET, ORIGINAL_STAR_UPGRADE) ||
+            equalAt(input, STAR_UPGRADE_OFFSET, FREE_STAR_UPGRADE) ||
+            equalAt(input, STAR_UPGRADE_OFFSET, LEGACY_STAR_UPGRADE)) {
+            "Unknown XP Hero star upgrade instruction"
+        }
+        ORIGINAL_STAR_UPGRADE.copyInto(normalized, STAR_UPGRADE_OFFSET)
         val sha = MessageDigest.getInstance("SHA-256").digest(normalized)
             .joinToString("") { "%02x".format(it) }
         require(sha == ORIGINAL_SHA) { "Unexpected XP Hero ARM64 code; refusing patch" }
