@@ -51,7 +51,7 @@ private object XP130 {
         check(directory != null && directory.isDirectory) {
             "XP Hero Unity Data directory was not found: ${pinned.parent}"
         }
-        val patterns = fields.map { field -> Regex("\\\"" + Regex.escape(field) + "\\":\\"[0-9]+\\"") }
+        val patterns = fields.map { field -> Regex("\"" + Regex.escape(field) + "\":\"[0-9]+\"") }
         val candidates = directory.walkTopDown().maxDepth(2)
             .filter { it.isFile && it.length() in 1L..(32L * 1024 * 1024) }
             .mapNotNull { file ->
