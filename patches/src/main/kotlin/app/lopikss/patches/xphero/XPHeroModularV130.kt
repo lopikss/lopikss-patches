@@ -29,6 +29,48 @@ private object XP130 {
         return m.value.replace("\"cost_value\":\"$old\"", "\"cost_value\":\"${"0".repeat(old.length)}\"")
     }
 
+    /**
+     * XP Hero 27.0.0 rebuilds Unity Data filenames. Locate the evolution
+     * table by its existing fields instead of assuming the 26.2.0 asset name.
+     * Reject ambiguous/partial matches; never modify an unverified file.
+     */
+    fun patchHeroEvolve(pinned: java.io.File) {
+        val legacyHash = "f66705315246f8b730793a6964a6d148deb9b86a119bb1d232b801bd7201ffb9"
+        val fields = arrayOf("Cost_Amount1", "Cost_Amount2", "Cost_Piece")
+
+        // Keep the original 26.2.0 path + hash behavior unchanged.
+        if (pinned.isFile) {
+            val original = pinned.readBytes()
+            if (digest(original) == legacyHash) {
+                pinned.writeBytes(hero(original, legacyHash, 92, *fields))
+                return
+            }
+        }
+
+        val directory = pinned.parentFile
+        check(directory != null && directory.isDirectory) {
+            "XP Hero Unity Data directory was not found: ${pinned.parent}"
+        }
+        val patterns = fields.map { field -> Regex("\\\"" + Regex.escape(field) + "\\":\\"[0-9]+\\"") }
+        val candidates = directory.walkTopDown().maxDepth(2)
+            .filter { it.isFile && it.length() in 1L..(32L * 1024 * 1024) }
+            .mapNotNull { file ->
+                val bytes = runCatching { file.readBytes() }.getOrNull() ?: return@mapNotNull null
+                val data = String(bytes, Charsets.ISO_8859_1)
+                val counts = patterns.map { it.findAll(data).count() }
+                if (counts.all { it >= 92 && it <= 512 } && counts.distinct().size == 1) {
+                    Triple(file, bytes, counts.first())
+                } else null
+            }.take(2).toList()
+        check(candidates.size == 1) {
+            "Expected exactly one XP Hero evolution asset; found ${candidates.size}. No files changed."
+        }
+        val (file, bytes, rowCount) = candidates.single()
+        // Existing hero() field matching, exact row-count checks and
+        // in-place byte-length validation remain untouched.
+        file.writeBytes(hero(bytes, digest(bytes), rowCount, *fields))
+    }
+
     fun store(costBytes: ByteArray, productBytes: ByteArray, categoryIds: Set<Int>,
               expectedRowCount: Int, other: Boolean = false): ByteArray {
         require(digest(productBytes) == PRODUCT_HASH) { "Unsupported XP Hero product asset" }
@@ -190,10 +232,7 @@ val xp130FreeHeroEvolve = rawResourcePatch(
 ) {
     compatibleWith(XP_HERO)
     execute {
-        val file = get(XP130.HERO_EVOLVE)
-        file.writeBytes(XP130.hero(file.readBytes(),
-            "f66705315246f8b730793a6964a6d148deb9b86a119bb1d232b801bd7201ffb9", 92,
-            "Cost_Amount1", "Cost_Amount2", "Cost_Piece"))
+        XP130.patchHeroEvolve(get(XP130.HERO_EVOLVE))
     }
 }
 
