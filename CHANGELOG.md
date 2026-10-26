@@ -1,3 +1,9 @@
+## [1.3.15-dev.1](https://github.com/lopikss/lopikss-patches/compare/v1.3.14...v1.3.15-dev.1) (2026-10-26)
+
+### 🐛 Bug Fixes
+
+* locate XP Hero 27.0.0 evolution asset dynamically ([f1c4f15](https://github.com/lopikss/lopikss-patches/commit/f1c4f1585561a70a20f32e5543af6a81d6de7f13))
+
 ## [1.3.14](https://github.com/lopikss/lopikss-patches/compare/v1.3.13...v1.3.14) (2026-10-22)
 
 ### 🐛 Bug Fixes
