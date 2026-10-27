@@ -1,3 +1,9 @@
+## [1.3.15](https://github.com/lopikss/lopikss-patches/compare/v1.3.14...v1.3.15) (2026-10-27)
+
+### 🐛 Bug Fixes
+
+* publish XP Hero 27.0.0 patch compatibility in stable feed ([305f865](https://github.com/lopikss/lopikss-patches/commit/305f865f5440a5f24a9a6ed006a9753d9a2c2b13))
+
 ## [1.3.15-dev.1](https://github.com/lopikss/lopikss-patches/compare/v1.3.14...v1.3.15-dev.1) (2026-10-26)
 
 ### 🐛 Bug Fixes
