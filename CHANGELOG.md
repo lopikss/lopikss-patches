@@ -1,3 +1,9 @@
+## [1.3.16](https://github.com/lopikss/lopikss-patches/compare/v1.3.15...v1.3.16) (2026-10-30)
+
+### 🐛 Bug Fixes
+
+* XP Hero 27.0.0 evolution using verified Unity asset ([06ff676](https://github.com/lopikss/lopikss-patches/commit/06ff676ad1f9c046737c29fdf79eea00787c50dd))
+
 ## [1.3.15](https://github.com/lopikss/lopikss-patches/compare/v1.3.14...v1.3.15) (2026-10-27)
 
 ### 🐛 Bug Fixes
