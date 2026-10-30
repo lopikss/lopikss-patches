@@ -82,7 +82,7 @@ Tell me the **game name, Android package, exact version**, what you'd like chang
 This catalog is generated automatically from published Morphe patch metadata.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.20](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.20)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;11 patches total
+> **[v1.3.21](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.21)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;11 patches total
 <details open>
 <summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;11 patches</summary>
 <br>
@@ -104,7 +104,7 @@ This catalog is generated automatically from published Morphe patch metadata.
 | [XP Hero | Free Trait Presets](#xp-hero-free-trait-presets) | Experimental: zero save/load costs for four trait presets (not rerolls). |  |
 | [XP Hero | Free Trait Rerolls](#xp-hero-free-trait-rerolls) | Experimental: change the ARM64 trait reroll cost calculator to return 0, including for locked traits. |  |
 | [XP Hero | Hero Upgrade (1 Shard - Fallback)](#xp-hero-hero-upgrade-1-shard-fallback) | Confirmed working fallback; costs one shard. Disable when selecting Free Hero Upgrade (0 Shards). |  |
-| [XP Hero | Unlock Blaster & Hana (FREE)](#xp-hero-unlock-blaster-hana-free) | Experimental: Blaster and Hana cost 0 pieces; the native zero-amount consume path keeps its normal notifications. |  |
+| [XP Hero | Unlock All Heroes (FREE)](#xp-hero-unlock-all-heroes-free) | Experimental: all heroes cost 0 unlock pieces; the native zero-amount consume path keeps its normal notifications. Other unlock conditions may still apply. |  |
 
 </details>
 

@@ -1,3 +1,9 @@
+## [1.3.21](https://github.com/lopikss/lopikss-patches/compare/v1.3.20...v1.3.21) (2026-10-30)
+
+### 🐛 Bug Fixes
+
+* **xp-hero:** make every hero's unlock-piece cost free ([299986e](https://github.com/lopikss/lopikss-patches/commit/299986eac30994e0c9c170f18c06e58b85bf3592))
+
 ## [1.3.20](https://github.com/lopikss/lopikss-patches/compare/v1.3.19...v1.3.20) (2026-10-30)
 
 ### 🐛 Bug Fixes

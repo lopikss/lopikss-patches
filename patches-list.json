@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.3.20",
+  "version": "1.3.21",
   "patches": [
     {
       "name": "XP Hero | Free Hero Evolve",
@@ -416,8 +416,8 @@
       "options": []
     },
     {
-      "name": "XP Hero | Unlock Blaster & Hana (FREE)",
-      "description": "Experimental: Blaster and Hana cost 0 pieces; the native zero-amount consume path keeps its normal notifications.",
+      "name": "XP Hero | Unlock All Heroes (FREE)",
+      "description": "Experimental: all heroes cost 0 unlock pieces; the native zero-amount consume path keeps its normal notifications. Other unlock conditions may still apply.",
       "default": false,
       "category": null,
       "compatiblePackages": [
