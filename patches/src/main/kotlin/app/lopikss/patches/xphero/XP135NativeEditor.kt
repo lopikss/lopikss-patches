@@ -22,6 +22,62 @@ internal object XP135NativeEditor {
         "88b591e6099c55b1147b865847a14651b108f9bd6837707371766a054c8df443"
     private const val EXPECTED_SIZE = 83_724_712
 
+
+    /**
+     * XP Hero 27.0.0 zero-shard CostumeController.TryGradeUpCostume flow.
+     * Verified against original libil2cpp.so SHA-256 and disassembly:
+     *   VA 0x2BC9368: read Cost1_Amount into x23 -> MOV X23,#1
+     *   VA 0x2BC9380: HasEnoughPieces call -> AddCostumePiece(int,long)
+     *   VA 0x2BC9384: affordability TBZ -> NOP (credit returns void)
+     *   VA 0x2BC938C: read Cost1_Amount into x19 -> MOV X19,#1
+     * The original TryConsumeCostumePiece call at VA 0x2BC93A4 is unchanged.
+     * AddCostumePiece at VA 0x2BD6324 validates positive quantity and adds
+     * to the per-costume counter via VA 0x2BD66DC.
+     *
+     * These offsets are FILE offsets (instruction VAs minus 0x4000).
+     * Unlike the 26.2.0 normalized verifier, this port requires the exact
+     * original 27.0.0 library before ANY edits; no other v27 native module
+     * is claimed compatible by this change.
+     */
+    private const val ORIGINAL_SHA_27 =
+        "c732bc0957569db6ba7856e181a37706893a4332bca48bebc90be21ef5cada5a"
+    private const val EXPECTED_SIZE_27 = 90_037_632
+    private val STAR_TEMPORARY_SHARD_PATCHES_27 = listOf(
+        Triple(0x2BC5368,
+            byteArrayOf(0xD7.toByte(), 0x12, 0x40, 0xF9.toByte()),
+            byteArrayOf(0x37, 0x00, 0x80.toByte(), 0xD2.toByte())),
+        Triple(0x2BC5380,
+            byteArrayOf(0xE0.toByte(), 0x18, 0x00, 0x94.toByte()), // BL HasEnoughPieces
+            byteArrayOf(0xE9.toByte(), 0x33, 0x00, 0x94.toByte())), // BL AddCostumePiece
+        Triple(0x2BC5384,
+            byteArrayOf(0x60, 0x1E, 0x00, 0x36), // TBZ W0,#0,fail
+            byteArrayOf(0x1F, 0x20, 0x03, 0xD5.toByte())), // NOP
+        Triple(0x2BC538C,
+            byteArrayOf(0xD3.toByte(), 0x12, 0x40, 0xF9.toByte()),
+            byteArrayOf(0x33, 0x00, 0x80.toByte(), 0xD2.toByte())),
+    )
+
+    private fun freeHeroStarUpgrades27(input: ByteArray): ByteArray {
+        require(input.size == EXPECTED_SIZE_27) {
+            "Unsupported XP Hero 27.0.0 ARM64 library length"
+        }
+        val sha = MessageDigest.getInstance("SHA-256").digest(input)
+            .joinToString("") { "%02x".format(it) }
+        require(sha == ORIGINAL_SHA_27) {
+            "Unsupported XP Hero 27.0.0 ARM64 instructions; refusing star-upgrade edit"
+        }
+        for ((offset, original, _) in STAR_TEMPORARY_SHARD_PATCHES_27) {
+            require(equalAt(input, offset, original)) {
+                "XP Hero 27.0.0 upgrade instruction mismatch at 0x" + offset.toString(16)
+            }
+        }
+        return input.copyOf().also { out ->
+            for ((offset, _, modified) in STAR_TEMPORARY_SHARD_PATCHES_27) {
+                modified.copyInto(out, offset)
+            }
+        }
+    }
+
     // CalculateRollCost ARM64 method entry, user-tested free trait rerolls.
     private const val TRAIT_OFFSET = 0x2686684
     private val ORIGINAL_TRAIT = byteArrayOf(
@@ -288,6 +344,7 @@ internal object XP135NativeEditor {
      * callsite and consume it through the original successful one-shard path.
      */
     fun freeHeroStarUpgrades(input: ByteArray): ByteArray {
+        if (input.size == EXPECTED_SIZE_27) return freeHeroStarUpgrades27(input)
         verify(input)
         return input.copyOf().also { result ->
             // Reverse earlier patches to the unrelated static grade-up route.
