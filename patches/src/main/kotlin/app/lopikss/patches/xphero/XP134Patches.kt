@@ -40,8 +40,13 @@ val xpHeroFreeTickets400 = rawResourcePatch(
     )
 
     execute {
-        val remote = get(XP134TicketEditor.REMOTE)
-        val pvp = get(XP134TicketEditor.PVP)
+        // Select the verified Unity TextAsset files for XP Hero 27.0.0.
+        // Keep the 26.2.0 names and existing field matching code unchanged.
+        val remote27 = get(XP134TicketEditor.REMOTE_27)
+        val pvp27 = get(XP134TicketEditor.PVP_27)
+        val use27 = remote27.isFile && pvp27.isFile
+        val remote = if (use27) remote27 else get(XP134TicketEditor.REMOTE)
+        val pvp = if (use27) pvp27 else get(XP134TicketEditor.PVP)
         val native = get(XP135NativeEditor.ARM64)
         // Check all three assets before writing any file.
         val (newRemote, newPvp) = XP134TicketEditor.freeTicketRecharge(
