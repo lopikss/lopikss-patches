@@ -86,14 +86,14 @@ private object XP130 {
         val v27 = productDigest == PRODUCT_HASH_27
         require(v27 || productDigest == PRODUCT_HASH) { "Unsupported XP Hero product asset" }
         val products = productPattern.findAll(String(productBytes, Charsets.ISO_8859_1)).toList()
-        check(products.size == if (v27) 801 else 777) { "Unexpected product table" }
+        check(products.size == (if (v27) 801 else 777)) { "Unexpected product table" }
         val selectedGroups = products.filter {
             val category = it.groupValues[1].toInt()
             if (other) category !in categoryIds else category in categoryIds
         }.map { it.groupValues[2].toInt() }.toSet()
 
         val original = String(costBytes, Charsets.ISO_8859_1)
-        check(pricePattern.findAll(original).count() == if (v27) 855 else 829) {
+        check(pricePattern.findAll(original).count() == (if (v27) 855 else 829)) {
             "Unexpected shop price table"
         }
         val normalized = pricePattern.replace(original) {
@@ -147,7 +147,7 @@ private object XP130 {
         }
         val text = String(data, Charsets.ISO_8859_1)
         val price = Regex("(\\\"Cost1_Amount\\\":\\\")([0-9]+)(\\\")")
-        check(price.findAll(text).count() == if (v27) 156 else 144) {
+        check(price.findAll(text).count() == (if (v27) 156 else 144)) {
             "Unexpected star upgrade row count"
         }
         val rewritten = price.replace(text) { match ->
@@ -207,18 +207,18 @@ val xpHeroFreeShops = rawResourcePatch(
     )
 
     execute {
+        val v27Costs = get(XP130.COST_27)
+        val v27Products = get(XP130.PRODUCTS_27)
+        val v27 = v27Costs.isFile && v27Products.isFile
         val selected = listOf(
             Triple(dailyGems.value == true, setOf(15), 300),
-            Triple(chests.value == true, setOf(4, 8), 20),
+            Triple(chests.value == true, setOf(4, 8), if (v27) 24 else 20),
             Triple(tokens.value == true, setOf(34), 27),
             Triple(invasion.value == true, setOf(9), 38),
             Triple(exchange.value == true, setOf(6, 7), 24),
         )
         val extra = otherShops.value == true
         if (selected.any { it.first } || extra) {
-            val v27Costs = get(XP130.COST_27)
-            val v27Products = get(XP130.PRODUCTS_27)
-            val v27 = v27Costs.isFile && v27Products.isFile
             val shopCosts = if (v27) v27Costs else get(XP130.COST)
             val productData = (if (v27) v27Products else get(XP130.PRODUCTS)).readBytes()
             var bytes = shopCosts.readBytes()
