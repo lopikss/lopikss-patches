@@ -68,7 +68,7 @@ internal object XP135NativeEditor {
         }
         for ((offset, original, _) in STAR_TEMPORARY_SHARD_PATCHES_27) {
             require(equalAt(input, offset, original)) {
-                "XP Hero 27.0.0 upgrade instruction mismatch at 0x{offset.toString(16)}"
+                "XP Hero 27.0.0 upgrade instruction mismatch at 0x" + offset.toString(16)
             }
         }
         return input.copyOf().also { out ->
