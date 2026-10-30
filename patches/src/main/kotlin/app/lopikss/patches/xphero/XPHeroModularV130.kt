@@ -12,6 +12,9 @@ private object XP130 {
     const val HERO_LEVEL = "assets/bin/Data/00199bb5af76d48728e982d6a69b40eb"
     const val HERO_STAR = "assets/bin/Data/02ce5273e9c794059afe2ada0670d172"
     const val HERO_EVOLVE = "assets/bin/Data/c71e9b16a78284852b30650ca0ebbf2e"
+    // Verified against the original XP Hero 27.0.0 base APK (93 data rows).
+    const val HERO_EVOLVE_27 = "assets/bin/Data/f7768fb39186946c1becf3280715fc7b"
+    const val HERO_EVOLVE_27_SHA = "b1b798d3f78de28869c7e40cf29751dfa12947221bd34fdc8b823ef96b5cfd5f"
 
     private const val PRODUCT_HASH = "ff0afd7f54a04fe9af0cdcbf3c9c149d8e7d867c7743a6d7399f50166e24ec22"
     // Hash calculated after zeroing only verified non-IAP, per-item cost fields.
@@ -232,7 +235,15 @@ val xp130FreeHeroEvolve = rawResourcePatch(
 ) {
     compatibleWith(XP_HERO)
     execute {
-        XP130.patchHeroEvolve(get(XP130.HERO_EVOLVE))
+        val v27 = get(XP130.HERO_EVOLVE_27)
+        if (v27.isFile) {
+            // Exact v27 path, hash and row count. No heuristic scanning needed.
+            v27.writeBytes(XP130.hero(v27.readBytes(), XP130.HERO_EVOLVE_27_SHA, 93,
+                "Cost_Amount1", "Cost_Amount2", "Cost_Piece"))
+        } else {
+            // Preserve the original v26.2.0 implementation and fallback.
+            XP130.patchHeroEvolve(get(XP130.HERO_EVOLVE))
+        }
     }
 }
 
