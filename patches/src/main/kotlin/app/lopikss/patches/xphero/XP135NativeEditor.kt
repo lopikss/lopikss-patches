@@ -65,6 +65,14 @@ internal object XP135NativeEditor {
     // - GetFreeTicketCount: VA 0x2826028 (item 7002)
     // - Field Return consumption guard: VA 0x282A12C (item 7002)
     // The offsets below are *file* offsets (VA - 0x4000).
+    // TraitContext.CalculateRollCost() no-argument overload (token 0x06000CB8).
+    // Verified by the 27.0.0 metadata method-pointer table and entry bytes.
+    private const val TRAIT_OFFSET_27 = 0x29FD86C
+    // CostumeManagement.AddCostumePiece 0-quantity guard: B.LE -> B.LT.
+    // Same guard as 26.2.0, relocated with its surrounding method.
+    private const val HERO_UNLOCK_CONSUME_OFFSET_27 = 0x2BD065C
+    private val ORIGINAL_HERO_UNLOCK_27 = byteArrayOf(0x0D, 0x0A, 0x00, 0x54)
+    private val ZERO_HERO_UNLOCK_27 = byteArrayOf(0x0B, 0x0A, 0x00, 0x54)
     private const val TOMB_OFFSET_27 = 0x2C905B8
     private const val RETURN_QUANTITY_OFFSET_27 = 0x2824A7C
     private const val RETURN_ITEM_OFFSET_27 = 0x2824A94
@@ -99,7 +107,12 @@ internal object XP135NativeEditor {
             "Unexpected XP Hero 27.0.0 Heroes' Tomb instructions"
         }
         val normalized = input.copyOf()
+        require(equalAt(input, HERO_UNLOCK_CONSUME_OFFSET_27 - 4, HERO_UNLOCK_COMPARE)) {
+            "Unexpected XP Hero 27.0.0 zero-piece guard comparison"
+        }
         val choices = listOf(
+            Triple(TRAIT_OFFSET_27, ORIGINAL_TRAIT, FREE_TRAIT),
+            Triple(HERO_UNLOCK_CONSUME_OFFSET_27, ORIGINAL_HERO_UNLOCK_27, ZERO_HERO_UNLOCK_27),
             Triple(TOMB_OFFSET_27, ORIGINAL_TOMB, FREE_TOMB),
             Triple(RETURN_ITEM_OFFSET_27, ORIGINAL_RETURN_ITEM, FREE_RETURN_ITEM),
             Triple(RETURN_NO_PASS_OFFSET_27, ORIGINAL_RETURN_NO_PASS, FREE_RETURN_NO_PASS),
@@ -414,6 +427,12 @@ internal object XP135NativeEditor {
      * consumption as success, without changing positive piece spending.
      */
     fun allowZeroPieceHeroUnlock(input: ByteArray): ByteArray {
+        if (input.size == EXPECTED_SIZE_27) {
+            verify27Native(input)
+            return input.copyOf().also {
+                ZERO_HERO_UNLOCK_27.copyInto(it, HERO_UNLOCK_CONSUME_OFFSET_27)
+            }
+        }
         verify(input)
         return input.copyOf().also {
             ZERO_HERO_UNLOCK.copyInto(it, HERO_UNLOCK_CONSUME_OFFSET)
@@ -441,6 +460,10 @@ internal object XP135NativeEditor {
     }
 
     fun freeTraitRerolls(input: ByteArray): ByteArray {
+        if (input.size == EXPECTED_SIZE_27) {
+            verify27Native(input)
+            return input.copyOf().also { FREE_TRAIT.copyInto(it, TRAIT_OFFSET_27) }
+        }
         verify(input)
         return input.copyOf().also { FREE_TRAIT.copyInto(it, TRAIT_OFFSET) }
     }
