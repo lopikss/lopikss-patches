@@ -7,9 +7,12 @@ internal object XP134TicketEditor {
     const val REMOTE = "assets/bin/Data/22fc19c3e5dc14f5ca465a3e6cd62dc3"
     const val REMOTE_27 = "assets/bin/Data/3d215194f0ca245868497014573f6f96"
     const val PVP = "assets/bin/Data/8f4cc030fdc024de3acdae95bb99e004"
+    const val PVP_27 = "assets/bin/Data/57560bddb8aca4a848ee41d220acd630"
     private const val REMOTE_SHA = "c2f1df06c02d8723b569c532457eced4baee00f1c0bbb6a139bdcb3be801bfb1"
     private const val REMOTE_SHA_27 = "c18c4df4e626c554359e74a4073e01538d104465cbbe43220d304de08536c080"
     private const val PVP_SHA = "a06150f47dfb4d441a10570466b0e43892c45c0136517f4fdf31880eb4d2d9ee"
+    // Exact original XP Hero 27.0.0 ConfigData_47 SHA-256 (PvP).
+    private const val PVP_SHA_27 = "2f150741c35cb7b1d40a15890c87f9f5351c1396994ec412a4a40e13caa0e0ff"
 
     private val originals = linkedMapOf(
         "TRAIT_SUPERROLL_COST_AMOUNT" to "1",
@@ -167,13 +170,18 @@ internal object XP134TicketEditor {
         require(returnDaily in 10..5000) { "Return daily ticket count must be between 10 and 5000" }
         require(freeReturns in 3..5000) { "Free return allowance must be between 3 and 5000" }
         val changedRemote = remote(remoteBytes, false, dailyLimit, returnDaily, freeReturns)
-        val pvp = parse(pvpBytes, "ConfigData_45")
+        val v27Name = "ConfigData_47"
+        val is27 = pvpBytes.size > 168 && le32(pvpBytes, 144) == v27Name.length &&
+            String(pvpBytes, 148, v27Name.length, Charsets.ISO_8859_1) == v27Name
+        val pvp = parse(pvpBytes, if (is27) v27Name else "ConfigData_45")
         val current = value(pvp.text, "PVP_TICKET_RV_COUNT_LIMIT")
         check(current.toIntOrNull()?.let { it in 1..5000 } == true) {
             "Unexpected PvP refill configuration"
         }
         val originalText = put(pvp.text, "PVP_TICKET_RV_COUNT_LIMIT", "5")
-        require(sha(pvp.encode(originalText)) == PVP_SHA) { "Unexpected PvP ticket asset" }
+        require(sha(pvp.encode(originalText)) == (if (is27) PVP_SHA_27 else PVP_SHA)) {
+            "Unexpected PvP ticket asset"
+        }
         val changedPvp = pvp.encode(put(pvp.text, "PVP_TICKET_RV_COUNT_LIMIT", dailyLimit.toString()))
         return changedRemote to changedPvp
     }
