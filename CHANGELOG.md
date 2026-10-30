@@ -1,3 +1,9 @@
+## [1.3.20](https://github.com/lopikss/lopikss-patches/compare/v1.3.19...v1.3.20) (2026-10-30)
+
+### 🐛 Bug Fixes
+
+* XP Hero 27.0.0 trait rerolls and free unlock compatibility ([f1d6bbb](https://github.com/lopikss/lopikss-patches/commit/f1d6bbbf062bba322e5aa9fa0234dcd40034abe1))
+
 ## [1.3.19](https://github.com/lopikss/lopikss-patches/compare/v1.3.18...v1.3.19) (2026-10-30)
 
 ### 🐛 Bug Fixes
