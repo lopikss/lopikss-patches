@@ -10,10 +10,12 @@ import java.security.MessageDigest
  */
 private object XP138Heroes {
     const val HERO_DATA = "assets/bin/Data/ac161aa51303a4fce8138bf3242d0920"
+    const val HERO_DATA_27 = "assets/bin/Data/6ee8d550509fc420fa99cd817379de6f"
     const val HERO_STAR = "assets/bin/Data/02ce5273e9c794059afe2ada0670d172"
     const val HERO_STAR_27 = "assets/bin/Data/ad2670771b384455ebef2391d9ec5592"
 
     private const val HERO_DATA_SHA = "ff5d1c8e995e8169b643227d7e87a202910dc81c8e141d12ca0d8c0488018408"
+    private const val HERO_DATA_SHA_27 = "98c3b1475724db40dce90f2c22bc08c9c2f46af95cb17d682c3b4ebfea6537d3"
     private const val HERO_STAR_SHA = "818570c2ec087bab93583352fbe6e6ff9dd859b5f06cd14b9d1995842467df87"
     private const val HERO_STAR_SHA_27 = "4ad3a365ac10ec3ae2314f0c089ba5803bb4a4fb1265c8eb868be765987f90e1"
 
@@ -21,7 +23,10 @@ private object XP138Heroes {
         .digest(input).joinToString("") { "%02x".format(it) }
 
     fun unlockBlasterAndHana(input: ByteArray): ByteArray {
-        require(digest(input) == HERO_DATA_SHA) { "Unsupported XP Hero CostumeData" }
+        val sha = digest(input)
+        require(sha == HERO_DATA_SHA || sha == HERO_DATA_SHA_27) {
+            "Unsupported XP Hero CostumeData"
+        }
         val source = String(input, Charsets.ISO_8859_1)
         val heroRow = Regex("""\{[^{}]*"UnlockRequiredPieces":"([0-9]+)"[^{}]*"id":"(23|24)"[^{}]*\}""")
         val matches = heroRow.findAll(source).toList()
@@ -73,7 +78,8 @@ val xp138UnlockLastTwoHeroes = rawResourcePatch(
 ) {
     compatibleWith(XP_HERO)
     execute {
-        val heroFile = get(XP138Heroes.HERO_DATA)
+        val heroData27 = get(XP138Heroes.HERO_DATA_27)
+        val heroFile = if (heroData27.isFile) heroData27 else get(XP138Heroes.HERO_DATA)
         val native = get(XP135NativeEditor.ARM64)
         // Validate the original asset and native game logic before changing
         // either file. This remains opt-in and version-specific.
