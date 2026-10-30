@@ -1,3 +1,9 @@
+## [1.3.17](https://github.com/lopikss/lopikss-patches/compare/v1.3.16...v1.3.17) (2026-10-30)
+
+### 🐛 Bug Fixes
+
+* support XP Hero 27.0.0 shop, S-ticket and hero shard data ([94a923b](https://github.com/lopikss/lopikss-patches/commit/94a923bbb0a019f690c53a1b2deb06e2cacec29a))
+
 ## [1.3.16](https://github.com/lopikss/lopikss-patches/compare/v1.3.15...v1.3.16) (2026-10-30)
 
 ### 🐛 Bug Fixes
