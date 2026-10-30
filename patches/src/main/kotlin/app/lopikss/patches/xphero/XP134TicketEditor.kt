@@ -5,8 +5,10 @@ import java.security.MessageDigest
 /** Version-pinned, stackable XP Hero 26.2.0 Unity TextAsset ticket editor. */
 internal object XP134TicketEditor {
     const val REMOTE = "assets/bin/Data/22fc19c3e5dc14f5ca465a3e6cd62dc3"
+    const val REMOTE_27 = "assets/bin/Data/3d215194f0ca245868497014573f6f96"
     const val PVP = "assets/bin/Data/8f4cc030fdc024de3acdae95bb99e004"
     private const val REMOTE_SHA = "c2f1df06c02d8723b569c532457eced4baee00f1c0bbb6a139bdcb3be801bfb1"
+    private const val REMOTE_SHA_27 = "c18c4df4e626c554359e74a4073e01538d104465cbbe43220d304de08536c080"
     private const val PVP_SHA = "a06150f47dfb4d441a10570466b0e43892c45c0136517f4fdf31880eb4d2d9ee"
 
     private val originals = linkedMapOf(
@@ -113,15 +115,18 @@ internal object XP134TicketEditor {
         input: ByteArray, sTicket: Boolean,
         dailyLimit: Int = 400, returnDaily: Int = 5000, freeReturns: Int = 5000,
     ): ByteArray {
-        val asset = parse(input, "RemoteConfig_329")
+        val name27 = "RemoteConfig_341"
+        val is27 = input.size > 168 && le32(input, 144) == name27.length &&
+            String(input, 148, name27.length, Charsets.ISO_8859_1) == name27
+        val asset = parse(input, if (is27) name27 else "RemoteConfig_329")
         var normalized = asset.text
         for ((key, original) in originals) {
             val current = value(asset.text, key)
             require(supported(key, current, original)) { "Unexpected current $key" }
             normalized = put(normalized, key, original)
         }
-        require(sha(asset.encode(normalized)) == REMOTE_SHA) {
-            "Unsupported XP Hero 26.2.0 RemoteConfig asset"
+        require(sha(asset.encode(normalized)) == (if (is27) REMOTE_SHA_27 else REMOTE_SHA)) {
+            "Unsupported XP Hero RemoteConfig asset"
         }
         var modified = asset.text
         if (sTicket) {
