@@ -1,3 +1,9 @@
+## [1.3.19](https://github.com/lopikss/lopikss-patches/compare/v1.3.18...v1.3.19) (2026-10-30)
+
+### 🐛 Bug Fixes
+
+* port XP Hero 27.0.0 Free Tickets and Return ([70145f9](https://github.com/lopikss/lopikss-patches/commit/70145f907d425f1694b257b459385a9be0c5a944))
+
 ## [1.3.18](https://github.com/lopikss/lopikss-patches/compare/v1.3.17...v1.3.18) (2026-10-30)
 
 ### 🐛 Bug Fixes
