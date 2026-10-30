@@ -82,7 +82,7 @@ Tell me the **game name, Android package, exact version**, what you'd like chang
 This catalog is generated automatically from published Morphe patch metadata.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.17](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.17)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;11 patches total
+> **[v1.3.18](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.18)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;11 patches total
 <details open>
 <summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;11 patches</summary>
 <br>

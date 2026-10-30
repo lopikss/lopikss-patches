@@ -1,3 +1,9 @@
+## [1.3.18](https://github.com/lopikss/lopikss-patches/compare/v1.3.17...v1.3.18) (2026-10-30)
+
+### 🐛 Bug Fixes
+
+* port XP Hero 27.0.0 zero-shard upgrade asset and native instructions ([58b8132](https://github.com/lopikss/lopikss-patches/commit/58b8132794406bce74c073d024c65a2141454ea1))
+
 ## [1.3.17](https://github.com/lopikss/lopikss-patches/compare/v1.3.16...v1.3.17) (2026-10-30)
 
 ### 🐛 Bug Fixes
