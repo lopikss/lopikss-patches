@@ -57,15 +57,97 @@ internal object XP135NativeEditor {
             byteArrayOf(0x33, 0x00, 0x80.toByte(), 0xD2.toByte())),
     )
 
-    private fun freeHeroStarUpgrades27(input: ByteArray): ByteArray {
+
+    // Verified against the original XP Hero 27.0.0 libil2cpp.so:
+    // - Heroes' Tomb GetChargeCost: VA 0x2C945B8
+    // - ResetDailyTickets quantity / item: VA 0x2828A7C / 0x2828A94
+    // - Daily-reset no-pass guards: VA 0x282898C / 0x2828998
+    // - GetFreeTicketCount: VA 0x2826028 (item 7002)
+    // - Field Return consumption guard: VA 0x282A12C (item 7002)
+    // The offsets below are *file* offsets (VA - 0x4000).
+    private const val TOMB_OFFSET_27 = 0x2C905B8
+    private const val RETURN_QUANTITY_OFFSET_27 = 0x2824A7C
+    private const val RETURN_ITEM_OFFSET_27 = 0x2824A94
+    private const val RETURN_NO_PASS_OFFSET_27 = 0x282498C
+    private const val RETURN_INACTIVE_PASS_OFFSET_27 = 0x2824998
+    private const val INSTANT_RETURN_COUNT_OFFSET_27 = 0x2822028
+    private const val RETURN_FREE_CONSUME_GUARD_OFFSET_27 = 0x282612C
+
+    private fun knownFreeReturnQuantity27(bytes: ByteArray): Boolean {
+        val code = instruction(bytes, RETURN_QUANTITY_OFFSET_27)
+        return (code and 0xFFE0001F.toInt()) == 0xD2800013.toInt() &&
+            ((code ushr 5) and 0xFFFF) in 10..5000
+    }
+
+    private fun knownInstantReturnCount27(bytes: ByteArray): Boolean {
+        val code = instruction(bytes, INSTANT_RETURN_COUNT_OFFSET_27)
+        return (code and 0xFFE0001F.toInt()) == 0x52800000 &&
+            ((code ushr 5) and 0xFFFF) in 10..5000 &&
+            equalAt(bytes, INSTANT_RETURN_COUNT_OFFSET_27 + 4, INSTANT_RETURN_COUNT_RET)
+    }
+
+    /**
+     * Normalize ONLY our recognized 27.0.0 changes to compare the complete
+     * original library hash. This allows the Return and 0-shard patches in
+     * either order, without accepting arbitrary updated ARM64 code.
+     */
+    private fun verify27Native(input: ByteArray) {
         require(input.size == EXPECTED_SIZE_27) {
             "Unsupported XP Hero 27.0.0 ARM64 library length"
         }
-        val sha = MessageDigest.getInstance("SHA-256").digest(input)
+        require(equalAt(input, TOMB_OFFSET_27 - 8, TOMB_NEIGHBORS)) {
+            "Unexpected XP Hero 27.0.0 Heroes' Tomb instructions"
+        }
+        val normalized = input.copyOf()
+        val choices = listOf(
+            Triple(TOMB_OFFSET_27, ORIGINAL_TOMB, FREE_TOMB),
+            Triple(RETURN_ITEM_OFFSET_27, ORIGINAL_RETURN_ITEM, FREE_RETURN_ITEM),
+            Triple(RETURN_NO_PASS_OFFSET_27, ORIGINAL_RETURN_NO_PASS, FREE_RETURN_NO_PASS),
+            Triple(RETURN_INACTIVE_PASS_OFFSET_27, ORIGINAL_RETURN_INACTIVE_PASS, FREE_RETURN_INACTIVE_PASS),
+            Triple(RETURN_FREE_CONSUME_GUARD_OFFSET_27,
+                ORIGINAL_RETURN_FREE_CONSUME_GUARD, INSTANT_RETURN_FREE_CONSUME_GUARD)
+        ) + STAR_TEMPORARY_SHARD_PATCHES_27
+        for ((offset, original, changed) in choices) {
+            require(equalAt(input, offset, original) || equalAt(input, offset, changed)) {
+                "Unsupported XP Hero 27.0.0 native instruction at 0x" + offset.toString(16)
+            }
+            original.copyInto(normalized, offset)
+        }
+        require(equalAt(input, RETURN_QUANTITY_OFFSET_27, ORIGINAL_RETURN_QUANTITY) ||
+            knownFreeReturnQuantity27(input)) {
+            "Unsupported XP Hero 27.0.0 Return daily quantity instruction"
+        }
+        ORIGINAL_RETURN_QUANTITY.copyInto(normalized, RETURN_QUANTITY_OFFSET_27)
+        require(equalAt(input, INSTANT_RETURN_COUNT_OFFSET_27, ORIGINAL_RETURN_COUNT_ENTRY) ||
+            knownInstantReturnCount27(input)) {
+            "Unsupported XP Hero 27.0.0 free Return count function"
+        }
+        ORIGINAL_RETURN_COUNT_ENTRY.copyInto(normalized, INSTANT_RETURN_COUNT_OFFSET_27)
+        val sha = MessageDigest.getInstance("SHA-256").digest(normalized)
             .joinToString("") { "%02x".format(it) }
         require(sha == ORIGINAL_SHA_27) {
-            "Unsupported XP Hero 27.0.0 ARM64 instructions; refusing star-upgrade edit"
+            "Unexpected XP Hero 27.0.0 ARM64 code; refusing native edits"
         }
+    }
+
+    private fun freeHeroesTombRefills27(input: ByteArray, freeReturnDaily: Int): ByteArray {
+        verify27Native(input)
+        return input.copyOf().also { result ->
+            FREE_TOMB.copyInto(result, TOMB_OFFSET_27)
+            replaceInstruction(result, RETURN_QUANTITY_OFFSET_27,
+                0xD2800013.toInt() or (freeReturnDaily shl 5))
+            FREE_RETURN_ITEM.copyInto(result, RETURN_ITEM_OFFSET_27)
+            FREE_RETURN_NO_PASS.copyInto(result, RETURN_NO_PASS_OFFSET_27)
+            FREE_RETURN_INACTIVE_PASS.copyInto(result, RETURN_INACTIVE_PASS_OFFSET_27)
+            replaceInstruction(result, INSTANT_RETURN_COUNT_OFFSET_27,
+                0x52800000 or (freeReturnDaily shl 5))
+            INSTANT_RETURN_COUNT_RET.copyInto(result, INSTANT_RETURN_COUNT_OFFSET_27 + 4)
+            INSTANT_RETURN_FREE_CONSUME_GUARD.copyInto(result, RETURN_FREE_CONSUME_GUARD_OFFSET_27)
+        }
+    }
+
+    private fun freeHeroStarUpgrades27(input: ByteArray): ByteArray {
+        verify27Native(input)
         for ((offset, original, _) in STAR_TEMPORARY_SHARD_PATCHES_27) {
             require(equalAt(input, offset, original)) {
                 "XP Hero 27.0.0 upgrade instruction mismatch at 0x" + offset.toString(16)
@@ -365,6 +447,7 @@ internal object XP135NativeEditor {
 
     fun freeHeroesTombRefills(input: ByteArray, freeReturnDaily: Int): ByteArray {
         require(freeReturnDaily in 10..5000) { "Invalid daily free Return ticket count" }
+        if (input.size == EXPECTED_SIZE_27) return freeHeroesTombRefills27(input, freeReturnDaily)
         verify(input)
         return input.copyOf().also {
             FREE_TOMB.copyInto(it, TOMB_OFFSET)
