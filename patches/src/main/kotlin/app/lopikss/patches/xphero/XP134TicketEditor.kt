@@ -125,7 +125,7 @@ internal object XP134TicketEditor {
             require(supported(key, current, original)) { "Unexpected current $key" }
             normalized = put(normalized, key, original)
         }
-        require(sha(asset.encode(normalized)) == if (is27) REMOTE_SHA_27 else REMOTE_SHA) {
+        require(sha(asset.encode(normalized)) == (if (is27) REMOTE_SHA_27 else REMOTE_SHA)) {
             "Unsupported XP Hero RemoteConfig asset"
         }
         var modified = asset.text
