@@ -11,9 +11,11 @@ import java.security.MessageDigest
 private object XP138Heroes {
     const val HERO_DATA = "assets/bin/Data/ac161aa51303a4fce8138bf3242d0920"
     const val HERO_STAR = "assets/bin/Data/02ce5273e9c794059afe2ada0670d172"
+    const val HERO_STAR_27 = "assets/bin/Data/ad2670771b384455ebef2391d9ec5592"
 
     private const val HERO_DATA_SHA = "ff5d1c8e995e8169b643227d7e87a202910dc81c8e141d12ca0d8c0488018408"
     private const val HERO_STAR_SHA = "818570c2ec087bab93583352fbe6e6ff9dd859b5f06cd14b9d1995842467df87"
+    private const val HERO_STAR_SHA_27 = "4ad3a365ac10ec3ae2314f0c089ba5803bb4a4fb1265c8eb868be765987f90e1"
 
     private fun digest(input: ByteArray): String = MessageDigest.getInstance("SHA-256")
         .digest(input).joinToString("") { "%02x".format(it) }
@@ -42,10 +44,12 @@ private object XP138Heroes {
     }
 
     fun freeStarUpgrades(input: ByteArray): ByteArray {
-        require(digest(input) == HERO_STAR_SHA) { "Unsupported XP Hero CostumeStarGradeOptionData" }
+        val sha = digest(input)
+        val v27 = sha == HERO_STAR_SHA_27
+        require(v27 || sha == HERO_STAR_SHA) { "Unsupported XP Hero CostumeStarGradeOptionData" }
         val text = String(input, Charsets.ISO_8859_1)
         val price = Regex("""("Cost1_Amount":")([0-9]+)(")""")
-        check(price.findAll(text).count() == 144) {
+        check(price.findAll(text).count() == (if (v27) 156 else 144)) {
             "Unexpected hero star upgrade data"
         }
         val edited = price.replace(text) { match ->
@@ -93,7 +97,8 @@ val xp138FreeHeroStarUpgrades = rawResourcePatch(
 ) {
     compatibleWith(XP_HERO)
     execute {
-        val starFile = get(XP138Heroes.HERO_STAR)
+        val v27Star = get(XP138Heroes.HERO_STAR_27)
+        val starFile = if (v27Star.isFile) v27Star else get(XP138Heroes.HERO_STAR)
         val native = get(XP135NativeEditor.ARM64)
         // Validate every source before modifying either file.
         val modifiedStars = XP138Heroes.freeStarUpgrades(starFile.readBytes())
