@@ -5,7 +5,7 @@ import app.morphe.patcher.patch.rawResourcePatch
 import java.security.MessageDigest
 
 /**
- * Version-pinned XP Hero 26.2.0 hero data edits.
+ * Version-pinned XP Hero 26.2.0 and 27.0.0 hero data edits.
  * Both preserve Unity file length and verify the *original* asset SHA-256.
  */
 private object XP138Heroes {
@@ -22,28 +22,29 @@ private object XP138Heroes {
     private fun digest(input: ByteArray): String = MessageDigest.getInstance("SHA-256")
         .digest(input).joinToString("") { "%02x".format(it) }
 
-    fun unlockBlasterAndHana(input: ByteArray): ByteArray {
+    fun unlockAllHeroes(input: ByteArray): ByteArray {
         val sha = digest(input)
-        require(sha == HERO_DATA_SHA || sha == HERO_DATA_SHA_27) {
+        val v27 = sha == HERO_DATA_SHA_27
+        require(v27 || sha == HERO_DATA_SHA) {
             "Unsupported XP Hero CostumeData"
         }
         val source = String(input, Charsets.ISO_8859_1)
-        val heroRow = Regex("""\{[^{}]*"UnlockRequiredPieces":"([0-9]+)"[^{}]*"id":"(23|24)"[^{}]*\}""")
-        val matches = heroRow.findAll(source).toList()
-        check(matches.size == 2 && matches.map { it.groupValues[2] }.toSet() == setOf("23", "24")) {
-            "Expected exactly the Blaster (23) and Hana (24) hero rows"
+        // Every hero has its own UnlockRequiredPieces entry. Keep the exact
+        // original digit width so Unity resource offsets/file length stay intact.
+        val requiredPieces = Regex("""("UnlockRequiredPieces":")([0-9]+)(")""")
+        val matches = requiredPieces.findAll(source).toList()
+        val expectedHeroes = if (v27) 26 else 24
+        check(matches.size == expectedHeroes) {
+            "Expected $expectedHeroes hero unlock requirements; found ${matches.size}"
         }
-        check(matches.all { it.groupValues[1] == "100" }) {
-            "Unexpected unlock requirements for Blaster or Hana"
+        check(matches.count { it.groupValues[2].any { digit -> digit != '0' } } >= 2) {
+            "Unexpected already-free XP Hero CostumeData"
         }
-        val edited = heroRow.replace(source) { match ->
-            match.value.replace(
-                "\"UnlockRequiredPieces\":\"100\"",
-                "\"UnlockRequiredPieces\":\"000\"",
-            )
+        val edited = requiredPieces.replace(source) { match ->
+            match.groupValues[1] + "0".repeat(match.groupValues[2].length) + match.groupValues[3]
         }.toByteArray(Charsets.ISO_8859_1)
         check(edited.size == input.size && !edited.contentEquals(input)) {
-            "Hero asset unexpectedly changed"
+            "Hero unlock asset unexpectedly changed"
         }
         return edited
     }
@@ -66,14 +67,13 @@ private object XP138Heroes {
 }
 
 /**
- * Blaster and Hana are hero IDs 23 and 24 with 100 shards required in
- * the original CostumeData. Set their unlock requirements to zero.
- * This does not change any paid IAP offers or other heroes.
+ * Remove the unlock-piece cost for every hero, including Vlad, by editing
+ * all original CostumeData rows. Leave paid IAP offers and other costs intact.
  */
 @Suppress("unused")
-val xp138UnlockLastTwoHeroes = rawResourcePatch(
-    name = "XP Hero | Unlock Blaster & Hana (FREE)",
-    description = "Experimental: Blaster and Hana cost 0 pieces; the native zero-amount consume path keeps its normal notifications.",
+val xp138UnlockAllHeroes = rawResourcePatch(
+    name = "XP Hero | Unlock All Heroes (FREE)",
+    description = "Experimental: all heroes cost 0 unlock pieces; the native zero-amount consume path keeps its normal notifications. Other unlock conditions may still apply.",
     default = false,
 ) {
     compatibleWith(XP_HERO)
@@ -83,7 +83,7 @@ val xp138UnlockLastTwoHeroes = rawResourcePatch(
         val native = get(XP135NativeEditor.ARM64)
         // Validate the original asset and native game logic before changing
         // either file. This remains opt-in and version-specific.
-        val newHeroData = XP138Heroes.unlockBlasterAndHana(heroFile.readBytes())
+        val newHeroData = XP138Heroes.unlockAllHeroes(heroFile.readBytes())
         val newNative = XP135NativeEditor.allowZeroPieceHeroUnlock(native.readBytes())
         heroFile.writeBytes(newHeroData)
         native.writeBytes(newNative)
