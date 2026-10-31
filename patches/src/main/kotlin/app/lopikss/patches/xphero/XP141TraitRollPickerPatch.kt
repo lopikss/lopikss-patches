@@ -5,6 +5,45 @@ import app.morphe.patcher.patch.rawResourcePatch
 import app.morphe.patcher.patch.stringOption
 
 /**
+ * Morphe's dropdown renders the stored String value, not a separate label.
+ * Human-readable values are the canonical representation; the original
+ * XP Hero numeric codes remain accepted for previous Morphe settings.
+ */
+internal object XP141TraitOptionLabels {
+    val grades = linkedMapOf(
+        "S" to 6,
+        "SS" to 7,
+        "SSS" to 8,
+    )
+
+    val stats = linkedMapOf(
+        "Total Attack Power" to 1,
+        "Melee Weapon Damage" to 20,
+        "Ranged Weapon Damage" to 19,
+        "Critical Damage" to 2,
+        "Critical Chance" to 9,
+        "Attack Speed" to 10,
+        "Max HP" to 5,
+        "Healing Reduction on Hit" to 18,
+        "Status Effect Resistance" to 21,
+    )
+
+    val synergies = linkedMapOf(
+        "Warrior's Fist (orange attack)" to 1,
+        "Vampire Fang (red)" to 2,
+        "Dragon's Claw (blue critical damage)" to 3,
+        "Ogre Heart (green HP)" to 4,
+        "Sage's Hourglass (purple cooldown)" to 5,
+    )
+
+    fun toId(value: String?, available: Map<String, Int>, fallback: String): Int {
+        val selected = value ?: fallback
+        return available[selected] ?: selected.toIntOrNull()?.takeIf { it in available.values }
+            ?: error("Unrecognized trait choice: " + selected)
+    }
+}
+
+/**
  * XP Hero 27.0.0 S-ticket outcome picker.
  *
  * Configure from Morphe's PATCH SETTINGS before patching. The chosen outcome
@@ -20,60 +59,55 @@ val xp141ChooseSTicketTrait = rawResourcePatch(
 ) {
     compatibleWith(XP_HERO_27)
 
+    // Morphe's dropdown values are displayed literally in the selected field.
+    // Keep both map keys AND stored values readable, and translate internally
+    // to the XP Hero numeric data-table identifiers on execute.
     val desiredGrade = stringOption(
-        key = "chosenTraitGrade",
-        default = "8",
-        values = mapOf(
-            "6" to "S",
-            "7" to "SS",
-            "8" to "SSS",
-        ),
+        key = "chosenTraitGradeLabel",
+        default = "SSS",
+        values = XP141TraitOptionLabels.grades.keys.associateWith { it },
         title = "S-ticket rarity",
         description = "Every S-ticket roll selects this rarity. SSS is the highest.",
         required = true,
-        validator = { it != null && it in setOf("6", "7", "8") },
+        validator = { it != null && (it in XP141TraitOptionLabels.grades ||
+            it.toIntOrNull() in XP141TraitRollPickerData.validRarities) },
     )
 
     val desiredStat = stringOption(
-        key = "chosenTraitStat",
-        default = "1",
-        values = mapOf(
-            "1" to "Total Attack Power",
-            "20" to "Melee Weapon Damage",
-            "19" to "Ranged Weapon Damage",
-            "2" to "Critical Damage",
-            "9" to "Critical Chance",
-            "10" to "Attack Speed",
-            "5" to "Max HP",
-            "18" to "Healing Reduction on Hit",
-            "21" to "Status Effect Resistance",
-        ),
+        key = "chosenTraitStatLabel",
+        default = "Total Attack Power",
+        values = XP141TraitOptionLabels.stats.keys.associateWith { it },
         title = "Trait stat",
         description = "Choose the exact bonus you want from the next S-ticket roll.",
         required = true,
-        validator = { it?.toIntOrNull() in XP141TraitRollPickerData.validStats },
+        validator = { it != null && (it in XP141TraitOptionLabels.stats ||
+            it.toIntOrNull() in XP141TraitRollPickerData.validStats) },
     )
 
     val desiredSet = stringOption(
-        key = "chosenTraitSynergy",
-        default = "1",
-        values = mapOf(
-            "1" to "Warrior's Fist (orange attack)",
-            "2" to "Vampire Fang (red)",
-            "3" to "Dragon's Claw (blue critical damage)",
-            "4" to "Ogre Heart (green HP)",
-            "5" to "Sage's Hourglass (purple cooldown)",
-        ),
+        key = "chosenTraitSynergyLabel",
+        default = "Warrior's Fist (orange attack)",
+        values = XP141TraitOptionLabels.synergies.keys.associateWith { it },
         title = "Trait synergy icon",
         description = "Choose the set icon to build matching trait synergy.",
         required = true,
-        validator = { it != null && it in setOf("1", "2", "3", "4", "5") },
+        validator = { it != null && (it in XP141TraitOptionLabels.synergies ||
+            it.toIntOrNull() in XP141TraitRollPickerData.validSynergies) },
     )
 
     execute {
-        val grade = (desiredGrade.value ?: "8").toInt()
-        val stat = (desiredStat.value ?: "1").toInt()
-        val synergy = (desiredSet.value ?: "1").toInt()
+        // Fresh option keys prevent Morphe from redisplaying the old numeric
+        // saved selections. The parser still accepts legacy numeric codes
+        // in case settings are restored from an older user configuration.
+        val grade = XP141TraitOptionLabels.toId(
+            desiredGrade.value, XP141TraitOptionLabels.grades, "SSS"
+        )
+        val stat = XP141TraitOptionLabels.toId(
+            desiredStat.value, XP141TraitOptionLabels.stats, "Total Attack Power"
+        )
+        val synergy = XP141TraitOptionLabels.toId(
+            desiredSet.value, XP141TraitOptionLabels.synergies, "Warrior's Fist (orange attack)"
+        )
 
         val rollAsset = get(XP141TraitRollPickerData.ROLLS)
         val optionAsset = get(XP141TraitRollPickerData.OPTIONS)
