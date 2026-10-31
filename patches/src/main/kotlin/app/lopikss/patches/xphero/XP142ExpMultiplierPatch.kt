@@ -8,7 +8,7 @@ import app.morphe.patcher.patch.rawResourcePatch
 @Suppress("unused")
 val xp142MassiveExpMultiplier = rawResourcePatch(
     name = "XP Hero | Massive EXP Multiplier",
-    description = "Multiply monster-kill account EXP and its per-kill cap. Default 10000x. Does not change level requirements, item drops or quest rewards. Experimental for XP Hero 27.0.0.",
+    description = "Multiply monster-kill EXP and its per-kill cap, from 1x up to 100000x (default 10000x). Extremely large values are capped to avoid 64-bit overflow; other rewards stay unchanged.",
     default = false,
 ) {
     compatibleWith(XP_HERO_27)
@@ -17,9 +17,9 @@ val xp142MassiveExpMultiplier = rawResourcePatch(
         key = "monsterExpMultiplier",
         default = 10000,
         title = "Monster EXP multiplier",
-        description = "1x to 10000x. Default 10000x. Boosts XP Hero 27.0.0 enemy-kill EXP and the per-kill EXP cap; may be limited by online checks.",
+        description = "1x–100000x, default 10000x. Very large rewards are capped for 64-bit safety; actual EXP may be limited by game/server checks.",
         required = true,
-        validator = { it != null && it in 1..10000 },
+        validator = { it != null && it in 1..100000 },
     )
 
     execute {
