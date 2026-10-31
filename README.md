@@ -82,18 +82,19 @@ Tell me the **game name, Android package, exact version**, what you'd like chang
 This catalog is generated automatically from published Morphe patch metadata.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.21](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.21)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;11 patches total
+> **[v1.3.22](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.22)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;12 patches total
 <details open>
-<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;11 patches</summary>
+<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;12 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;27.0.0 | 🧪&nbsp;26.2.0 |
-| :---: | :---: |
+| 🧪&nbsp;27.0.0 |
+| :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
+| [XP Hero | Choose S-Ticket Trait](#xp-hero-choose-s-ticket-trait) | Choose S/SS/SSS rarity, stat and set icon in patch settings. S-ticket roll weights favor exactly that combination. Coin-roll rarity/synergy odds unchanged; same-rarity stats are shared. Combine with Free S-Ticket Rolls. | • S-ticket rarity<br>• Trait stat<br>• Trait synergy icon |
 | [XP Hero | Free Hero Evolve](#xp-hero-free-hero-evolve) | Experimental: zero hero evolution materials and pieces. |  |
 | [XP Hero | Free Hero Level Up](#xp-hero-free-hero-level-up) | Experimental: zero hero level-up resource costs. |  |
 | [XP Hero | Free Hero Upgrade (0 Shards)](#xp-hero-free-hero-upgrade-0-shards) | Experimental: shows 0 shards, credits +1 just before the normal 1-shard upgrade, then consumes it. Net cost 0; do not combine with 1-shard fallback. |  |
