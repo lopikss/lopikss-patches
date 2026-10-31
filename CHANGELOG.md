@@ -1,3 +1,9 @@
+## [1.3.24](https://github.com/lopikss/lopikss-patches/compare/v1.3.23...v1.3.24) (2026-10-31)
+
+### 🐛 Bug Fixes
+
+* add XP Hero 27.0.0 10000x configurable monster EXP multiplier ([e376707](https://github.com/lopikss/lopikss-patches/commit/e37670738dbb0b8b98f41f68d6b23040f55cf4c1))
+
 ## [1.3.23](https://github.com/lopikss/lopikss-patches/compare/v1.3.22...v1.3.23) (2026-10-31)
 
 ### 🐛 Bug Fixes

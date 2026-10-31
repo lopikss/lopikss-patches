@@ -82,9 +82,9 @@ Tell me the **game name, Android package, exact version**, what you'd like chang
 This catalog is generated automatically from published Morphe patch metadata.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.23](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.23)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;12 patches total
+> **[v1.3.24](https://github.com/lopikss/lopikss-patches/releases/tag/v1.3.24)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;13 patches total
 <details open>
-<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;12 patches</summary>
+<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;13 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -105,6 +105,7 @@ This catalog is generated automatically from published Morphe patch metadata.
 | [XP Hero | Free Trait Presets](#xp-hero-free-trait-presets) | Experimental: zero save/load costs for four trait presets (not rerolls). |  |
 | [XP Hero | Free Trait Rerolls](#xp-hero-free-trait-rerolls) | Experimental: change the ARM64 trait reroll cost calculator to return 0, including for locked traits. |  |
 | [XP Hero | Hero Upgrade (1 Shard - Fallback)](#xp-hero-hero-upgrade-1-shard-fallback) | Confirmed working fallback; costs one shard. Disable when selecting Free Hero Upgrade (0 Shards). |  |
+| [XP Hero | Massive EXP Multiplier](#xp-hero-massive-exp-multiplier) | Multiply monster-kill account EXP and its per-kill cap. Default 10000x. Does not change level requirements, item drops or quest rewards. Experimental for XP Hero 27.0.0. | • Monster EXP multiplier |
 | [XP Hero | Unlock All Heroes (FREE)](#xp-hero-unlock-all-heroes-free) | Experimental: all heroes cost 0 unlock pieces; the native zero-amount consume path keeps its normal notifications. Other unlock conditions may still apply. |  |
 
 </details>
