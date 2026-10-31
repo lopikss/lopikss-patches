@@ -15,7 +15,7 @@ import app.morphe.patcher.patch.stringOption
 @Suppress("unused")
 val xp141ChooseSTicketTrait = rawResourcePatch(
     name = "XP Hero | Choose S-Ticket Trait",
-    description = "Choose S/SS/SSS rarity, stat and set icon in patch settings. S-ticket roll weights favor exactly that combination. Ordinary rolls unchanged. Combine with Free S-Ticket Rolls if desired.",
+    description = "Choose S/SS/SSS rarity, stat and set icon in patch settings. S-ticket roll weights favor exactly that combination. Coin-roll rarity/synergy odds unchanged; same-rarity stats are shared. Combine with Free S-Ticket Rolls.",
     default = false,
 ) {
     compatibleWith(XP_HERO_27)
