@@ -1,3 +1,9 @@
+## [1.3.23](https://github.com/lopikss/lopikss-patches/compare/v1.3.22...v1.3.23) (2026-10-31)
+
+### 🐛 Bug Fixes
+
+* show readable names in XP Hero S-ticket trait picker ([981812d](https://github.com/lopikss/lopikss-patches/commit/981812d7142ef0febbb95855c64b36d166795710))
+
 ## [1.3.22](https://github.com/lopikss/lopikss-patches/compare/v1.3.21...v1.3.22) (2026-10-31)
 
 ### 🐛 Bug Fixes
