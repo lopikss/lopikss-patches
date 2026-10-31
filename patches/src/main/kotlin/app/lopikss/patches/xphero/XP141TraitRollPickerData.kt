@@ -7,7 +7,9 @@ import java.security.MessageDigest
  * synergy by preserving table entries and allocating their existing total
  * probabilities to the chosen entry.
  *
- * Ordinary (coin) trait rolls are untouched. No existing trait is rewritten.
+ * Coin-roll rarity and synergy pools stay unchanged. The stat option table
+ * is shared across both roll modes: a rare coin roll at the chosen rarity
+ * will use the selected stat too. No existing trait is rewritten.
  * Expects the unmodified three Unity TextAsset files from the 27.0.0 XAPK.
  */
 internal object XP141TraitRollPickerData {
