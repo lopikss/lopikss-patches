@@ -89,16 +89,21 @@ internal object XP142ExpMultiplierData {
         }
     }
 
+    // At 100000x some original values exceed signed 64-bit limits.
+    // Cap each reward at half Long.MAX_VALUE to leave room for arithmetic
+    // rather than writing overflowed/negative amounts into game data.
+    // All 10000x outputs from the original 27.0.0 files fit below this cap.
+    private const val MAX_EXP_VALUE = Long.MAX_VALUE / 2
+
     private fun scaled(original: String, factor: Int): String {
         val value = original.toLong()
-        require(value >= 0 && value <= Long.MAX_VALUE / factor) {
-            "XP reward overflow: " + value + " * " + factor
-        }
-        return (value * factor).toString()
+        require(value >= 0L) { "Negative XP value" }
+        return (if (value > MAX_EXP_VALUE / factor) MAX_EXP_VALUE
+                else value * factor).toString()
     }
 
     fun multiplyEnemyExp(input: ByteArray, multiplier: Int): ByteArray {
-        require(multiplier in 1..10_000) { "EXP multiplier must be 1–10000" }
+        require(multiplier in 1..100_000) { "EXP multiplier must be 1–100000" }
         val asset = UnityTextAsset(input, "EnemyData_1084", ENEMY_SHA256)
         val rows = enemyExp.findAll(asset.text).toList()
         check(rows.size == 246 && rows.count { it.groupValues[1] != "0" } == 169) {
@@ -112,7 +117,7 @@ internal object XP142ExpMultiplierData {
     }
 
     fun multiplyKillLimit(input: ByteArray, multiplier: Int): ByteArray {
-        require(multiplier in 1..10_000) { "EXP multiplier must be 1–10000" }
+        require(multiplier in 1..100_000) { "EXP multiplier must be 1–100000" }
         val asset = UnityTextAsset(input, "LevelUpData_Exp_116", LIMIT_SHA256)
         val rows = singleKillLimit.findAll(asset.text).toList()
         check(rows.size == 1500 && rows.all { it.groupValues[1].toLong() > 0L }) {
