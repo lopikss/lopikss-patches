@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/lopikss/lopikss-patches/compare/v1.3.25...v1.4.0) (2026-10-31)
+
+### ✨ New Features
+
+* optional experimental XP Hero 27.0.0 level 2200 progression ([d01daf4](https://github.com/lopikss/lopikss-patches/commit/d01daf4bce9a92352653decfae85747fde7c5bee))
+
 ## [1.3.25](https://github.com/lopikss/lopikss-patches/compare/v1.3.24...v1.3.25) (2026-10-31)
 
 ### 🐛 Bug Fixes
