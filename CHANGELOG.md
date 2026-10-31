@@ -1,3 +1,9 @@
+## [1.3.25](https://github.com/lopikss/lopikss-patches/compare/v1.3.24...v1.3.25) (2026-10-31)
+
+### 🐛 Bug Fixes
+
+* safely support 100000x monster EXP in XP Hero 27.0.0 ([6f3fdbe](https://github.com/lopikss/lopikss-patches/commit/6f3fdbe452422d13ba2c8247209c580d804a2446))
+
 ## [1.3.24](https://github.com/lopikss/lopikss-patches/compare/v1.3.23...v1.3.24) (2026-10-31)
 
 ### 🐛 Bug Fixes
