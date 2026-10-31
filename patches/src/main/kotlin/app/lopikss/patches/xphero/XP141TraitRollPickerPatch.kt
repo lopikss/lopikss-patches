@@ -63,7 +63,7 @@ val xp141ChooseSTicketTrait = rawResourcePatch(
     // Keep both map keys AND stored values readable, and translate internally
     // to the XP Hero numeric data-table identifiers on execute.
     val desiredGrade = stringOption(
-        key = "chosenTraitGrade",
+        key = "chosenTraitGradeLabel",
         default = "SSS",
         values = XP141TraitOptionLabels.grades.keys.associateWith { it },
         title = "S-ticket rarity",
@@ -74,7 +74,7 @@ val xp141ChooseSTicketTrait = rawResourcePatch(
     )
 
     val desiredStat = stringOption(
-        key = "chosenTraitStat",
+        key = "chosenTraitStatLabel",
         default = "Total Attack Power",
         values = XP141TraitOptionLabels.stats.keys.associateWith { it },
         title = "Trait stat",
@@ -85,7 +85,7 @@ val xp141ChooseSTicketTrait = rawResourcePatch(
     )
 
     val desiredSet = stringOption(
-        key = "chosenTraitSynergy",
+        key = "chosenTraitSynergyLabel",
         default = "Warrior's Fist (orange attack)",
         values = XP141TraitOptionLabels.synergies.keys.associateWith { it },
         title = "Trait synergy icon",
@@ -96,8 +96,9 @@ val xp141ChooseSTicketTrait = rawResourcePatch(
     )
 
     execute {
-        // Accept old 1.3.22 persisted numeric IDs so an existing selection
-        // can be upgraded without losing the chosen outcome.
+        // Fresh option keys prevent Morphe from redisplaying the old numeric
+        // saved selections. The parser still accepts legacy numeric codes
+        // in case settings are restored from an older user configuration.
         val grade = XP141TraitOptionLabels.toId(
             desiredGrade.value, XP141TraitOptionLabels.grades, "SSS"
         )
