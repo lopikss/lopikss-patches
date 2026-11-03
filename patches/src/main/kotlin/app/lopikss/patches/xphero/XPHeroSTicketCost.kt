@@ -16,7 +16,8 @@ val xpHeroFreeSTicketRolls = rawResourcePatch(
 ) {
     compatibleWith(XP_HERO)
     execute {
-        val file = get(XP134TicketEditor.REMOTE)
+        val v27 = get(XP134TicketEditor.REMOTE_27)
+        val file = if (v27.isFile) v27 else get(XP134TicketEditor.REMOTE)
         file.writeBytes(XP134TicketEditor.sTicket(file.readBytes()))
     }
 }
