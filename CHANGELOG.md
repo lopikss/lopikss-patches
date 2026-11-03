@@ -1,3 +1,9 @@
+## [1.5.0](https://github.com/lopikss/lopikss-patches/compare/v1.4.0...v1.5.0) (2026-11-03)
+
+### ✨ New Features
+
+* guarantee highest-rarity Tomb runes in XP Hero 27.0.0 ([6a8adf1](https://github.com/lopikss/lopikss-patches/commit/6a8adf12d04ee0bc7d9850810cbb21800de2501c))
+
 ## [1.4.0](https://github.com/lopikss/lopikss-patches/compare/v1.3.25...v1.4.0) (2026-10-31)
 
 ### ✨ New Features

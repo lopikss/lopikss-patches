@@ -82,9 +82,9 @@ Tell me the **game name, Android package, exact version**, what you'd like chang
 This catalog is generated automatically from published Morphe patch metadata.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.4.0](https://github.com/lopikss/lopikss-patches/releases/tag/v1.4.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;13 patches total
+> **[v1.5.0](https://github.com/lopikss/lopikss-patches/releases/tag/v1.5.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;14 patches total
 <details open>
-<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;13 patches</summary>
+<summary>📦 XP Hero&nbsp;&nbsp;•&nbsp;&nbsp;14 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -105,6 +105,7 @@ This catalog is generated automatically from published Morphe patch metadata.
 | [XP Hero | Free Trait Presets](#xp-hero-free-trait-presets) | Experimental: zero save/load costs for four trait presets (not rerolls). |  |
 | [XP Hero | Free Trait Rerolls](#xp-hero-free-trait-rerolls) | Experimental: change the ARM64 trait reroll cost calculator to return 0, including for locked traits. |  |
 | [XP Hero | Hero Upgrade (1 Shard - Fallback)](#xp-hero-hero-upgrade-1-shard-fallback) | Confirmed working fallback; costs one shard. Disable when selecting Free Hero Upgrade (0 Shards). |  |
+| [XP Hero | Highest-Rarity Tomb Runes](#xp-hero-highest-rarity-tomb-runes) | Every rune dropped in Heroes' Tomb uses the highest available grade for the selected difficulty, including three-ticket runs. Original loot counts and ticket costs apply. |  |
 | [XP Hero | Massive EXP Multiplier](#xp-hero-massive-exp-multiplier) | Monster EXP 1x–100000x (default 10000x). Optional EXPERIMENTAL level cap 2200; original max 1500 remains default. Extending player level might be rejected by server checks or break existing saves. | • Monster EXP multiplier<br>• EXPERIMENTAL player level cap |
 | [XP Hero | Unlock All Heroes (FREE)](#xp-hero-unlock-all-heroes-free) | Experimental: all heroes cost 0 unlock pieces; the native zero-amount consume path keeps its normal notifications. Other unlock conditions may still apply. |  |
 
