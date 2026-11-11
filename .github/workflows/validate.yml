@@ -28,3 +28,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew :patches:buildAndroid --no-daemon
+      - name: Read-only XP Hero transaction feasibility scan
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'research/xphero-virtual-one-shard-20261022'
+        run: |
+          curl --location --fail --show-error --silent --retry 2 --connect-timeout 30 --max-time 330 \
+            --user-agent 'Mozilla/5.0' \
+            'https://d.apkpure.net/b/XAPK/io.supercent.weaponrpg?nc=arm64-v8a&sv=24&versionCode=79' \
+            --output /tmp/xp-hero-262.xapk
+          python3 scripts/inspect_xphero_virtual_one.py
