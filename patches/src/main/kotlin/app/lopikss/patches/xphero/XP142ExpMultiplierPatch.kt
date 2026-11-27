@@ -1,6 +1,6 @@
 package app.lopikss.patches.xphero
 
-import app.lopikss.patches.shared.Constants.XP_HERO_27_UNCHANGED_272
+import app.lopikss.patches.shared.Constants.XP_HERO_27
 import app.morphe.patcher.patch.intOption
 import app.morphe.patcher.patch.rawResourcePatch
 
@@ -11,7 +11,7 @@ val xp142MassiveExpMultiplier = rawResourcePatch(
     description = "Monster EXP 1x–100000x (default 10000x). Optional EXPERIMENTAL level cap 2200; original max 1500 remains default. Extending player level might be rejected by server checks or break existing saves.",
     default = false,
 ) {
-    compatibleWith(XP_HERO_27_UNCHANGED_272)
+    compatibleWith(XP_HERO_27)
 
     val multiplier = intOption(
         key = "monsterExpMultiplier",
