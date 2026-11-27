@@ -1,6 +1,7 @@
 package app.lopikss.patches.xphero
 
 import app.lopikss.patches.shared.Constants.XP_HERO
+import app.lopikss.patches.shared.Constants.XP_HERO_UNCHANGED_272
 import app.morphe.patcher.patch.rawResourcePatch
 import app.morphe.patcher.patch.booleanOption
 import java.security.MessageDigest
@@ -238,7 +239,7 @@ val xpHeroFreeShops = rawResourcePatch(
 val xp130FreeHeroLevel = rawResourcePatch(
     name = "XP Hero | Free Hero Level Up", description = "Experimental: zero hero level-up resource costs.", default = false,
 ) {
-    compatibleWith(XP_HERO)
+    compatibleWith(XP_HERO_UNCHANGED_272)
     execute {
         val file = get(XP130.HERO_LEVEL)
         file.writeBytes(XP130.hero(file.readBytes(),
@@ -251,7 +252,7 @@ val xp130FreeHeroLevel = rawResourcePatch(
 val xp130FreeHeroEvolve = rawResourcePatch(
     name = "XP Hero | Free Hero Evolve", description = "Experimental: zero hero evolution materials and pieces.", default = false,
 ) {
-    compatibleWith(XP_HERO)
+    compatibleWith(XP_HERO_UNCHANGED_272)
     execute {
         val v27 = get(XP130.HERO_EVOLVE_27)
         if (v27.isFile) {

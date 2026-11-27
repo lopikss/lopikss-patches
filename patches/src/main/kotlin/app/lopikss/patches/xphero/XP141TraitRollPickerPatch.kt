@@ -1,6 +1,6 @@
 package app.lopikss.patches.xphero
 
-import app.lopikss.patches.shared.Constants.XP_HERO_27
+import app.lopikss.patches.shared.Constants.XP_HERO_27_UNCHANGED_272
 import app.morphe.patcher.patch.rawResourcePatch
 import app.morphe.patcher.patch.stringOption
 
@@ -57,7 +57,7 @@ val xp141ChooseSTicketTrait = rawResourcePatch(
     description = "Choose S/SS/SSS rarity, stat and set icon in patch settings. S-ticket roll weights favor exactly that combination. Coin-roll rarity/synergy odds unchanged; same-rarity stats are shared. Combine with Free S-Ticket Rolls.",
     default = false,
 ) {
-    compatibleWith(XP_HERO_27)
+    compatibleWith(XP_HERO_27_UNCHANGED_272)
 
     // Morphe's dropdown values are displayed literally in the selected field.
     // Keep both map keys AND stored values readable, and translate internally

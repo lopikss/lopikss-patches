@@ -1,6 +1,7 @@
 package app.lopikss.patches.xphero
 
 import app.lopikss.patches.shared.Constants.XP_HERO
+import app.lopikss.patches.shared.Constants.XP_HERO_UNCHANGED_272
 import app.morphe.patcher.patch.rawResourcePatch
 import java.security.MessageDigest
 
@@ -60,7 +61,7 @@ val xp132FreeRuneUpgrades = rawResourcePatch(
     description = "Experimental: zero both resource costs for all 1,440 rune upgrade levels.",
     default = false,
 ) {
-    compatibleWith(XP_HERO)
+    compatibleWith(XP_HERO_UNCHANGED_272)
     execute {
         val file = get(XP132.RUNE)
         file.writeBytes(XP132.runes(file.readBytes()))
@@ -73,7 +74,7 @@ val xp132FreeTraitPresets = rawResourcePatch(
     description = "Experimental: zero save/load costs for four trait presets (not rerolls).",
     default = false,
 ) {
-    compatibleWith(XP_HERO)
+    compatibleWith(XP_HERO_UNCHANGED_272)
     execute {
         val file = get(XP132.PRESET)
         file.writeBytes(XP132.presets(file.readBytes()))
